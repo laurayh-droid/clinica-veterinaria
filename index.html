@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VetCare - Sistema de Gestão para Clínica Veterinária</title>
+  <meta name="description" content="Sistema completo de gestão veterinária para controle de tutores, pets, prontuários, receitas, estoque e caixa diário.">
+  
+  <!-- Fontes do Google & Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app-container">
+    
+    <!-- Sidebar de Navegação -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="brand-icon">
+            <i class="fa-solid fa-paw"></i>
+          </div>
+          <div>
+            <div class="brand-title">VetCare</div>
+            <div class="brand-subtitle">Clínica Veterinária</div>
+          </div>
+        </div>
+
+        <nav class="nav-menu">
+          <a class="nav-item active" data-tab="dashboard">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard / Fila</span>
+            <span class="badge-count" id="badge-fila-count">0</span>
+          </a>
+          <a class="nav-item" data-tab="tutores-pets">
+            <i class="fa-solid fa-users"></i>
+            <span>Tutores & Pets</span>
+          </a>
+          <a class="nav-item" data-tab="agenda">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Agenda</span>
+          </a>
+          <a class="nav-item" data-tab="atendimento" id="nav-atendimento-item">
+            <i class="fa-solid fa-stethoscope"></i>
+            <span>Atendimento Clínico</span>
+          </a>
+          <a class="nav-item" data-tab="estoque">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Estoque</span>
+            <span class="badge-count" id="badge-estoque-alert" style="background-color: var(--danger-text); display:none;">!</span>
+          </a>
+          <a class="nav-item" data-tab="caixa">
+            <i class="fa-solid fa-cash-register"></i>
+            <span>Caixa & Financeiro</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Seletor de Perfil de Usuário (RF03, RN02) -->
+      <div class="user-profile-widget">
+        <div class="user-profile-label">Perfil Ativo (RF03)</div>
+        <select id="user-role-select" class="role-select" onchange="switchUserRole(this.value)">
+          <option value="vet">Dr. Carlos (Vet - CRMV 12345)</option>
+          <option value="recepcao">Ana Silva (Recepcionista)</option>
+          <option value="admin">Mariana (Administradora)</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Área Principal -->
+    <div class="main-wrapper">
+      
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="page-header-info">
+          <h1 id="page-title">Dashboard & Fila do Dia</h1>
+          <p id="page-subtitle">Acompanhamento da recepção e consultas de hoje</p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="active-role-badge" id="role-badge">
+            <i class="fa-solid fa-user-doctor"></i>
+            <span id="role-badge-text">Médico Veterinário</span>
+          </div>
+          <span style="font-size: 0.85rem; color: var(--text-muted);" id="current-date-display">--/--/----</span>
+        </div>
+      </header>
+
+      <!-- Conteúdo da Aplicação -->
+      <main class="content-area">
+
+        <!-- =================================================================== -->
+        <!-- ABA 1: DASHBOARD & FILA DO DIA (RF05)                              -->
+        <!-- =================================================================== -->
+        <section id="dashboard" class="tab-content active">
+          
+          <!-- Métricas Resumidas -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <div class="metric-data">
+                <h3>Atendimentos Hoje</h3>
+                <div class="value" id="metric-consultas-hoje">0</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon warning">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div class="metric-data">
+                <h3>Aguardando na Fila</h3>
+                <div class="value" id="metric-aguardando">0</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon success">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+              </div>
+              <div class="metric-data">
+                <h3>Faturamento Hoje</h3>
+                <div class="value" id="metric-faturamento">R$ 0,00</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="metric-data">
+                <h3>Estoque Zerado (RN04)</h3>
+                <div class="value" id="metric-estoque-zero">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerta de Estoque (RN04) -->
+          <div id="dashboard-stock-alert" class="alert-banner" style="display: none;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="stock-alert-message">Atenção: Existem produtos com estoque zerado no sistema!</span>
+          </div>
+
+          <!-- Fila do Dia -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fa-solid fa-list-check" style="color: var(--primary);"></i>
+                Fila de Atendimento do Dia (RF05)
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openModal('modal-novo-agendamento')">
+                <i class="fa-solid fa-plus"></i> Novo Agendamento
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Horário</th>
+                    <th>Pacientes (Pet / Tutor)</th>
+                    <th>Veterinário</th>
+                    <th>Status</th>
+                    <th class="text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="fila-dia-tbody">
+                  <!-- Inserido dinamicamente via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- ABA 2: TUTORES & PETS (RF01, RF02, RN01)                           -->
+        <!-- =================================================================== -->
+        <section id="tutores-pets" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fa-solid fa-address-book" style="color: var(--primary);"></i>
+                Cadastro de Tutores e Pacientes
+              </div>
+              <button class="btn btn-primary" onclick="openModal('modal-novo-tutor')">
+                <i class="fa-solid fa-user-plus"></i> Cadastrar Tutor & Pet (RF01/RF02)
+              </button>
+            </div>
+
+            <!-- Busca Rápida (<2s RNF03) -->
+            <div class="search-filter-bar">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-tutor-input" class="search-input" placeholder="Buscar tutor ou pet por Nome, CPF ou Telefone (RNF03)..." onkeyup="filterTutores(this.value)">
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Tutor (RF01)</th>
+                    <th>CPF</th>
+                    <th>WhatsApp / Contato</th>
+                    <th>Pets Vinculados (RF02 / RN01)</th>
+                    <th class="text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tutores-tbody">
+                  <!-- Inserido via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- ABA 3: AGENDA (RF04)                                                -->
+        <!-- =================================================================== -->
+        <section id="agenda" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fa-solid fa-calendar-days" style="color: var(--primary);"></i>
+                Agenda de Consultas e Retornos (RF04)
+              </div>
+              <button class="btn btn-primary" onclick="openModal('modal-novo-agendamento')">
+                <i class="fa-solid fa-calendar-plus"></i> Agendar Consulta
+              </button>
+            </div>
+
+            <div class="search-filter-bar">
+              <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+                <label class="form-label" for="agenda-date-filter">Filtrar por Data:</label>
+                <input type="date" id="agenda-date-filter" class="form-control" style="width: auto;" onchange="loadAgendaTable(this.value)">
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Data / Hora</th>
+                    <th>Pet / Espécie</th>
+                    <th>Tutor Responsável</th>
+                    <th>Veterinário</th>
+                    <th>Status</th>
+                    <th class="text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="agenda-tbody">
+                  <!-- Inserido via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- ABA 4: ATENDIMENTO CLÍNICO (RF06, RF07, RF08, RF09, RN02, RN03)      -->
+        <!-- =================================================================== -->
+        <section id="atendimento" class="tab-content">
+          
+          <!-- Trava de Permissão RN02 -->
+          <div id="vet-permission-lock" class="alert-banner" style="display:none; background-color: var(--status-aguardando-bg); color: var(--status-aguardando-text); border-color: #fde68a;">
+            <i class="fa-solid fa-lock"></i>
+            <span><strong>Atenção (RN02):</strong> Apenas o perfil de Médico Veterinário pode preencher prontuários, registrar diagnósticos e emitir receitas médicas.</span>
+          </div>
+
+          <div class="form-grid" style="grid-template-columns: 1fr 2fr;">
+            
+            <!-- Seleção de Paciente em Atendimento -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-paw" style="color: var(--primary);"></i> Paciente em Consulta
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Selecionar Paciente da Fila:</label>
+                <select id="atendimento-pet-select" class="form-control" onchange="onSelectPetAtendimento(this.value)">
+                  <option value="">-- Selecione um pet da fila --</option>
+                </select>
+              </div>
+
+              <div id="selected-pet-card" class="mt-2" style="display:none; background-color: var(--bg-main); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                <div class="entity-info mb-2">
+                  <div class="pet-avatar" id="pet-avatar-display">🐾</div>
+                  <div class="entity-details">
+                    <div class="title" id="pet-name-display">Thor</div>
+                    <div class="subtitle" id="pet-species-breed">Cão - Golden Retriever</div>
+                  </div>
+                </div>
+                <hr style="border:0; border-top:1px solid var(--border); margin:0.75rem 0;">
+                <p style="font-size:0.8rem; color:var(--text-secondary);"><strong>Tutor:</strong> <span id="pet-tutor-display">Carlos Silva</span></p>
+                <p style="font-size:0.8rem; color:var(--text-secondary);"><strong>Idade/Peso:</strong> <span id="pet-age-weight">3 anos | 28 kg</span></p>
+              </div>
+
+              <!-- Vacinas Aplicadas (RF09) -->
+              <div class="panel-header mt-2" style="margin-bottom:0.75rem;">
+                <div class="panel-title" style="font-size:0.95rem;">
+                  <i class="fa-solid fa-syringe" style="color: var(--primary);"></i> Vacinas (RF09)
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="openModal('modal-nova-vacina')">+ Vacina</button>
+              </div>
+
+              <div id="pet-vaccines-list" style="font-size:0.825rem; color: var(--text-secondary);">
+                <em>Selecione um paciente para ver a carteira de vacinação.</em>
+              </div>
+            </div>
+
+            <!-- Prontuário Clínico & Receita -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-notes-medical" style="color: var(--primary);"></i>
+                  Prontuário da Consulta Atual (RF06)
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                  <button class="btn btn-outline btn-sm" onclick="openModal('modal-receita')" id="btn-emitir-receita">
+                    <i class="fa-solid fa-file-prescription"></i> Emitir Receita (RF08)
+                  </button>
+                </div>
+              </div>
+
+              <form id="form-prontuario" onsubmit="salvarProntuario(event)">
+                <div class="form-grid mb-2">
+                  <div class="form-group full-width">
+                    <label class="form-label">Queixa Principal & Histórico Observado (RF06):</label>
+                    <textarea id="prontuario-queixa" class="form-control" placeholder="Ex: Animal apresentando prostração e perda de apetite há 2 dias..."></textarea>
+                  </div>
+
+                  <div class="form-group full-width">
+                    <label class="form-label">Exame Físico & Sintomas Observados:</label>
+                    <textarea id="prontuario-sintomas" class="form-control" placeholder="Ex: Temperatura 38.5°C, mucosas normcoradas, sem dor abdominal..."></textarea>
+                  </div>
+
+                  <div class="form-group full-width">
+                    <label class="form-label">Diagnóstico Presuntivo / Definitivo:</label>
+                    <textarea id="prontuario-diagnostico" class="form-control" placeholder="Ex: Gastrenterite leve..."></textarea>
+                  </div>
+
+                  <div class="form-group full-width">
+                    <label class="form-label">Orientações e Tratamento Prescrito:</label>
+                    <textarea id="prontuario-orientacoes" class="form-control" placeholder="Ex: Dieta leve por 3 dias, hidratação oral..."></textarea>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:0.75rem;" class="mt-2">
+                  <button type="submit" class="btn btn-primary" id="btn-salvar-prontuario">
+                    <i class="fa-solid fa-floppy-disk"></i> Salvar Consulta & Finalizar
+                  </button>
+                </div>
+              </form>
+
+              <!-- Histórico do Paciente (RF07) -->
+              <div class="mt-2" style="border-top:1px solid var(--border); padding-top:1rem;">
+                <h3 style="font-size:0.95rem; font-family:var(--font-heading); font-weight:600;">
+                  <i class="fa-solid fa-clock-rotate-left" style="color:var(--primary);"></i> Histórico Clínico Anterior (RF07)
+                </h3>
+                <div id="patient-timeline-container" class="timeline">
+                  <!-- Histórico dinâmico via app.js -->
+                  <p style="font-size:0.85rem; color:var(--text-muted); padding-top:0.5rem;">Nenhum histórico selecionado.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- ABA 5: ESTOQUE BÁSICO (RF10, RF11, RN04)                          -->
+        <!-- =================================================================== -->
+        <section id="estoque" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i>
+                Controle de Estoque de Produtos e Medicamentos (RF10)
+              </div>
+              <button class="btn btn-primary" onclick="openModal('modal-novo-produto')">
+                <i class="fa-solid fa-box-archive"></i> Cadastrar Item (RF10)
+              </button>
+            </div>
+
+            <div class="search-filter-bar">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="search-input" placeholder="Buscar medicamento ou insumo no estoque..." onkeyup="filterEstoque(this.value)">
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Nome do Produto / Item (RF10)</th>
+                    <th>Preço de Venda</th>
+                    <th>Qtd. Atual em Estoque</th>
+                    <th>Status de Estoque (RN04)</th>
+                    <th class="text-right">Ações (RF11)</th>
+                  </tr>
+                </thead>
+                <tbody id="estoque-tbody">
+                  <!-- Inserido via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- ABA 6: CAIXA E PAGAMENTOS (RF12, RF13)                              -->
+        <!-- =================================================================== -->
+        <section id="caixa" class="tab-content">
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            
+            <!-- Registro de Pagamento RF12 -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-receipt" style="color: var(--primary);"></i>
+                  Registrar Pagamento / Caixa (RF12)
+                </div>
+              </div>
+
+              <form id="form-pagamento" onsubmit="registrarPagamento(event)">
+                <div class="form-group mb-2">
+                  <label class="form-label">Descrição do Atendimento / Produto:</label>
+                  <input type="text" id="pagamento-descricao" class="form-control" placeholder="Ex: Consulta Clínica + Vacina V10" required>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="form-label">Tutor (Opcional):</label>
+                  <select id="pagamento-tutor-select" class="form-control">
+                    <option value="">-- Cliente Avulso --</option>
+                  </select>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="form-label">Valor Cobrado (R$):</label>
+                  <input type="number" step="0.01" id="pagamento-valor" class="form-control" placeholder="150.00" required>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="form-label">Forma de Pagamento (RF12):</label>
+                  <select id="pagamento-metodo" class="form-control" required>
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-width mt-2">
+                  <i class="fa-solid fa-cash-register"></i> Confirmar Recebimento (RF12)
+                </button>
+              </form>
+            </div>
+
+            <!-- Fechamento de Caixa Diário RF13 -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-chart-line" style="color: var(--primary);"></i>
+                  Fechamento de Caixa Diário (RF13)
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="imprimirRelatorioCaixa()">
+                  <i class="fa-solid fa-print"></i> Imprimir Relatório
+                </button>
+              </div>
+
+              <div style="background-color: var(--bg-main); padding: 1.25rem; border-radius: var(--radius-md); border:1px solid var(--border);" class="mb-2">
+                <h3 style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Faturamento Total do Dia</h3>
+                <div style="font-size:2rem; font-family:var(--font-heading); font-weight:700; color:var(--primary-hover);" id="caixa-total-display">R$ 0,00</div>
+              </div>
+
+              <h4 style="font-size:0.9rem; margin-bottom:0.5rem; color:var(--text-secondary);">Resumo por Forma de Pagamento:</h4>
+              <div id="caixa-breakdown-list" style="display:flex; flex-direction:column; gap:0.5rem;">
+                <!-- Dinâmico via JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Histórico de Transações do Dia -->
+          <div class="panel mt-2">
+            <div class="panel-header">
+              <div class="panel-title">Lançamentos do Dia</div>
+            </div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Horário</th>
+                    <th>Descrição</th>
+                    <th>Cliente / Tutor</th>
+                    <th>Forma de Pagamento</th>
+                    <th class="text-right">Valor</th>
+                  </tr>
+                </thead>
+                <tbody id="caixa-transacoes-tbody">
+                  <!-- Inserido via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAIS INTERATIVOS                                                         -->
+  <!-- ========================================================================= -->
+
+  <!-- Modal 1: Novo Tutor & Pet (RF01, RF02, RN01) -->
+  <div id="modal-novo-tutor" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Cadastrar Tutor e Pet (RF01/RF02)</h2>
+        <button class="modal-close" onclick="closeModal('modal-novo-tutor')">&times;</button>
+      </div>
+      <form id="form-novo-tutor" onsubmit="salvarTutorEPet(event)">
+        <div class="modal-body form-grid">
+          <h3 class="full-width" style="font-size:0.95rem; border-bottom:1px solid var(--border); padding-bottom:0.25rem;">Dados do Tutor (RF01)</h3>
+          
+          <div class="form-group">
+            <label class="form-label">Nome Completo *</label>
+            <input type="text" id="tutor-nome" class="form-control" placeholder="Ex: Mariana Oliveira" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">CPF *</label>
+            <input type="text" id="tutor-cpf" class="form-control" placeholder="000.000.000-00" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">WhatsApp / Telefone *</label>
+            <input type="text" id="tutor-telefone" class="form-control" placeholder="(11) 99999-8888" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Endereço</label>
+            <input type="text" id="tutor-endereco" class="form-control" placeholder="Rua, Número, Bairro">
+          </div>
+
+          <h3 class="full-width mt-2" style="font-size:0.95rem; border-bottom:1px solid var(--border); padding-bottom:0.25rem;">Dados do Pet Vinculado (RF02 / RN01)</h3>
+
+          <div class="form-group">
+            <label class="form-label">Nome do Pet *</label>
+            <input type="text" id="pet-nome" class="form-control" placeholder="Ex: Mel" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Espécie *</label>
+            <select id="pet-especie" class="form-control" required>
+              <option value="Cão">Cão</option>
+              <option value="Gato">Gato</option>
+              <option value="Ave">Ave</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Raça</label>
+            <input type="text" id="pet-raca" class="form-control" placeholder="Ex: Poodle, SRD...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Sexo</label>
+            <select id="pet-sexo" class="form-control">
+              <option value="Macho">Macho</option>
+              <option value="Fêmea">Fêmea</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Idade / Nasc.</label>
+            <input type="text" id="pet-idade" class="form-control" placeholder="Ex: 2 anos">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Peso (kg)</label>
+            <input type="number" step="0.1" id="pet-peso" class="form-control" placeholder="Ex: 8.5">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-novo-tutor')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Cadastro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Novo Agendamento (RF04) -->
+  <div id="modal-novo-agendamento" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Agendar Consulta (RF04)</h2>
+        <button class="modal-close" onclick="closeModal('modal-novo-agendamento')">&times;</button>
+      </div>
+      <form id="form-novo-agendamento" onsubmit="salvarAgendamento(event)">
+        <div class="modal-body form-grid">
+          <div class="form-group full-width">
+            <label class="form-label">Selecione o Paciente (Pet / Tutor) *</label>
+            <select id="agendamento-pet-select" class="form-control" required>
+              <!-- Dinâmico via JS -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Data *</label>
+            <input type="date" id="agendamento-data" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Horário *</label>
+            <input type="time" id="agendamento-hora" class="form-control" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Veterinário Responsável *</label>
+            <select id="agendamento-vet-select" class="form-control" required>
+              <option value="Dr. Carlos (CRMV 12345)">Dr. Carlos (CRMV 12345)</option>
+              <option value="Dra. Juliana (CRMV 67890)">Dra. Juliana (CRMV 67890)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-novo-agendamento')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Confirmar Agendamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Emissão de Receita Simples (RF08, RN03) -->
+  <div id="modal-receita" class="modal-overlay">
+    <div class="modal-card" style="max-width:700px;">
+      <div class="modal-header">
+        <h2>Emitir Receita Médica Simples (RF08 / RN03)</h2>
+        <button class="modal-close" onclick="closeModal('modal-receita')">&times;</button>
+      </div>
+      <div class="modal-body">
+        
+        <form id="form-receita" onsubmit="gerarVisualizacaoReceita(event)">
+          <div class="form-group mb-2">
+            <label class="form-label">Medicamentos e Dosagens Prescritas:</label>
+            <textarea id="receita-texto" class="form-control" style="min-height:120px;" placeholder="Ex: 1. Amoxicilina 250mg - Administrar 1 comprimido a cada 12 horas por 7 dias.&#10;2. Meloxicam 1mg - Administrar 1 comprimido a cada 24 horas por 3 dias." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-eye"></i> Gerar Pré-visualização com CRMV (RN03)
+          </button>
+        </form>
+
+        <!-- Preview da Receita com CRMV do Veterinário (RN03) -->
+        <div id="recipe-preview-container" class="recipe-preview mt-2" style="display:none;">
+          <div class="recipe-header">
+            <h2>VetCare - Clínica Veterinária</h2>
+            <p>Rua dos Pets, 123 - Centro | Tel: (11) 3333-4444</p>
+            <div class="recipe-vet-badge" id="recipe-vet-info">
+              <i class="fa-solid fa-user-doctor"></i> Dr. Carlos - CRMV/SP 12345
+            </div>
+          </div>
+
+          <div class="recipe-info-grid">
+            <div><strong>Paciente:</strong> <span id="recipe-patient-name">Mel</span></div>
+            <div><strong>Especialidade:</strong> Veterinária Geral</div>
+            <div><strong>Tutor:</strong> <span id="recipe-tutor-name">Mariana</span></div>
+            <div><strong>Data:</strong> <span id="recipe-date-display">--/--/----</span></div>
+          </div>
+
+          <div class="recipe-medications">
+            <h4 style="font-size:0.9rem; text-transform:uppercase; color:var(--primary-hover); border-bottom:1px solid var(--border); padding-bottom:0.25rem;" class="mb-2">Receituário Prescrito:</h4>
+            <div id="recipe-meds-list" style="white-space: pre-wrap; font-size:0.9rem; line-height:1.6;"></div>
+          </div>
+
+          <div class="recipe-footer">
+            <div class="signature-line"></div>
+            <p style="font-size:0.85rem; font-weight:600;" id="recipe-vet-signature">Dr. Carlos - Médico Veterinário</p>
+            <p style="font-size:0.75rem; color:#64748b;" id="recipe-crmv-signature">CRMV/SP 12345 (RN03)</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-receita')">Fechar</button>
+        <button type="button" class="btn btn-primary" onclick="imprimirReceita()">
+          <i class="fa-solid fa-print"></i> Imprimir Receita
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Registrar Vacina (RF09) -->
+  <div id="modal-nova-vacina" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Registrar Aplicação de Vacina (RF09)</h2>
+        <button class="modal-close" onclick="closeModal('modal-nova-vacina')">&times;</button>
+      </div>
+      <form id="form-nova-vacina" onsubmit="salvarVacina(event)">
+        <div class="modal-body form-grid">
+          <div class="form-group full-width">
+            <label class="form-label">Nome da Vacina *</label>
+            <input type="text" id="vacina-nome" class="form-control" placeholder="Ex: V10 Polivalente, Antirrábica..." required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Data de Aplicação *</label>
+            <input type="date" id="vacina-data-aplicacao" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Próxima Dose Prevista *</label>
+            <input type="date" id="vacina-data-proxima" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-nova-vacina')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Registrar Vacina</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Novo Produto no Estoque (RF10) -->
+  <div id="modal-novo-produto" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Cadastrar Item no Estoque (RF10)</h2>
+        <button class="modal-close" onclick="closeModal('modal-novo-produto')">&times;</button>
+      </div>
+      <form id="form-novo-produto" onsubmit="salvarProduto(event)">
+        <div class="modal-body form-grid">
+          <div class="form-group full-width">
+            <label class="form-label">Nome do Produto / Medicamento *</label>
+            <input type="text" id="produto-nome" class="form-control" placeholder="Ex: Anti-inflamatório Meloxivet 1mg" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preço de Venda (R$) *</label>
+            <input type="number" step="0.01" id="produto-preco" class="form-control" placeholder="45.00" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Quantidade em Estoque *</label>
+            <input type="number" id="produto-qtd" class="form-control" placeholder="10" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-novo-produto')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Produto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Area exclusiva de impressão para Receitas (RN03) -->
+  <div id="print-recipe-area"></div>
+
+  <!-- Script Principal JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
