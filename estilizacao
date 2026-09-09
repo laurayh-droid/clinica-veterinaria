@@ -1,0 +1,72 @@
+# Identidade Visual & Paleta: Harmonia entre Pets Domésticos e Silvestres / Exóticos
+
+Este plano define a reformulação visual do sistema **VetCare (Fauna & Pets)** para transmitir com clareza e elegância a proposta única da clínica: um ambiente de acolhimento e excelência médica tanto para animais de estimação convencionais (cães, gatos) quanto para fauna silvestre e espécies exóticas (aves, répteis, roedores exóticos e pequenos mamíferos).
+
+---
+
+## 🎨 Conceito Visual e Direção de Arte
+
+### 1. Simbologia e Logo
+- **Logo Vetorial (SVG Nativo):** Um emblema orgânico e moderno que une a **pata acolhedora** dos pets tradicionais a elementos da **natureza silvestre** (uma folha tropical estilizada / pena de ave exótica / contornos fluidos da fauna) inscritos em um gradiente suave.
+- **Assinatura da Marca:** **VetCare Fauna & Domésticos** — *Medicina Veterinária & Manejo de Silvestres*.
+
+```
+       [ 🌿 Folha / Pena Silvestre ]
+                     +
+           [ 🐾 Pata Doméstica ]
+                     =
+   [ Emblema Integrado VetCare Fauna & Pets ]
+```
+
+### 2. Nova Paleta de Cores (Bio-Harmônica)
+Combinação equilibrada entre a vitalidade e riqueza da fauna/flora silvestre (verdes botânicos e esmeralda) com o acolhimento caloroso dos pets domésticos (âmbar dourado e terracota suave), apoiados em tons clínicos sofisticados (ardósia profunda e névoa botânica):
+
+| Token | Cor Hex | Significado & Uso na Interface |
+| :--- | :--- | :--- |
+| `--primary` | `#059669` (Esmeralda Botânico) | Ação principal, botões, ícones de destaque e saúde da fauna |
+| `--primary-dark` | `#064e3b` (Verde Floresta Profundo) | Cabeçalhos, contraste de texto e identidade |
+| `--primary-light` | `#d1fae5` (Menta Fresco) | Fundo de tags, destaques e cards ativos |
+| `--accent-amber` | `#d97706` (Âmbar Solar / Dourado) | Pets domésticos, calor, atenção e agendamentos |
+| `--accent-terracotta` | `#c2410c` (Terracota da Terra) | Detalhes exóticos e calor orgânico |
+| `--accent-lagoon` | `#0284c7` (Azul Arara / Lagoa) | Consultas médicas e exames |
+| `--accent-orchid` | `#9333ea` (Orquídea Tropical) | Consultoria de manejo & espécies especiais |
+| `--bg-main` | `#f4f7f4` (Névoa Botânica Suave) | Fundo geral relaxante, substitui o cinza neutro frio |
+| `--surface` | `#ffffff` (Branco Puro) | Cards, painéis e modais com sombras orgânicas |
+| `--text-main` | `#132a1e` (Carvão Florestal) | Legibilidade máxima com nuance natural |
+| `--text-secondary`| `#3f5a4d` (Ardósia Musgo) | Subtítulos e rótulos de campos |
+
+---
+
+## 🛠️ Mudanças Propostas
+
+### 1. Estilização & Design System
+#### [MODIFY] [style.css](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/style.css)
+- Substituição das variáveis CSS com a nova paleta bio-harmônica.
+- Criação dos novos estilos para o emblema SVG da logo no sidebar.
+- Adição de classes específicas para categorização visual de animais:
+  - `.badge-domestico` (estilo âmbar / dourado aconchegante com ícone 🐶/🐱)
+  - `.badge-silvestre` (estilo esmeralda / folhagem com ícone 🦜/🦎/🦔)
+  - `.pet-avatar-domestico` e `.pet-avatar-silvestre` (gradientes temáticos nos avatares)
+- Refinamento de cartões de métricas, tabelas, modais e barra de perfil ativo com micro-gradientes e bordas sutis.
+
+### 2. Estrutura HTML & Marca
+#### [MODIFY] [index.html](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/index.html)
+- Atualização do componente de marca (logo) na barra lateral com o novo SVG comemorativo e tipografia balanceada.
+- Adição de ícones representativos nos filtros e subtítulos (fauna, penas, patas e plantas).
+- Atualização dos metadados de página e título para refletir a nova identidade.
+- Ajuste das badges e métricas da tela inicial para destacar o equilíbrio entre atendimentos domésticos e silvestres.
+
+### 3. Dinâmica e Identificação Visual em JavaScript
+#### [MODIFY] [app.js](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/app.js)
+- Melhoria no gerador de avatares e badges de pets para identificar automaticamente a espécie (Aves 🦜, Répteis 🦎/🐢, Silvestres/Exóticos 🦔/🐰, Cães 🐶, Gatos 🐱) com suas respectivas cores temáticas.
+- Atualização dos textos de feedback e simulação de perfil para refletir a identidade *VetCare Fauna & Domésticos*.
+
+---
+
+## 🔍 Plano de Verificação
+
+### Verificação Visual & Interativa
+1. **Logo & Header:** Confirmar que a nova logo SVG renderiza perfeitamente em tamanhos variados, com gradiente nítido e sem distorções.
+2. **Harmonia de Cores:** Avaliar o contraste e a estética nas 5 abas do sistema (Dashboard, Funcionários, Tutores & Pets, Agenda, Atendimento).
+3. **Diferenciação Visual Doméstico vs. Silvestre:** Validar se a lista de pacientes e fila do dia identifica claramente a categoria de cada animal através das cores e ícones temáticos.
+4. **Modais e Formulários:** Verificar se os inputs, botões e telas de impressão de receita médica / guia de manejo mantêm a nova identidade gráfica.
