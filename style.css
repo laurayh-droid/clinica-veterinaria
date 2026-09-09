@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VetCare - Sistema para Clínica Veterinária
+   VetCare - Sistema para Clínica Veterinária e Consultoria Silvestre
    Estilos CSS - Tons Neutros & Verde Água (Aqua Green Teal)
    ========================================================================== */
 
@@ -34,6 +34,16 @@
   --status-finalizado-text: #15803d;
   --status-cancelado-bg: #ffe4e6;
   --status-cancelado-text: #be123c;
+
+  /* Specialty Badges */
+  --badge-vet-bg: #e0f2fe;
+  --badge-vet-text: #0369a1;
+  --badge-adestrador-bg: #fef3c7;
+  --badge-adestrador-text: #92400e;
+  --badge-atendente-bg: #f1f5f9;
+  --badge-atendente-text: #475569;
+  --badge-silvestre-bg: #fae8ff;
+  --badge-silvestre-text: #86198f;
   
   --danger-bg: #fef2f2;
   --danger-text: #dc2626;
@@ -81,7 +91,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 260px;
+  width: 265px;
   background-color: var(--surface);
   border-right: 1px solid var(--border);
   display: flex;
@@ -116,13 +126,13 @@ body {
 .brand-title {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: var(--text-main);
   letter-spacing: -0.02em;
 }
 
 .brand-subtitle {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -143,7 +153,7 @@ body {
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -189,7 +199,7 @@ body {
 }
 
 .user-profile-label {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
@@ -203,7 +213,7 @@ body {
   border: 1px solid var(--border);
   background-color: var(--surface);
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   color: var(--text-main);
   font-weight: 500;
   outline: none;
@@ -236,7 +246,7 @@ body {
 
 .page-header-info h1 {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--text-main);
 }
@@ -289,10 +299,9 @@ body {
    Componentes & Cards
    ========================================================================== */
 
-/* Grid de Métricas */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.75rem;
 }
@@ -326,23 +335,23 @@ body {
   font-size: 1.3rem;
 }
 
-.metric-icon.warning {
+.metric-icon.purple {
+  background-color: #fae8ff;
+  color: #86198f;
+}
+
+.metric-icon.amber {
   background-color: #fef3c7;
   color: #b45309;
 }
 
-.metric-icon.danger {
-  background-color: #ffe4e6;
-  color: #be123c;
-}
-
-.metric-icon.success {
-  background-color: #dcfce7;
-  color: #15803d;
+.metric-icon.blue {
+  background-color: #e0f2fe;
+  color: #0369a1;
 }
 
 .metric-data h3 {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 500;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -351,13 +360,12 @@ body {
 
 .metric-data .value {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-main);
   margin-top: 2px;
 }
 
-/* Containers e Painéis de Conteúdo */
 .panel {
   background-color: var(--surface);
   border: 1px solid var(--border);
@@ -378,7 +386,7 @@ body {
 
 .panel-title {
   font-family: var(--font-heading);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--text-main);
   display: flex;
@@ -386,7 +394,6 @@ body {
   gap: 0.5rem;
 }
 
-/* Formulários & Filtros */
 .search-filter-bar {
   display: flex;
   gap: 1rem;
@@ -416,7 +423,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   outline: none;
   background-color: var(--surface);
   transition: border-color 0.2s ease;
@@ -427,7 +434,6 @@ body {
   box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
 }
 
-/* Botões */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -474,22 +480,12 @@ body {
   background-color: var(--primary-light);
 }
 
-.btn-danger {
-  background-color: var(--danger-text);
-  color: white;
-}
-
-.btn-danger:hover {
-  background-color: #b91c1c;
-}
-
 .btn-sm {
   padding: 0.35rem 0.7rem;
   font-size: 0.8rem;
   border-radius: var(--radius-sm);
 }
 
-/* Tabelas Estilizadas */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -520,15 +516,10 @@ body {
   vertical-align: middle;
 }
 
-.custom-table tbody tr {
-  transition: background-color 0.15s ease;
-}
-
 .custom-table tbody tr:hover {
   background-color: var(--surface-hover);
 }
 
-/* Badges de Status */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -545,22 +536,25 @@ body {
 .status-finalizado { background-color: var(--status-finalizado-bg); color: var(--status-finalizado-text); }
 .status-cancelado { background-color: var(--status-cancelado-bg); color: var(--status-cancelado-text); }
 
-/* Alerta de Estoque Zero (RN04) */
+.badge-vet { background-color: var(--badge-vet-bg); color: var(--badge-vet-text); }
+.badge-adestrador { background-color: var(--badge-adestrador-bg); color: var(--badge-adestrador-text); }
+.badge-atendente { background-color: var(--badge-atendente-bg); color: var(--badge-atendente-text); }
+.badge-silvestre { background-color: var(--badge-silvestre-bg); color: var(--badge-silvestre-text); }
+
 .alert-banner {
-  background-color: var(--danger-bg);
-  border: 1px solid var(--danger-border);
-  color: var(--danger-text);
+  background-color: var(--status-aguardando-bg);
+  border: 1px solid #fde68a;
+  color: var(--status-aguardando-text);
   padding: 0.85rem 1.25rem;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 1.25rem;
 }
 
-/* Avatar de Pet e Tutor */
 .pet-avatar {
   width: 36px;
   height: 36px;
@@ -590,7 +584,6 @@ body {
   color: var(--text-muted);
 }
 
-/* Grid de Formulários */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -634,10 +627,6 @@ textarea.form-control {
   resize: vertical;
 }
 
-/* ==========================================================================
-   Modais Interativos
-   ========================================================================== */
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -664,7 +653,7 @@ textarea.form-control {
   background-color: var(--surface);
   border-radius: var(--radius-lg);
   width: 90%;
-  max-width: 600px;
+  max-width: 620px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
@@ -686,7 +675,7 @@ textarea.form-control {
 
 .modal-header h2 {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
@@ -696,10 +685,6 @@ textarea.form-control {
   font-size: 1.25rem;
   color: var(--text-muted);
   cursor: pointer;
-}
-
-.modal-close:hover {
-  color: var(--text-main);
 }
 
 .modal-body {
@@ -717,10 +702,7 @@ textarea.form-control {
   border-bottom-right-radius: var(--radius-lg);
 }
 
-/* ==========================================================================
-   Receita Médica & Impressão (RN03)
-   ========================================================================== */
-
+/* Receita / Guia de Manejo Impresso */
 .recipe-preview {
   background-color: white;
   border: 1px solid #cbd5e1;
@@ -743,12 +725,7 @@ textarea.form-control {
 .recipe-header h2 {
   font-family: 'Outfit', sans-serif;
   color: var(--primary-hover);
-  font-size: 1.5rem;
-}
-
-.recipe-header p {
-  font-size: 0.825rem;
-  color: #64748b;
+  font-size: 1.4rem;
 }
 
 .recipe-vet-badge {
@@ -774,38 +751,12 @@ textarea.form-control {
   margin-bottom: 1.5rem;
 }
 
-.recipe-medications {
-  margin-bottom: 2rem;
-}
-
-.recipe-med-item {
-  padding: 0.85rem 0;
-  border-bottom: 1px dashed #e2e8f0;
-}
-
-.recipe-med-item strong {
-  color: #0f172a;
-  font-size: 0.95rem;
-}
-
-.recipe-med-instructions {
-  font-size: 0.85rem;
-  color: #475569;
-  margin-top: 0.25rem;
-}
-
-.recipe-footer {
-  margin-top: 3rem;
-  text-align: center;
-}
-
 .signature-line {
   width: 250px;
   border-top: 1px solid #0f172a;
-  margin: 0 auto 0.5rem auto;
+  margin: 3rem auto 0.5rem auto;
 }
 
-/* Ocultar elementos de impressão em tela comum */
 #print-recipe-area {
   display: none;
 }
@@ -826,7 +777,6 @@ textarea.form-control {
   }
 }
 
-/* Linha do Tempo de Prontuário (RF07) */
 .timeline {
   position: relative;
   padding-left: 1.5rem;
@@ -857,7 +807,6 @@ textarea.form-control {
   border-radius: 50%;
   background-color: var(--primary);
   border: 3px solid var(--surface);
-  box-shadow: 0 0 0 1px var(--primary);
 }
 
 .timeline-card {
@@ -867,28 +816,7 @@ textarea.form-control {
   padding: 1rem;
 }
 
-.timeline-date {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.timeline-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin: 0.25rem 0;
-}
-
-.timeline-body {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-/* Utilitários */
 .text-right { text-align: right; }
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
-.gap-2 { gap: 0.5rem; }
