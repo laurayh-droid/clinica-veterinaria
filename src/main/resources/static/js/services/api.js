@@ -1,5 +1,6 @@
 /**
- * Cliente de API REST para comunicação com o backend Spring Boot.
+ * Cliente de API REST para comunicação com o backend Spring Boot Monolítico.
+ * Context-path: /api
  */
 const API_BASE_URL = '/api';
 
@@ -47,25 +48,78 @@ export const ApiService = {
     }
   },
 
-  // Endpoints do Domínio Clínico & Silvestre
-  auth: {
-    login: (credentials) => ApiService.request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) })
-  },
+  // 1. Corpo Clínico & Funcionários
   funcionarios: {
-    listar: () => ApiService.request('/funcionarios'),
+    listar: (busca = '') => ApiService.request(`/funcionarios${busca ? `?busca=${encodeURIComponent(busca)}` : ''}`),
+    listarAtivos: () => ApiService.request('/funcionarios/ativos'),
     obterPorId: (id) => ApiService.request(`/funcionarios/${id}`),
-    salvar: (dados) => ApiService.request('/funcionarios', { method: 'POST', body: JSON.stringify(dados) })
+    salvar: (dados) => ApiService.request('/funcionarios', { method: 'POST', body: JSON.stringify(dados) }),
+    atualizar: (id, dados) => ApiService.request(`/funcionarios/${id}`, { method: 'PUT', body: JSON.stringify(dados) }),
+    alternarStatus: (id) => ApiService.request(`/funcionarios/${id}/status`, { method: 'PATCH' }),
+    remover: (id) => ApiService.request(`/funcionarios/${id}`, { method: 'DELETE' })
   },
+
+  // 2. Tutores
   tutores: {
-    listar: () => ApiService.request('/tutores'),
-    salvar: (dados) => ApiService.request('/tutores', { method: 'POST', body: JSON.stringify(dados) })
+    listar: (busca = '') => ApiService.request(`/tutores${busca ? `?busca=${encodeURIComponent(busca)}` : ''}`),
+    obterPorId: (id) => ApiService.request(`/tutores/${id}`),
+    salvar: (dados) => ApiService.request('/tutores', { method: 'POST', body: JSON.stringify(dados) }),
+    atualizar: (id, dados) => ApiService.request(`/tutores/${id}`, { method: 'PUT', body: JSON.stringify(dados) }),
+    remover: (id) => ApiService.request(`/tutores/${id}`, { method: 'DELETE' })
   },
+
+  // 3. Pets & Pacientes (Domésticos e Silvestres)
   pets: {
-    listar: () => ApiService.request('/pets'),
-    salvar: (dados) => ApiService.request('/pets', { method: 'POST', body: JSON.stringify(dados) })
+    listar: (filtros = {}) => {
+      const params = new URLSearchParams();
+      if (filtros.busca) params.append('busca', filtros.busca);
+      if (filtros.categoria) params.append('categoria', filtros.categoria);
+      if (filtros.tutorId) params.append('tutorId', filtros.tutorId);
+      const queryString = params.toString();
+      return ApiService.request(`/pets${queryString ? `?${queryString}` : ''}`);
+    },
+    obterPorId: (id) => ApiService.request(`/pets/${id}`),
+    salvar: (dados) => ApiService.request('/pets', { method: 'POST', body: JSON.stringify(dados) }),
+    atualizar: (id, dados) => ApiService.request(`/pets/${id}`, { method: 'PUT', body: JSON.stringify(dados) }),
+    remover: (id) => ApiService.request(`/pets/${id}`, { method: 'DELETE' })
   },
+
+  // 4. Agenda & Fila do Dia
   atendimentos: {
-    listar: () => ApiService.request('/atendimentos'),
-    salvar: (dados) => ApiService.request('/atendimentos', { method: 'POST', body: JSON.stringify(dados) })
+    listar: (data = '') => ApiService.request(`/atendimentos${data ? `?data=${data}` : ''}`),
+    listarFilaHoje: () => ApiService.request('/atendimentos/fila-hoje'),
+    listarPorPet: (petId) => ApiService.request(`/atendimentos/pet/${petId}`),
+    obterPorId: (id) => ApiService.request(`/atendimentos/${id}`),
+    salvar: (dados) => ApiService.request('/atendimentos', { method: 'POST', body: JSON.stringify(dados) }),
+    atualizarStatus: (id, status) => ApiService.request(`/atendimentos/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+    remover: (id) => ApiService.request(`/atendimentos/${id}`, { method: 'DELETE' })
+  },
+
+  // 5. Prontuários Médicos & Receituário (Médico Veterinário)
+  prontuarios: {
+    listarPorPet: (petId) => ApiService.request(`/prontuarios/pet/${petId}`),
+    obterPorId: (id) => ApiService.request(`/prontuarios/${id}`),
+    registrar: (dados) => ApiService.request('/prontuarios', { method: 'POST', body: JSON.stringify(dados) }),
+    emitirReceita: (id) => ApiService.request(`/prontuarios/${id}/receita`)
+  },
+
+  // 6. Guia de Manejo Silvestre & Adestramento (Especialista / Adestrador)
+  guiasManejo: {
+    listarPorPet: (petId) => ApiService.request(`/guias-manejo/pet/${petId}`),
+    obterPorId: (id) => ApiService.request(`/guias-manejo/${id}`),
+    registrar: (dados) => ApiService.request('/guias-manejo', { method: 'POST', body: JSON.stringify(dados) })
+  },
+
+  // 7. Vacinação & Imunizações
+  vacinas: {
+    listarPorPet: (petId) => ApiService.request(`/vacinas/pet/${petId}`),
+    obterPorId: (id) => ApiService.request(`/vacinas/${id}`),
+    cadastrar: (dados) => ApiService.request('/vacinas', { method: 'POST', body: JSON.stringify(dados) }),
+    remover: (id) => ApiService.request(`/vacinas/${id}`, { method: 'DELETE' })
+  },
+
+  // 8. Indicadores & Métricas do Dashboard
+  dashboard: {
+    obterMetricas: () => ApiService.request('/dashboard/metricas')
   }
 };

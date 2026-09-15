@@ -1,0 +1,102 @@
+# Walkthrough: Lógica de Programação e Arquitetura do Sistema VetCare
+
+Implementamos a **lógica de programação básica e a arquitetura em camadas** do sistema da Clínica Veterinária Monolítica (**VetCare Fauna & Domésticos**), estruturado no Spring Boot 3.3.3 com suporte a animais domésticos, silvestres e exóticos.
+
+---
+
+## 1. Estrutura de Pacotes Implementada
+
+```text
+src/main/java/br/com/clinicaveterinaria/
+├── ClinicaVeterinariaApplication.java
+├── config/
+│   ├── CorsConfig.java               # Configuração CORS global
+│   ├── DataInitializer.java          # Carga inicial com massa de testes rica
+│   └── OpenApiConfig.java            # Documentação interativa Swagger / OpenAPI 3
+├── controller/
+│   ├── AgendamentoController.java     # /api/atendimentos & /api/agendamentos
+│   ├── DashboardController.java       # /api/dashboard/metricas
+│   ├── FuncionarioController.java     # /api/funcionarios
+│   ├── GuiaManejoSilvestreController.java # /api/guias-manejo
+│   ├── PetController.java             # /api/pets
+│   ├── ProntuarioClinicoController.java   # /api/prontuarios
+│   ├── TutorController.java           # /api/tutores
+│   └── VacinaController.java          # /api/vacinas
+├── dto/
+│   ├── AgendamentoDTO.java            # Request, StatusUpdate & Response
+│   ├── DashboardMetricasDTO.java      # Agregação de métricas da clínica
+│   ├── FuncionarioDTO.java            # Request & Response
+│   ├── GuiaManejoSilvestreDTO.java    # Request & Response
+│   ├── PetDTO.java                    # Request, Resumo & Response
+│   ├── ProntuarioClinicoDTO.java      # Request, Response & ReceitaResponse
+│   ├── TutorDTO.java                  # Request & Response com pets
+│   └── VacinaTratamentoDTO.java       # Request & Response
+├── enums/
+│   ├── CategoriaPet.java              # DOMESTICO, SILVESTRE, EXOTICO
+│   ├── PerfilFuncionario.java         # ADMINISTRADOR, VETERINARIO, ESPECIALISTA_SILVESTRES, ATENDENTE
+│   ├── SexoPet.java                   # MACHO, FEMEA, INDEFINIDO
+│   ├── StatusAgendamento.java         # AGENDADO, AGUARDANDO, EM_ATENDIMENTO, FINALIZADO, CANCELADO
+│   └── TipoServico.java               # CONSULTA_CLINICA, CONSULTORIA_MANEJO, etc.
+├── exception/
+│   ├── ErrorResponse.java             # Formato padronizado de erro HTTP
+│   ├── GlobalExceptionHandler.java    # Interceptador global @RestControllerAdvice
+│   ├── RegraDeNegocioException.java   # Exceção de regra de negócio (HTTP 422)
+│   └── ResourceNotFoundException.java # Exceção de recurso não encontrado (HTTP 404)
+├── model/
+│   ├── Agendamento.java               # Mapeamento JPA para tb_agendamentos
+│   ├── Funcionario.java               # Mapeamento JPA para tb_funcionarios
+│   ├── GuiaManejoSilvestre.java       # Mapeamento JPA para tb_guias_manejo_silvestre
+│   ├── Pet.java                       # Mapeamento JPA para tb_pets
+│   ├── ProntuarioClinico.java         # Mapeamento JPA para tb_prontuarios_clinicos
+│   ├── Tutor.java                     # Mapeamento JPA para tb_tutores
+│   └── VacinaTratamento.java          # Mapeamento JPA para tb_vacinas_tratamentos
+├── repository/
+│   ├── AgendamentoRepository.java
+│   ├── FuncionarioRepository.java
+│   ├── GuiaManejoSilvestreRepository.java
+│   ├── PetRepository.java
+│   ├── ProntuarioClinicoRepository.java
+│   ├── TutorRepository.java
+│   └── VacinaTratamentoRepository.java
+└── service/
+    ├── AgendamentoService.java        # Gestão de horários e fila do dia
+    ├── DashboardService.java          # Indicadores e métricas em tempo real
+    ├── FuncionarioService.java        # Validação de CRMV e dados de equipe
+    ├── GuiaManejoSilvestreService.java # Consultoria de recinto e bem-estar
+    ├── PetService.java                # Vínculo obrigatório e ficha do paciente
+    ├── ProntuarioClinicoService.java  # Exame físico, diagnóstico e receitas com CRMV
+    ├── TutorService.java              # Gestão de tutores e pets associados
+    └── VacinaTratamentoService.java   # Histórico vacinal e datas de reforço
+```
+
+---
+
+## 2. Regras de Negócio Implementadas
+
+| Regra | Descrição | Onde foi implementada |
+| :--- | :--- | :--- |
+| **RN01 - Vínculo Obrigatório** | Todo pet deve estar associado a um tutor cadastrado. | [`PetService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/PetService.java) |
+| **RN02 - Separação de Competências** | Apenas Médicos Veterinários preenchem prontuários clínicos; apenas Especialistas em Silvestres / Adestradores emitem Guias de Manejo. | [`ProntuarioClinicoService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/ProntuarioClinicoService.java) e [`GuiaManejoSilvestreService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/GuiaManejoSilvestreService.java) |
+| **RN03 - CRMV Obrigatório** | Cadastro de veterinários e emissão de receitas médicas exige número de CRMV válido. | [`FuncionarioService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/FuncionarioService.java) e [`ProntuarioClinicoService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/ProntuarioClinicoService.java) |
+| **RN04 - Parâmetros Ambientais do Guia** | Para fauna silvestre e exótica, exige registro de recinto, iluminação/UVB, temperatura ou enriquecimento. | [`GuiaManejoSilvestreService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/GuiaManejoSilvestreService.java) |
+| **RN05 - Histórico Multidisciplinar** | Acesso cronológico independente a prontuários médicos e a guias de manejo. | [`ProntuarioClinicoRepository.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/repository/ProntuarioClinicoRepository.java) e [`GuiaManejoSilvestreRepository.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/repository/GuiaManejoSilvestreRepository.java) |
+| **RN06 - Gestão da Fila do Dia** | Ao registrar atendimento clínico ou sessão de manejo, o agendamento do paciente na fila do dia é automaticamente finalizado. | [`ProntuarioClinicoService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/ProntuarioClinicoService.java) e [`AgendamentoService.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/service/AgendamentoService.java) |
+
+---
+
+## 3. Carga Inicial de Dados (`DataInitializer`)
+
+O componente [`DataInitializer.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/main/java/br/com/clinicaveterinaria/config/DataInitializer.java) popula automaticamente a base com:
+- **Funcionários**: Dr. Carlos Eduardo (CRMV/SP 12345), Lucas Mendes (Especialista Silvestres), Ana Silva (Atendente), Mariana Oliveira (Administradora).
+- **Tutores & Pets**: Mariana Oliveira (Kiko - Papagaio e Nina - Gato Siamês), Roberto Almeida (Tufão - Jabuti Piranga), Fernanda Costa (Thor - Golden Retriever), Bruno Albuquerque (Pipoca - Ferret).
+- **Agendamentos**: Fila do dia com status ativos (*Em Atendimento, Aguardando, Agendado*).
+- **Prontuários e Guias**: Registros prévios de consultas clínicas e consultorias comportamentais.
+- **Vacinas**: Imunizações V10, Antirrábica e V4 com próximas doses calculadas.
+
+---
+
+## 4. Testes Unitários Criados
+
+- [`FuncionarioServiceTest.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/test/java/br/com/clinicaveterinaria/service/FuncionarioServiceTest.java): Validação de CRMV obrigatório (RN03) e unicidade de CPF.
+- [`ProntuarioClinicoServiceTest.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/test/java/br/com/clinicaveterinaria/service/ProntuarioClinicoServiceTest.java): Bloqueio de profissionais não-veterinários e sucesso na emissão com CRMV.
+- [`GuiaManejoSilvestreServiceTest.java`](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/src/test/java/br/com/clinicaveterinaria/service/GuiaManejoSilvestreServiceTest.java): Bloqueio de recepcionistas e validação de parâmetros ambientais obrigatórios (RN04).
