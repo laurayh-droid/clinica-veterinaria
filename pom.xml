@@ -69,10 +69,15 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Dependências de Teste (JUnit 5, Mockito, AssertJ) -->
+		<!-- Dependências de Teste (JUnit 5, Mockito, AssertJ, H2 in-memory DB) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

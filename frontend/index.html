@@ -397,7 +397,7 @@
                 <i class="fa-solid fa-list-check"></i>
                 Fila de Atendimento do Dia
               </div>
-              <button class="btn btn-primary btn-sm" onclick="openModal('modal-novo-agendamento')">
+              <button class="btn btn-primary btn-sm" onclick="abrirModalNovoAgendamento()">
                 <i class="fa-solid fa-plus"></i> Novo Agendamento
               </button>
             </div>
@@ -515,7 +515,7 @@
                 <i class="fa-solid fa-calendar-check"></i>
                 Agenda de Consultas Clínicas & Manejo Silvestre
               </div>
-              <button class="btn btn-primary" onclick="openModal('modal-novo-agendamento')">
+              <button class="btn btn-primary" onclick="abrirModalNovoAgendamento()">
                 <i class="fa-solid fa-calendar-plus"></i> Agendar Atendimento
               </button>
             </div>
@@ -577,7 +577,7 @@
 
               <div id="vet-selected-pet-card" class="mt-2" style="display:none; background-color: var(--bg-main); padding: 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
                 <div class="entity-info mb-2">
-                  <div class="pet-avatar" id="vet-pet-avatar">🐾</div>
+                  <div class="pet-avatar" id="vet-pet-avatar"><i class="fa-solid fa-paw"></i></div>
                   <div class="entity-details">
                     <div class="title" id="vet-pet-name">Kiko</div>
                     <div class="subtitle" id="vet-pet-species">Silvestre • Papagaio Verdadeiro</div>
@@ -696,7 +696,7 @@
 
               <div id="manejo-selected-pet-card" class="mt-2" style="display:none; background-color: var(--bg-main); padding: 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
                 <div class="entity-info mb-2">
-                  <div class="pet-avatar pet-avatar-silvestre" id="manejo-pet-avatar">🦜</div>
+                  <div class="pet-avatar pet-avatar-silvestre" id="manejo-pet-avatar"><i class="fa-solid fa-feather"></i></div>
                   <div class="entity-details">
                     <div class="title" id="manejo-pet-name">Kiko</div>
                     <div class="subtitle" id="manejo-pet-species">Silvestre • Papagaio Verdadeiro</div>
@@ -1033,6 +1033,13 @@
       <form id="form-novo-agendamento" onsubmit="salvarAgendamento(event)">
         <div class="modal-body form-grid">
           <div class="form-group full-width">
+            <label class="form-label"><i class="fa-solid fa-user"></i> Tutor / Cliente (Filtro)</label>
+            <select id="agendamento-tutor-select" class="form-control" onchange="onAgendamentoTutorChange()">
+              <option value="">-- Todos os Tutores --</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
             <label class="form-label">Selecione o Paciente (Pet / Tutor) *</label>
             <select id="agendamento-pet-select" class="form-control" required>
               <!-- Dinâmico via JS -->
@@ -1041,11 +1048,12 @@
 
           <div class="form-group full-width">
             <label class="form-label">Tipo de Serviço *</label>
-            <select id="agendamento-tipo-servico" class="form-control" required>
+            <select id="agendamento-tipo-servico" class="form-control" onchange="filterProfissionaisPorTipoServico()" required>
               <option value="Consulta Clínica Veterinária">Consulta Clínica Veterinária (Vet)</option>
               <option value="Consultoria de Manejo & Adestramento Silvestre">Consultoria de Manejo & Adestramento (Silvestres)</option>
               <option value="Check-up Nutricional e Recinto">Check-up de Recinto & Bem-Estar</option>
-              <option value="Retorno Clínico">Retorno Clínico</option>
+              <option value="Retorno Clínico">Retorno Clínico (Vet)</option>
+              <option value="Vacinação & Imunização">Vacinação & Imunização (Vet)</option>
             </select>
           </div>
 
@@ -1097,7 +1105,7 @@
 
         <div id="recipe-preview-container" class="recipe-preview mt-2" style="display:none;">
           <div class="recipe-header">
-            <h2>🩺 VetCare Fauna & Domésticos</h2>
+            <h2><i class="fa-solid fa-stethoscope"></i> VetCare Fauna & Domésticos</h2>
             <p>Clínica Veterinária Integrada & Medicina Especializada</p>
             <div class="recipe-vet-badge" id="recipe-vet-info">
               Dr. Carlos Eduardo - CRMV/SP 12345
@@ -1155,7 +1163,7 @@
 
         <div id="guia-preview-container" class="guia-preview-box mt-2" style="display:none;">
           <div class="guia-header">
-            <h2>🌿 VetCare Fauna & Domésticos</h2>
+            <h2><i class="fa-solid fa-leaf"></i> VetCare Fauna & Domésticos</h2>
             <p style="font-size:0.85rem; color:var(--text-secondary);">Centro de Manejo, Enriquecimento e Bem-Estar de Animais Silvestres & Exóticos</p>
             <div class="status-badge badge-adestrador mt-1" id="guia-consultor-info">
               Lucas Mendes — Especialista em Manejo & Comportamento

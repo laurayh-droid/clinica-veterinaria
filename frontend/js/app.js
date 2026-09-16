@@ -23,33 +23,33 @@ function getPetTheme(pet) {
 
   // Aves
   if (breed.includes('papagaio') || breed.includes('arara') || breed.includes('calopsita') || breed.includes('ave') || breed.includes('periquito') || breed.includes('tucano') || breed.includes('cacatua')) {
-    return { icon: '🦜', badgeClass: 'badge-ave', avatarClass: 'pet-avatar-ave', typeName: 'Ave Silvestre' };
+    return { icon: '<i class="fa-solid fa-feather"></i>', badgeClass: 'badge-ave', avatarClass: 'pet-avatar-ave', typeName: 'Ave Silvestre' };
   }
   // Répteis
   if (breed.includes('jabuti') || breed.includes('tartaruga') || breed.includes('cágado')) {
-    return { icon: '🐢', badgeClass: 'badge-reptil', avatarClass: 'pet-avatar-reptil', typeName: 'Réptil (Quelônio)' };
+    return { icon: '<i class="fa-solid fa-shield-halved"></i>', badgeClass: 'badge-reptil', avatarClass: 'pet-avatar-reptil', typeName: 'Réptil (Quelônio)' };
   }
   if (breed.includes('iguana') || breed.includes('teiú') || breed.includes('lagarto') || breed.includes('serpente') || breed.includes('jiboia') || breed.includes('corn snake') || breed.includes('cobra') || breed.includes('dragão')) {
-    return { icon: '🦎', badgeClass: 'badge-reptil', avatarClass: 'pet-avatar-reptil', typeName: 'Réptil (Escamado)' };
+    return { icon: '<i class="fa-solid fa-dragon"></i>', badgeClass: 'badge-reptil', avatarClass: 'pet-avatar-reptil', typeName: 'Réptil (Escamado)' };
   }
   // Mamíferos exóticos / silvestres
   if (breed.includes('ferret') || breed.includes('furão') || breed.includes('chinchila') || breed.includes('porquinho') || breed.includes('hamster') || breed.includes('coelho') || breed.includes('mini pig')) {
-    return { icon: '🦔', badgeClass: 'badge-silvestre', avatarClass: 'pet-avatar-silvestre', typeName: 'Mamífero Exótico' };
+    return { icon: '<i class="fa-solid fa-leaf"></i>', badgeClass: 'badge-silvestre', avatarClass: 'pet-avatar-silvestre', typeName: 'Mamífero Exótico' };
   }
   // Domésticos - Caninos
   if (breed.includes('cão') || breed.includes('cachorro') || breed.includes('golden') || breed.includes('poodle') || breed.includes('pastor') || breed.includes('buldogue') || breed.includes('shih') || breed.includes('labrador') || breed.includes('srd')) {
-    return { icon: '🐶', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Canino Doméstico' };
+    return { icon: '<i class="fa-solid fa-dog"></i>', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Canino Doméstico' };
   }
   // Domésticos - Felinos
   if (breed.includes('gato') || breed.includes('felino') || breed.includes('siamês') || breed.includes('persa') || breed.includes('angorá')) {
-    return { icon: '🐱', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Felino Doméstico' };
+    return { icon: '<i class="fa-solid fa-cat"></i>', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Felino Doméstico' };
   }
 
   // Fallback baseado na categoria selecionada
   if (cat.includes('silvestre') || cat.includes('exótico')) {
-    return { icon: '🌿', badgeClass: 'badge-silvestre', avatarClass: 'pet-avatar-silvestre', typeName: 'Fauna Silvestre' };
+    return { icon: '<i class="fa-solid fa-leaf"></i>', badgeClass: 'badge-silvestre', avatarClass: 'pet-avatar-silvestre', typeName: 'Fauna Silvestre' };
   }
-  return { icon: '🐾', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Pet Doméstico' };
+  return { icon: '<i class="fa-solid fa-paw"></i>', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Pet Doméstico' };
 }
 
 // Estado Inicial Pré-carregado com Prontuários e Guias de Manejo Separados
@@ -465,7 +465,7 @@ function renderFilaDia() {
       if (p) { petObj = p; break; }
     }
 
-    const theme = petObj ? getPetTheme(petObj) : { icon: '🐾', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Pet' };
+    const theme = petObj ? getPetTheme(petObj) : { icon: '<i class="fa-solid fa-paw"></i>', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Pet' };
     const isManejo = ag.tipoServico.includes('Manejo') || ag.tipoServico.includes('Adestramento') || ag.tipoServico.includes('Recinto');
 
     let statusClass = 'status-agendado';
@@ -816,11 +816,14 @@ function renderTutores(filter = '') {
             <span class="status-badge ${theme.badgeClass}" style="margin-right:5px;">
               ${theme.icon} <strong>${p.nome}</strong> (${p.especieRaca})
             </span>
-            <small style="color:var(--text-muted);">[🩺 ${qtdVet} Clínicos | 🌿 ${qtdManejo} Manejos]</small>
+            <small style="color:var(--text-muted);">[<i class="fa-solid fa-stethoscope"></i> ${qtdVet} Clínicos | <i class="fa-solid fa-leaf"></i> ${qtdManejo} Manejos]</small>
           </div>
-          <div>
+          <div style="display:flex; gap:4px;">
             <button class="btn btn-outline btn-sm" style="padding:2px 8px; font-size:0.75rem;" onclick="editarPet(${tutor.id}, ${p.id})" title="Editar Paciente">
               <i class="fa-solid fa-pen"></i> Editar Pet
+            </button>
+            <button class="btn btn-secondary btn-sm" style="padding:2px 8px; font-size:0.75rem;" onclick="agendarParaTutor(${tutor.id}, ${p.id})" title="Agendar Atendimento para este Paciente">
+              <i class="fa-solid fa-calendar-plus"></i> Agendar
             </button>
           </div>
         </div>
@@ -837,7 +840,7 @@ function renderTutores(filter = '') {
         <button class="btn btn-outline btn-sm" style="margin-right:4px;" onclick="editarTutor(${tutor.id})" title="Editar Tutor e Paciente">
           <i class="fa-solid fa-user-pen"></i> Editar Tutor
         </button>
-        <button class="btn btn-secondary btn-sm" onclick="agendarParaTutor(${tutor.id})" title="Agendar Consulta">
+        <button class="btn btn-secondary btn-sm" onclick="agendarParaTutor(${tutor.id})" title="Agendar Consulta para este Tutor">
           <i class="fa-solid fa-calendar-plus"></i> Agendar
         </button>
       </td>
@@ -850,15 +853,17 @@ function filterTutores(val) {
   renderTutores(val);
 }
 
-function agendarParaTutor(tutorId) {
+function agendarParaTutor(tutorId, petId = null) {
   const tutor = state.tutores.find(t => t.id === tutorId);
-  if (tutor && tutor.pets.length > 0) {
-    openModal('modal-novo-agendamento');
-    const select = document.getElementById('agendamento-pet-select');
-    if (select) {
-      select.value = tutor.pets[0].id;
-    }
+  if (!tutor) return;
+
+  if (!tutor.pets || tutor.pets.length === 0) {
+    alert(`O tutor "${tutor.nome}" não possui animais/pets cadastrados para agendamento.`);
+    return;
   }
+
+  const selectedPetId = petId || tutor.pets[0].id;
+  abrirModalNovoAgendamento(tutorId, selectedPetId);
 }
 
 // 4. Agenda Integrada
@@ -879,7 +884,7 @@ function renderAgendaTable(dateVal) {
       const p = t.pets.find(pet => pet.id === ag.petId);
       if (p) { petObj = p; break; }
     }
-    const theme = petObj ? getPetTheme(petObj) : { icon: '🐾', badgeClass: 'badge-domestico' };
+    const theme = petObj ? getPetTheme(petObj) : { icon: '<i class="fa-solid fa-paw"></i>', badgeClass: 'badge-domestico' };
     const isManejo = ag.tipoServico.includes('Manejo') || ag.tipoServico.includes('Adestramento') || ag.tipoServico.includes('Recinto');
 
     const tr = document.createElement('tr');
@@ -905,14 +910,12 @@ function loadAgendaTable(dateVal) {
 function populatePetSelects() {
   const selectVet = document.getElementById('vet-pet-select');
   const selectManejo = document.getElementById('manejo-pet-select');
-  const selectAgendamento = document.getElementById('agendamento-pet-select');
 
   if (selectVet) {
     selectVet.innerHTML = '<option value="">-- Selecione um paciente --</option>';
     state.tutores.forEach(t => {
       t.pets.forEach(p => {
-        const theme = getPetTheme(p);
-        selectVet.innerHTML += `<option value="${p.id}">${theme.icon} ${p.nome} (${p.especieRaca}) - Tutor: ${t.nome}</option>`;
+        selectVet.innerHTML += `<option value="${p.id}">${p.nome} (${p.especieRaca}) - Tutor: ${t.nome}</option>`;
       });
     });
   }
@@ -921,32 +924,135 @@ function populatePetSelects() {
     selectManejo.innerHTML = '<option value="">-- Selecione um paciente --</option>';
     state.tutores.forEach(t => {
       t.pets.forEach(p => {
-        const theme = getPetTheme(p);
-        selectManejo.innerHTML += `<option value="${p.id}">${theme.icon} ${p.nome} [${p.categoria}] - Tutor: ${t.nome}</option>`;
+        selectManejo.innerHTML += `<option value="${p.id}">${p.nome} [${p.categoria}] - Tutor: ${t.nome}</option>`;
       });
     });
   }
 
-  if (selectAgendamento) {
+  const tutorSelect = document.getElementById('agendamento-tutor-select');
+  const currentTutorVal = tutorSelect ? tutorSelect.value : '';
+  populateAgendamentoTutorSelect(currentTutorVal);
+
+  const agendamentoPetSelect = document.getElementById('agendamento-pet-select');
+  const currentPetVal = agendamentoPetSelect ? agendamentoPetSelect.value : null;
+  updateAgendamentoPetSelectOptions(currentTutorVal, currentPetVal);
+}
+
+function populateAgendamentoTutorSelect(selectedTutorId = '') {
+  const tutorSelect = document.getElementById('agendamento-tutor-select');
+  if (!tutorSelect) return;
+
+  let html = '<option value="">-- Todos os Tutores --</option>';
+  state.tutores.forEach(t => {
+    const isSelected = selectedTutorId && String(t.id) === String(selectedTutorId) ? 'selected' : '';
+    const petCount = (t.pets || []).length;
+    html += `<option value="${t.id}" ${isSelected}>${t.nome} (${petCount} ${petCount === 1 ? 'pet' : 'pets'})</option>`;
+  });
+  tutorSelect.innerHTML = html;
+}
+
+function updateAgendamentoPetSelectOptions(tutorId = '', selectPetId = null) {
+  const selectAgendamento = document.getElementById('agendamento-pet-select');
+  if (!selectAgendamento) return;
+
+  selectAgendamento.innerHTML = '';
+
+  const targetTutorId = tutorId ? parseInt(tutorId) : null;
+
+  if (targetTutorId) {
+    const tutor = state.tutores.find(t => t.id === targetTutorId);
+    if (tutor && tutor.pets && tutor.pets.length > 0) {
+      selectAgendamento.innerHTML = `<option value="">-- Selecione o Paciente de ${tutor.nome} --</option>`;
+      tutor.pets.forEach(p => {
+        const isSelected = selectPetId && String(p.id) === String(selectPetId) ? 'selected' : '';
+        selectAgendamento.innerHTML += `<option value="${p.id}" ${isSelected}>${p.nome} [${p.categoria}] - ${p.especieRaca}</option>`;
+      });
+    } else {
+      selectAgendamento.innerHTML = `<option value="">-- Este tutor não possui pets cadastrados --</option>`;
+    }
+  } else {
     selectAgendamento.innerHTML = '<option value="">-- Selecione o Paciente --</option>';
     state.tutores.forEach(t => {
-      t.pets.forEach(p => {
-        const theme = getPetTheme(p);
-        selectAgendamento.innerHTML += `<option value="${p.id}">${theme.icon} ${p.nome} [${p.categoria}] - Tutor: ${t.nome}</option>`;
-      });
+      if (t.pets && t.pets.length > 0) {
+        let optgroupHtml = `<optgroup label="Tutor: ${t.nome}">`;
+        t.pets.forEach(p => {
+          const isSelected = selectPetId && String(p.id) === String(selectPetId) ? 'selected' : '';
+          optgroupHtml += `<option value="${p.id}" ${isSelected}>${p.nome} [${p.categoria}] - ${p.especieRaca}</option>`;
+        });
+        optgroupHtml += `</optgroup>`;
+        selectAgendamento.innerHTML += optgroupHtml;
+      }
     });
+  }
+
+  if (selectPetId) {
+    selectAgendamento.value = selectPetId;
   }
 }
 
+function onAgendamentoTutorChange() {
+  const tutorSelect = document.getElementById('agendamento-tutor-select');
+  const tutorId = tutorSelect ? tutorSelect.value : '';
+  updateAgendamentoPetSelectOptions(tutorId);
+}
+
+function abrirModalNovoAgendamento(tutorId = null, petId = null) {
+  populateAgendamentoTutorSelect(tutorId || '');
+  updateAgendamentoPetSelectOptions(tutorId || '', petId);
+  openModal('modal-novo-agendamento');
+}
+
 function populateProfissionalSelects() {
-  const selectAgendamento = document.getElementById('agendamento-profissional-select');
-  if (selectAgendamento) {
-    selectAgendamento.innerHTML = '';
-    state.funcionarios.forEach(f => {
-      if (f.cargo !== 'Atendente') {
-        selectAgendamento.innerHTML += `<option value="${f.nome} (${f.cargo})">${f.nome} (${f.cargo})</option>`;
-      }
-    });
+  filterProfissionaisPorTipoServico();
+}
+
+function filterProfissionaisPorTipoServico() {
+  const tipoSelect = document.getElementById('agendamento-tipo-servico');
+  const profSelect = document.getElementById('agendamento-profissional-select');
+  if (!tipoSelect || !profSelect) return;
+
+  const tipo = tipoSelect.value || '';
+  const previousVal = profSelect.value;
+
+  profSelect.innerHTML = '';
+
+  const isVetService = tipo.includes('Consulta') || tipo.includes('Vacinação') || tipo.includes('Retorno') || tipo.includes('Clínica');
+  const isManejoService = tipo.includes('Manejo') || tipo.includes('Adestramento') || tipo.includes('Recinto') || tipo.includes('Nutricional');
+
+  let compatibleCount = 0;
+  let firstVal = null;
+  let matchesPrevious = false;
+
+  state.funcionarios.forEach(f => {
+    if (f.cargo === 'Atendente') return;
+
+    let isCompatible = false;
+    if (isVetService && f.cargo.includes('Veterinário')) {
+      isCompatible = true;
+    } else if (isManejoService && (f.cargo.includes('Adestrador') || f.cargo.includes('Silvestres') || f.cargo.includes('Administrador'))) {
+      isCompatible = true;
+    } else if (!isVetService && !isManejoService) {
+      isCompatible = true;
+    }
+
+    if (isCompatible) {
+      const optionVal = `${f.nome} (${f.cargo})`;
+      if (!firstVal) firstVal = optionVal;
+      if (optionVal === previousVal) matchesPrevious = true;
+
+      profSelect.innerHTML += `<option value="${optionVal}">${optionVal}</option>`;
+      compatibleCount++;
+    }
+  });
+
+  if (compatibleCount === 0) {
+    profSelect.innerHTML = `<option value="" disabled selected>Nenhum profissional compatível cadastrado</option>`;
+  } else {
+    if (matchesPrevious && previousVal) {
+      profSelect.value = previousVal;
+    } else if (firstVal) {
+      profSelect.value = firstVal;
+    }
   }
 }
 
@@ -1405,6 +1511,35 @@ function salvarAgendamento(e) {
   const hora = document.getElementById('agendamento-hora').value;
   const profissional = document.getElementById('agendamento-profissional-select').value;
 
+  if (!petId) {
+    alert('Por favor, selecione um paciente!');
+    return;
+  }
+
+  if (!profissional) {
+    alert('Por favor, selecione um profissional responsável compatível com o tipo de atendimento!');
+    return;
+  }
+
+  const isVetService = tipoServico.includes('Consulta') || tipoServico.includes('Vacinação') || tipoServico.includes('Retorno') || tipoServico.includes('Clínica');
+  const isManejoService = tipoServico.includes('Manejo') || tipoServico.includes('Adestramento') || tipoServico.includes('Recinto') || tipoServico.includes('Nutricional');
+
+  const funcEncontrado = state.funcionarios.find(f => profissional.includes(f.nome));
+  if (funcEncontrado) {
+    if (funcEncontrado.cargo === 'Atendente') {
+      alert('Erro: Recepcionistas/Atendentes não prestam atendimento técnico/clínico e não podem ser designados como profissional responsável.');
+      return;
+    }
+    if (isVetService && !funcEncontrado.cargo.includes('Veterinário')) {
+      alert(`Erro: O tipo de atendimento "${tipoServico}" exige um Médico Veterinário. O profissional "${funcEncontrado.nome}" é "${funcEncontrado.cargo}".`);
+      return;
+    }
+    if (isManejoService && !funcEncontrado.cargo.includes('Adestrador') && !funcEncontrado.cargo.includes('Silvestres') && !funcEncontrado.cargo.includes('Administrador')) {
+      alert(`Erro: O tipo de atendimento "${tipoServico}" exige um Especialista em Silvestres / Adestrador. O profissional "${funcEncontrado.nome}" é "${funcEncontrado.cargo}".`);
+      return;
+    }
+  }
+
   let petNome = '';
   let tutorNome = '';
 
@@ -1461,7 +1596,12 @@ function salvarVacina(e) {
 
 function openModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (modal) modal.classList.add('active');
+  if (modal) {
+    modal.classList.add('active');
+    if (modalId === 'modal-novo-agendamento') {
+      filterProfissionaisPorTipoServico();
+    }
+  }
 }
 
 function closeModal(modalId) {
