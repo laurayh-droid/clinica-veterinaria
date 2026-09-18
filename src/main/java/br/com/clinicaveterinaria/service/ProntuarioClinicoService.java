@@ -106,7 +106,7 @@ public class ProntuarioClinicoService {
         }
 
         return new ProntuarioClinicoDTO.ReceitaResponse(
-                "VetCare Fauna & Domésticos - Clínica e Consultoria Veterinária",
+                "ZooMed Fauna & Domésticos - Clínica e Consultoria Veterinária",
                 p.getVeterinario().getNome(),
                 p.getVeterinario().getCrmv(),
                 p.getPet().getNome(),

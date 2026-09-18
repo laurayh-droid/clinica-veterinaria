@@ -17,15 +17,15 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("VetCare Fauna & Domésticos - API Clínica Veterinária")
+                        .title("ZooMed Fauna & Domésticos - API Clínica Veterinária")
                         .description("Sistema Monolítico para Gestão de Clínica e Consultoria Veterinária Especializada em Pets Domésticos, Silvestres e Exóticos.")
                         .version("1.0.0")
                         .contact(new Contact()
-                                .name("Equipe VetCare")
-                                .email("suporte@vetcare.com.br")
-                                .url("https://vetcare.com.br"))
+                                .name("Equipe ZooMed")
+                                .email("suporte@zoomed.com.br")
+                                .url("https://zoomed.com.br"))
                         .license(new License()
                                 .name("Proprietário / Uso Interno")
-                                .url("https://vetcare.com.br/licenca")));
+                                .url("https://zoomed.com.br/licenca")));
     }
 }

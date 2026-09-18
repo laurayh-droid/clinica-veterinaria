@@ -31,7 +31,7 @@ class FuncionarioServiceTest {
         FuncionarioDTO.Request request = new FuncionarioDTO.Request(
                 "Dr. Roberto",
                 "123.456.789-00",
-                "roberto@vetcare.com",
+                "roberto@zoomed.com",
                 "(11) 99999-8888",
                 PerfilFuncionario.VETERINARIO,
                 "" // CRMV vazio
@@ -50,7 +50,7 @@ class FuncionarioServiceTest {
         FuncionarioDTO.Request request = new FuncionarioDTO.Request(
                 "Dr. Carlos",
                 "111.222.333-44",
-                "carlos@vetcare.com",
+                "carlos@zoomed.com",
                 "(11) 98888-1111",
                 PerfilFuncionario.VETERINARIO,
                 "CRMV/SP 12345"
@@ -85,7 +85,7 @@ class FuncionarioServiceTest {
         FuncionarioDTO.Request request = new FuncionarioDTO.Request(
                 "Lucas Mendes",
                 "555.666.777-88",
-                "lucas@vetcare.com",
+                "lucas@zoomed.com",
                 "(11) 97777-2222",
                 PerfilFuncionario.ESPECIALISTA_SILVESTRES,
                 null

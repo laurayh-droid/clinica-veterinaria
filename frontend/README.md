@@ -1,4 +1,4 @@
-# 🎨 Estrutura do Template Frontend - VetCare Fauna & Domésticos
+# 🎨 Estrutura do Template Frontend - ZooMed Fauna & Domésticos
 
 Este diretório contém os componentes, folhas de estilo, scripts e recursos estáticos organizados no padrão de **Template Web Monolítico**.
 

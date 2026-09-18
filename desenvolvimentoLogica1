@@ -1,6 +1,6 @@
-# Walkthrough: Lógica de Programação e Arquitetura do Sistema VetCare
+# Walkthrough: Lógica de Programação e Arquitetura do Sistema ZooMed
 
-Implementamos a **lógica de programação básica e a arquitetura em camadas** do sistema da Clínica Veterinária Monolítica (**VetCare Fauna & Domésticos**), estruturado no Spring Boot 3.3.3 com suporte a animais domésticos, silvestres e exóticos.
+Implementamos a **lógica de programação básica e a arquitetura em camadas** do sistema da Clínica Veterinária Monolítica (**ZooMed Fauna & Domésticos**), estruturado no Spring Boot 3.3.3 com suporte a animais domésticos, silvestres e exóticos.
 
 ---
 

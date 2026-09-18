@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VetCare Fauna & Domésticos - Sistema Clínico e Consultoria Silvestre
+   ZooMed Fauna & Domésticos - Sistema Clínico e Consultoria Silvestre
    Lógica JavaScript: Autenticação, Prontuário Médico & Guia de Manejo
    ========================================================================== */
 
@@ -7,10 +7,10 @@ const CURRENT_DATE = new Date().toISOString().split('T')[0];
 
 // Perfis e Usuários Simulados no Sistema
 const USERS = {
-  vet: { name: 'Dr. Carlos Eduardo', role: 'Médico Veterinário', crmv: 'CRMV/SP 12345', cargoKey: 'Veterinário', email: 'carlos.vet@vetcare.com' },
-  adestrador: { name: 'Lucas Mendes', role: 'Adestrador / Esp. Silvestres', crmv: '', cargoKey: 'Adestrador / Esp. Silvestres', email: 'lucas.adestrador@vetcare.com' },
-  recepcao: { name: 'Ana Silva', role: 'Atendente / Recepcionista', crmv: '', cargoKey: 'Atendente', email: 'ana.recepcao@vetcare.com' },
-  admin: { name: 'Mariana Oliveira', role: 'Administradora Geral', crmv: '', cargoKey: 'Administrador', email: 'mariana.admin@vetcare.com' }
+  vet: { name: 'Dr. Carlos Eduardo', role: 'Médico Veterinário', crmv: 'CRMV/SP 12345', cargoKey: 'Veterinário', email: 'carlos.vet@zoomed.com' },
+  adestrador: { name: 'Lucas Mendes', role: 'Adestrador / Esp. Silvestres', crmv: '', cargoKey: 'Adestrador / Esp. Silvestres', email: 'lucas.adestrador@zoomed.com' },
+  recepcao: { name: 'Ana Silva', role: 'Atendente / Recepcionista', crmv: '', cargoKey: 'Atendente', email: 'ana.recepcao@zoomed.com' },
+  admin: { name: 'Mariana Oliveira', role: 'Administradora Geral', crmv: '', cargoKey: 'Administrador', email: 'mariana.admin@zoomed.com' }
 };
 
 let currentUserRole = 'vet'; // Perfil ativo por padrão
@@ -55,9 +55,9 @@ function getPetTheme(pet) {
 // Estado Inicial Pré-carregado com Prontuários e Guias de Manejo Separados
 let state = {
   funcionarios: [
-    { id: 1, nome: 'Dr. Carlos Eduardo', cpf: '111.222.333-44', email: 'carlos.vet@vetcare.com', telefone: '(11) 98888-1111', cargo: 'Veterinário', crmv: 'CRMV/SP 12345' },
-    { id: 2, nome: 'Lucas Mendes', cpf: '555.666.777-88', email: 'lucas.adestrador@vetcare.com', telefone: '(11) 97777-2222', cargo: 'Adestrador / Esp. Silvestres', crmv: '' },
-    { id: 3, nome: 'Ana Silva', cpf: '999.888.777-66', email: 'ana.recepcao@vetcare.com', telefone: '(11) 96666-3333', cargo: 'Atendente', crmv: '' }
+    { id: 1, nome: 'Dr. Carlos Eduardo', cpf: '111.222.333-44', email: 'carlos.vet@zoomed.com', telefone: '(11) 98888-1111', cargo: 'Veterinário', crmv: 'CRMV/SP 12345' },
+    { id: 2, nome: 'Lucas Mendes', cpf: '555.666.777-88', email: 'lucas.adestrador@zoomed.com', telefone: '(11) 97777-2222', cargo: 'Adestrador / Esp. Silvestres', crmv: '' },
+    { id: 3, nome: 'Ana Silva', cpf: '999.888.777-66', email: 'ana.recepcao@zoomed.com', telefone: '(11) 96666-3333', cargo: 'Atendente', crmv: '' }
   ],
   tutores: [
     {
@@ -163,7 +163,7 @@ let state = {
 };
 
 function loadState() {
-  const saved = localStorage.getItem('vetcare_fauna_state_v4');
+  const saved = localStorage.getItem('zoomed_fauna_state_v4') || localStorage.getItem('vetcare_fauna_state_v4');
   if (saved) {
     try {
       state = JSON.parse(saved);
@@ -176,7 +176,7 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem('vetcare_fauna_state_v4', JSON.stringify(state));
+  localStorage.setItem('zoomed_fauna_state_v4', JSON.stringify(state));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

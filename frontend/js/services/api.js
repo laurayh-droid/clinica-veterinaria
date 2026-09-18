@@ -15,7 +15,7 @@ export const ApiService = {
     };
 
     // Adiciona token JWT se presente
-    const token = localStorage.getItem('vetcare_auth_token');
+    const token = localStorage.getItem('zoomed_auth_token') || localStorage.getItem('vetcare_auth_token');
     if (token) {
       defaultHeaders['Authorization'] = `Bearer ${token}`;
     }

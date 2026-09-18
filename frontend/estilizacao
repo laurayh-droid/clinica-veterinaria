@@ -1,6 +1,6 @@
 # Identidade Visual & Paleta: Harmonia entre Pets Domésticos e Silvestres / Exóticos
 
-Este plano define a reformulação visual do sistema **VetCare (Fauna & Pets)** para transmitir com clareza e elegância a proposta única da clínica: um ambiente de acolhimento e excelência médica tanto para animais de estimação convencionais (cães, gatos) quanto para fauna silvestre e espécies exóticas (aves, répteis, roedores exóticos e pequenos mamíferos).
+Este plano define a reformulação visual do sistema **ZooMed (Fauna & Pets)** para transmitir com clareza e elegância a proposta única da clínica: um ambiente de acolhimento e excelência médica tanto para animais de estimação convencionais (cães, gatos) quanto para fauna silvestre e espécies exóticas (aves, répteis, roedores exóticos e pequenos mamíferos).
 
 ---
 
@@ -8,14 +8,14 @@ Este plano define a reformulação visual do sistema **VetCare (Fauna & Pets)** 
 
 ### 1. Simbologia e Logo
 - **Logo Vetorial (SVG Nativo):** Um emblema orgânico e moderno que une a **pata acolhedora** dos pets tradicionais a elementos da **natureza silvestre** (uma folha tropical estilizada / pena de ave exótica / contornos fluidos da fauna) inscritos em um gradiente suave.
-- **Assinatura da Marca:** **VetCare Fauna & Domésticos** — *Medicina Veterinária & Manejo de Silvestres*.
+- **Assinatura da Marca:** **ZooMed Fauna & Domésticos** — *Medicina Veterinária & Manejo de Silvestres*.
 
 ```
        [ 🌿 Folha / Pena Silvestre ]
                      +
            [ 🐾 Pata Doméstica ]
                      =
-   [ Emblema Integrado VetCare Fauna & Pets ]
+   [ Emblema Integrado ZooMed Fauna & Pets ]
 ```
 
 ### 2. Nova Paleta de Cores (Bio-Harmônica)
@@ -59,7 +59,7 @@ Combinação equilibrada entre a vitalidade e riqueza da fauna/flora silvestre (
 ### 3. Dinâmica e Identificação Visual em JavaScript
 #### [MODIFY] [app.js](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/app.js)
 - Melhoria no gerador de avatares e badges de pets para identificar automaticamente a espécie (Aves 🦜, Répteis 🦎/🐢, Silvestres/Exóticos 🦔/🐰, Cães 🐶, Gatos 🐱) com suas respectivas cores temáticas.
-- Atualização dos textos de feedback e simulação de perfil para refletir a identidade *VetCare Fauna & Domésticos*.
+- Atualização dos textos de feedback e simulação de perfil para refletir a identidade *ZooMed Fauna & Domésticos*.
 
 ---
 
