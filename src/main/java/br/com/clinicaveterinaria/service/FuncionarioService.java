@@ -47,7 +47,7 @@ public class FuncionarioService {
     @Transactional(readOnly = true)
     public FuncionarioDTO.Response buscarPorId(Long id) {
         Funcionario f = obterEntidade(id);
-        return FuncionarioDTO.Response::fromEntity.apply(f);
+        return FuncionarioDTO.Response.fromEntity(f);
     }
 
     @Transactional(readOnly = true)

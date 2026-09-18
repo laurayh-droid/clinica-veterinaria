@@ -70,8 +70,8 @@ public class AgendamentoService {
         Funcionario profissional = null;
         if (request.profissionalId() != null) {
             profissional = funcionarioService.obterEntidade(request.profissionalId());
-            validarCompetenciaProfissional(request.tipoServico(), profissional);
         }
+        validarCompetenciaProfissional(request.tipoServico(), profissional);
 
         Agendamento agendamento = Agendamento.builder()
                 .data(request.data())
@@ -108,15 +108,21 @@ public class AgendamentoService {
     }
 
     private void validarCompetenciaProfissional(TipoServico tipoServico, Funcionario profissional) {
-        if (profissional == null) return;
+        if (profissional == null) {
+            throw new RegraDeNegocioException("O profissional responsável é obrigatório para realizar o agendamento.");
+        }
 
-        if (tipoServico == TipoServico.CONSULTA_CLINICA || tipoServico == TipoServico.VACINACAO) {
+        if (profissional.getCargo() == PerfilFuncionario.ATENDENTE) {
+            throw new RegraDeNegocioException("Recepcionistas/Atendentes não prestam atendimento técnico ou clínico e não podem ser designados como profissional responsável (RN02).");
+        }
+
+        if (tipoServico == TipoServico.CONSULTA_CLINICA || tipoServico == TipoServico.VACINACAO || tipoServico == TipoServico.RETORNO) {
             if (profissional.getCargo() != PerfilFuncionario.VETERINARIO) {
-                throw new RegraDeNegocioException("Consultas clínicas e vacinações devem ser atribuídas a um Médico Veterinário (RN02).");
+                throw new RegraDeNegocioException("Atendimentos clínicos (consultas, vacinações e retornos) devem ser atribuídos a um Médico Veterinário (RN02).");
             }
         } else if (tipoServico == TipoServico.CONSULTORIA_MANEJO || tipoServico == TipoServico.CHECKUP_NUTRICIONAL) {
             if (profissional.getCargo() != PerfilFuncionario.ESPECIALISTA_SILVESTRES && profissional.getCargo() != PerfilFuncionario.ADMINISTRADOR) {
-                throw new RegraDeNegocioException("Consultorias de manejo silvestre e adestramento devem ser atribuídas a um Especialista em Silvestres / Adestrador (RN02).");
+                throw new RegraDeNegocioException("Consultorias de manejo silvestre, recinto e adestramento devem ser atribuídas a um Especialista em Silvestres / Adestrador (RN02).");
             }
         }
     }
