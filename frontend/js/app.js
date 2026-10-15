@@ -384,6 +384,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initDateDisplay();
   updateNavAccessBadges();
   renderAll();
+
+  // Verifica parâmetros de URL para demonstração via portfólio
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailParam = urlParams.get('email');
+    if (emailParam) {
+      const emailInput = document.getElementById('login-email');
+      if (emailInput) emailInput.value = emailParam;
+      for (const [key, u] of Object.entries(USERS)) {
+        if (u.email.toLowerCase() === emailParam.toLowerCase()) {
+          const pwdInput = document.getElementById('login-password');
+          if (pwdInput && u.passwords && u.passwords[0]) {
+            pwdInput.value = u.passwords[0];
+          }
+          break;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('URL params parsing not supported or errored:', err);
+  }
 });
 
 function initDateDisplay() {
