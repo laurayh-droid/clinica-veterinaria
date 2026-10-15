@@ -256,20 +256,20 @@
 
         <!-- Menu Lateral com Módulos Separados -->
         <nav class="nav-menu">
-          <a class="nav-item active" data-tab="dashboard">
+          <a class="nav-item active" data-tab="dashboard" id="nav-item-dashboard">
             <i class="fa-solid fa-chart-pie"></i>
             <span>Dashboard / Fila</span>
             <span class="badge-count" id="badge-fila-count">0</span>
           </a>
-          <a class="nav-item" data-tab="funcionarios">
+          <a class="nav-item" data-tab="funcionarios" id="nav-item-funcionarios">
             <i class="fa-solid fa-user-doctor"></i>
             <span>Corpo Clínico & Equipe</span>
           </a>
-          <a class="nav-item" data-tab="tutores-pets">
+          <a class="nav-item" data-tab="tutores-pets" id="nav-item-tutores-pets">
             <i class="fa-solid fa-shield-cat"></i>
             <span>Tutores & Pacientes</span>
           </a>
-          <a class="nav-item" data-tab="agenda">
+          <a class="nav-item" data-tab="agenda" id="nav-item-agenda">
             <i class="fa-solid fa-calendar-check"></i>
             <span>Agenda & Atendimentos</span>
           </a>
@@ -397,9 +397,6 @@
                 <i class="fa-solid fa-list-check"></i>
                 Fila de Atendimento do Dia
               </div>
-              <button class="btn btn-primary btn-sm" onclick="abrirModalNovoAgendamento()">
-                <i class="fa-solid fa-plus"></i> Novo Agendamento
-              </button>
             </div>
 
             <div class="table-responsive">
@@ -1105,11 +1102,7 @@
 
         <div id="recipe-preview-container" class="recipe-preview mt-2" style="display:none;">
           <div class="recipe-header">
-<<<<<<< HEAD
-            <h2>🩺 ZooMed Fauna & Domésticos</h2>
-=======
-            <h2><i class="fa-solid fa-stethoscope"></i> VetCare Fauna & Domésticos</h2>
->>>>>>> da483d444fcca327624ce1952e9bc803fc56ca4f
+            <h2><i class="fa-solid fa-stethoscope"></i> ZooMed Fauna & Domésticos</h2>
             <p>Clínica Veterinária Integrada & Medicina Especializada</p>
             <div class="recipe-vet-badge" id="recipe-vet-info">
               Dr. Carlos Eduardo - CRMV/SP 12345
@@ -1167,11 +1160,7 @@
 
         <div id="guia-preview-container" class="guia-preview-box mt-2" style="display:none;">
           <div class="guia-header">
-<<<<<<< HEAD
-            <h2>🌿 ZooMed Fauna & Domésticos</h2>
-=======
-            <h2><i class="fa-solid fa-leaf"></i> VetCare Fauna & Domésticos</h2>
->>>>>>> da483d444fcca327624ce1952e9bc803fc56ca4f
+            <h2><i class="fa-solid fa-leaf"></i> ZooMed Fauna & Domésticos</h2>
             <p style="font-size:0.85rem; color:var(--text-secondary);">Centro de Manejo, Enriquecimento e Bem-Estar de Animais Silvestres & Exóticos</p>
             <div class="status-badge badge-adestrador mt-1" id="guia-consultor-info">
               Lucas Mendes — Especialista em Manejo & Comportamento
@@ -1257,6 +1246,69 @@
     </div>
   </div>
 
+  <!-- Modal 7: Autorização por Senha (Admin / Atendente) -->
+  <div id="modal-auth-password" class="modal-overlay">
+    <div class="modal-card modal-auth-card">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div class="auth-lock-badge" id="auth-lock-icon-wrap">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h2 id="modal-auth-pwd-title" style="font-size:1.15rem; margin:0;">Autorização Necessária</h2>
+            <span style="font-size:0.75rem; color:var(--text-muted);" id="modal-auth-pwd-subtitle">Acesso restrito por perfil</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeAuthPasswordModal()">&times;</button>
+      </div>
+      
+      <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+        <div class="auth-warning-box mb-2" id="auth-warning-box">
+          <i class="fa-solid fa-triangle-exclamation" id="auth-warning-icon"></i>
+          <div id="auth-warning-message">
+            Esta operação requer autorização especial. Digite a senha correspondente para prosseguir.
+          </div>
+        </div>
+
+        <form id="form-auth-password" onsubmit="handleAuthPasswordSubmit(event)">
+          <div class="form-group mb-2">
+            <label class="form-label" id="auth-password-label" for="auth-input-password">
+              <i class="fa-solid fa-key"></i> Senha do Administrador:
+            </label>
+            <div class="password-input-wrap">
+              <input type="password" id="auth-input-password" class="form-control" placeholder="Digite a senha..." required autocomplete="off">
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('auth-input-password', 'auth-pwd-toggle-icon')">
+                <i class="fa-solid fa-eye" id="auth-pwd-toggle-icon"></i>
+              </button>
+            </div>
+            <div id="auth-password-error" class="auth-error-msg" style="display:none;">
+              <i class="fa-solid fa-circle-exclamation"></i> Senha incorreta. Verifique e tente novamente.
+            </div>
+          </div>
+
+          <div class="auth-hint-card">
+            <div class="hint-header">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Senhas para demonstração:</span>
+            </div>
+            <div class="hint-body" id="auth-hint-text">
+              • <strong>Administrador:</strong> <code>admin123</code> (ou <code>123456</code>)<br>
+              • <strong>Atendente:</strong> <code>atendente123</code> (ou <code>123456</code>)
+            </div>
+          </div>
+
+          <div class="modal-footer" style="padding: 1rem 0 0 0; margin-top: 1rem; border-top: 1px solid var(--border-subtle);">
+            <button type="button" class="btn btn-secondary" onclick="closeAuthPasswordModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="btn-confirm-auth">
+              <i class="fa-solid fa-unlock"></i> Confirmar & Liberar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
   <div id="print-recipe-area"></div>
   <div id="print-guia-area"></div>
 

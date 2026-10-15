@@ -1,0 +1,11 @@
+.git
+.gitignore
+.idea
+.vscode
+target/classes
+target/generated-sources
+target/maven-status
+target/test-classes
+*.log
+desenvolvimentoLogica1
+frontend/

@@ -7,13 +7,212 @@ const CURRENT_DATE = new Date().toISOString().split('T')[0];
 
 // Perfis e Usuários Simulados no Sistema
 const USERS = {
-  vet: { name: 'Dr. Carlos Eduardo', role: 'Médico Veterinário', crmv: 'CRMV/SP 12345', cargoKey: 'Veterinário', email: 'carlos.vet@zoomed.com' },
-  adestrador: { name: 'Lucas Mendes', role: 'Adestrador / Esp. Silvestres', crmv: '', cargoKey: 'Adestrador / Esp. Silvestres', email: 'lucas.adestrador@zoomed.com' },
-  recepcao: { name: 'Ana Silva', role: 'Atendente / Recepcionista', crmv: '', cargoKey: 'Atendente', email: 'ana.recepcao@zoomed.com' },
-  admin: { name: 'Mariana Oliveira', role: 'Administradora Geral', crmv: '', cargoKey: 'Administrador', email: 'mariana.admin@zoomed.com' }
+  vet: { 
+    name: 'Dr. Carlos Eduardo', 
+    role: 'Médico Veterinário', 
+    crmv: 'CRMV/SP 12345', 
+    cargoKey: 'Veterinário', 
+    email: 'carlos.vet@zoomed.com',
+    passwords: ['vet123', '123456', 'veterinario']
+  },
+  adestrador: { 
+    name: 'Lucas Mendes', 
+    role: 'Adestrador / Esp. Silvestres', 
+    crmv: '', 
+    cargoKey: 'Adestrador / Esp. Silvestres', 
+    email: 'lucas.adestrador@zoomed.com',
+    passwords: ['adestrador123', '123456', 'adestrador']
+  },
+  recepcao: { 
+    name: 'Ana Silva', 
+    role: 'Atendente / Recepcionista', 
+    crmv: '', 
+    cargoKey: 'Atendente', 
+    email: 'ana.recepcao@zoomed.com',
+    passwords: ['atendente123', '123456', 'recepcao', 'atendente']
+  },
+  admin: { 
+    name: 'Mariana Oliveira', 
+    role: 'Administradora Geral', 
+    crmv: '', 
+    cargoKey: 'Administrador', 
+    email: 'mariana.admin@zoomed.com',
+    passwords: ['admin123', '123456', 'admin']
+  }
 };
 
 let currentUserRole = 'vet'; // Perfil ativo por padrão
+
+/* ==========================================================================
+   MOTOR DE AUTORIZAÇÃO POR SENHA & PERMISSÕES
+   ========================================================================== */
+
+let pendingAuthCallback = null;
+let currentAuthRequiredRole = 'admin';
+let currentAuthTargetKey = null; // Chave da aba/recurso desbloqueado na sessão
+let sessionUnlockedTabs = new Set(); // Memória de abas desbloqueadas na sessão atual
+
+function validatePassword(requiredRole, typed) {
+  if (!typed) return false;
+  const password = typed.trim();
+
+  // Administrador tem permissão universal
+  const adminPwds = USERS.admin.passwords || ['admin123', '123456', 'admin'];
+  if (adminPwds.includes(password)) return true;
+
+  if (requiredRole === 'atendente' || requiredRole === 'recepcao') {
+    const atendentePwds = USERS.recepcao.passwords || ['atendente123', '123456', 'recepcao', 'atendente'];
+    return atendentePwds.includes(password);
+  }
+
+  if (requiredRole === 'vet') {
+    const vetPwds = USERS.vet.passwords || ['vet123', '123456', 'veterinario'];
+    return vetPwds.includes(password);
+  }
+
+  if (requiredRole === 'adestrador') {
+    const adestradorPwds = USERS.adestrador.passwords || ['adestrador123', '123456', 'adestrador'];
+    return adestradorPwds.includes(password);
+  }
+
+  return false;
+}
+
+function solicitarAutorizacao({ requiredRole = 'admin', targetKey = null, title, subtitle, message, onSuccess }) {
+  // Administrador possui acesso irrestrito
+  if (currentUserRole === 'admin') {
+    if (onSuccess && typeof onSuccess === 'function') onSuccess();
+    return;
+  }
+
+  // Se a aba/recurso já foi desbloqueada por senha nesta sessão, libera direto!
+  if (targetKey && sessionUnlockedTabs.has(targetKey)) {
+    if (onSuccess && typeof onSuccess === 'function') onSuccess();
+    return;
+  }
+
+  currentAuthRequiredRole = requiredRole;
+  currentAuthTargetKey = targetKey;
+  pendingAuthCallback = onSuccess || null;
+
+  const modalTitle = document.getElementById('modal-auth-pwd-title');
+  const modalSubtitle = document.getElementById('modal-auth-pwd-subtitle');
+  const warningMsg = document.getElementById('auth-warning-message');
+  const labelPwd = document.getElementById('auth-password-label');
+  const inputPwd = document.getElementById('auth-input-password');
+  const errorMsg = document.getElementById('auth-password-error');
+  const hintBody = document.getElementById('auth-hint-text');
+  const iconWrap = document.getElementById('auth-lock-icon-wrap');
+
+  if (errorMsg) errorMsg.style.display = 'none';
+  if (inputPwd) {
+    inputPwd.value = '';
+    inputPwd.classList.remove('is-invalid');
+  }
+
+  if (requiredRole === 'vet') {
+    if (modalTitle) modalTitle.innerText = title || 'Autorização do Médico Veterinário';
+    if (modalSubtitle) modalSubtitle.innerText = subtitle || 'Acesso ao Módulo Clínico & Prescrição';
+    if (warningMsg) warningMsg.innerHTML = message || 'Para acessar o Prontuário Clínico Veterinário, digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).';
+    if (labelPwd) labelPwd.innerHTML = '<i class="fa-solid fa-key"></i> Digite a Senha do Veterinário:';
+    if (hintBody) hintBody.innerHTML = '• <strong>Médico Veterinário:</strong> <code>vet123</code> (ou <code>123456</code>)<br>• <strong>Administrador:</strong> <code>admin123</code>';
+    if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-user-doctor"></i>';
+  } else if (requiredRole === 'adestrador') {
+    if (modalTitle) modalTitle.innerText = title || 'Autorização do Especialista em Silvestres';
+    if (modalSubtitle) modalSubtitle.innerText = subtitle || 'Acesso ao Guia de Manejo Silvestre';
+    if (warningMsg) warningMsg.innerHTML = message || 'Para acessar a Consultoria e Guia de Manejo Silvestre, digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).';
+    if (labelPwd) labelPwd.innerHTML = '<i class="fa-solid fa-key"></i> Digite a Senha do Adestrador / Silvestres:';
+    if (hintBody) hintBody.innerHTML = '• <strong>Adestrador / Silvestres:</strong> <code>adestrador123</code> (ou <code>123456</code>)<br>• <strong>Administrador:</strong> <code>admin123</code>';
+    if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-feather"></i>';
+  } else if (requiredRole === 'atendente' || requiredRole === 'recepcao') {
+    if (modalTitle) modalTitle.innerText = title || 'Autorização da Recepção';
+    if (modalSubtitle) modalSubtitle.innerText = subtitle || 'Acesso exclusivo para agendamentos';
+    if (warningMsg) warningMsg.innerHTML = message || 'Para agendar atendimentos, digite a <strong>Senha do Atendente</strong> (ou Administrador).';
+    if (labelPwd) labelPwd.innerHTML = '<i class="fa-solid fa-key"></i> Digite a Senha do Atendente:';
+    if (hintBody) hintBody.innerHTML = '• <strong>Atendente:</strong> <code>atendente123</code> (ou <code>123456</code>)<br>• <strong>Administrador:</strong> <code>admin123</code>';
+    if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-headset"></i>';
+  } else {
+    // Admin
+    if (modalTitle) modalTitle.innerText = title || 'Autorização do Administrador';
+    if (modalSubtitle) modalSubtitle.innerText = subtitle || 'Acesso Restrito';
+    if (warningMsg) warningMsg.innerHTML = message || 'Esta ação requer a <strong>Senha do Administrador</strong> para autorização.';
+    if (labelPwd) labelPwd.innerHTML = '<i class="fa-solid fa-key"></i> Digite a Senha do Administrador:';
+    if (hintBody) hintBody.innerHTML = '• <strong>Administrador:</strong> <code>admin123</code> (ou <code>123456</code>)';
+    if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+  }
+
+  openModal('modal-auth-password');
+  setTimeout(() => {
+    if (inputPwd) inputPwd.focus();
+  }, 150);
+}
+
+function closeAuthPasswordModal() {
+  closeModal('modal-auth-password');
+  pendingAuthCallback = null;
+  currentAuthTargetKey = null;
+  const errorMsg = document.getElementById('auth-password-error');
+  if (errorMsg) errorMsg.style.display = 'none';
+}
+
+function handleAuthPasswordSubmit(e) {
+  e.preventDefault();
+  const inputPwd = document.getElementById('auth-input-password');
+  const errorMsg = document.getElementById('auth-password-error');
+  const typed = (inputPwd ? inputPwd.value : '').trim();
+
+  if (validatePassword(currentAuthRequiredRole, typed)) {
+    if (errorMsg) errorMsg.style.display = 'none';
+    closeModal('modal-auth-password');
+    
+    // Armazena a chave na memória da sessão para não pedir mais senha nesta aba durante a sessão
+    if (currentAuthTargetKey) {
+      sessionUnlockedTabs.add(currentAuthTargetKey);
+    }
+
+    showToast('Acesso autorizado com sucesso para esta sessão!', 'success');
+    
+    const cb = pendingAuthCallback;
+    pendingAuthCallback = null;
+    currentAuthTargetKey = null;
+    if (cb && typeof cb === 'function') {
+      cb();
+    }
+  } else {
+    if (errorMsg) {
+      errorMsg.style.display = 'flex';
+      errorMsg.classList.remove('shakeError');
+      void errorMsg.offsetWidth;
+      errorMsg.classList.add('shakeError');
+    }
+    if (inputPwd) {
+      inputPwd.focus();
+      inputPwd.select();
+    }
+  }
+}
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast-notification ${type}`;
+
+  let icon = '<i class="fa-solid fa-circle-check"></i>';
+  if (type === 'warning') icon = '<i class="fa-solid fa-triangle-exclamation"></i>';
+  if (type === 'error') icon = '<i class="fa-solid fa-circle-xmark"></i>';
+
+  toast.innerHTML = `${icon} <span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    setTimeout(() => toast.remove(), 400);
+  }, 3500);
+}
 
 // Helper: Detecção Inteligente de Espécie e Tema Visual
 function getPetTheme(pet) {
@@ -183,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadState();
   initNavigation();
   initDateDisplay();
+  updateNavAccessBadges();
   renderAll();
 });
 
@@ -243,6 +443,7 @@ function toggleAuthRegCRMV(cargo) {
 }
 
 function loginQuick(roleKey) {
+  sessionUnlockedTabs.clear();
   currentUserRole = roleKey;
   const user = USERS[roleKey];
   
@@ -256,19 +457,15 @@ function loginQuick(roleKey) {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('app-container').style.display = 'flex';
   
-  // Se for veterinário vai para dashboard ou prontuário; se for adestrador vai para guia de manejo
-  if (roleKey === 'vet') {
-    switchTab('dashboard');
-  } else if (roleKey === 'adestrador') {
-    switchTab('guia-manejo');
-  } else {
-    switchTab('dashboard');
-  }
+  // Redireciona sempre para o dashboard
+  switchTab('dashboard');
+  showToast(`Sessão iniciada como ${user.name} (${user.role})`, 'success');
 }
 
 function fazerLogin(e) {
   e.preventDefault();
   const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value.trim();
   
   // Verifica se corresponde a algum perfil existente
   let matchedRole = 'vet';
@@ -277,6 +474,14 @@ function fazerLogin(e) {
       matchedRole = key;
       break;
     }
+  }
+
+  // Validação de senha simples
+  const targetUser = USERS[matchedRole];
+  const validPasswords = targetUser.passwords || ['123456'];
+  if (password && !validPasswords.includes(password) && password !== '123456') {
+    alert('Senha incorreta para o e-mail informado.');
+    return;
   }
 
   loginQuick(matchedRole);
@@ -288,6 +493,7 @@ function fazerCadastroAuth(e) {
   const email = document.getElementById('auth-reg-email').value;
   const cargo = document.getElementById('auth-reg-cargo').value;
   const crmv = document.getElementById('auth-reg-crmv').value;
+  const password = document.getElementById('auth-reg-password').value;
 
   const novoFuncionario = {
     id: Date.now(),
@@ -312,7 +518,8 @@ function fazerCadastroAuth(e) {
     role: cargo,
     crmv: novoFuncionario.crmv,
     cargoKey: cargo,
-    email: email
+    email: email,
+    passwords: [password, '123456']
   };
 
   alert(`Cadastro realizado com sucesso! Bem-vindo(a), ${nome}.`);
@@ -321,24 +528,201 @@ function fazerCadastroAuth(e) {
 
 function fazerLogout() {
   if (confirm('Deseja encerrar a sessão atual e retornar à tela de login?')) {
+    sessionUnlockedTabs.clear();
     document.getElementById('app-container').style.display = 'none';
     document.getElementById('login-screen').classList.remove('hidden');
   }
 }
 
 /* ==========================================================================
-   Navegação por Abas & Perfis
+   Navegação por Abas & Controle de Acesso
    ========================================================================== */
 
 function initNavigation() {
-  const navItems = document.querySelectorAll('.nav-item');
+  const navItems = document.querySelectorAll('.nav-menu .nav-item');
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const tabId = item.getAttribute('data-tab');
-      switchTab(tabId);
+      trySwitchTab(tabId);
     });
   });
+}
+
+function getTabLabel(tabId) {
+  const titles = {
+    'dashboard': 'Dashboard & Fila do Dia',
+    'funcionarios': 'Corpo Clínico & Equipe',
+    'tutores-pets': 'Tutores & Pacientes',
+    'agenda': 'Agenda & Atendimentos',
+    'prontuario-clinico': 'Prontuário Médico Veterinário',
+    'guia-manejo': 'Guia de Manejo Silvestre & Bem-Estar'
+  };
+  return titles[tabId] || tabId;
+}
+
+function trySwitchTab(tabId) {
+  // Dashboard é liberado para todos
+  if (tabId === 'dashboard') {
+    switchTab('dashboard');
+    return;
+  }
+
+  // Administrador tem acesso irrestrito a todas as abas
+  if (currentUserRole === 'admin') {
+    switchTab(tabId);
+    return;
+  }
+
+  // Se a aba já foi desbloqueada por senha nesta sessão, libera direto sem pedir de novo
+  if (sessionUnlockedTabs.has(tabId)) {
+    switchTab(tabId);
+    return;
+  }
+
+  // Regras para Adestrador (apenas Dashboard e Guia de Manejo liberados diretamente)
+  if (currentUserRole === 'adestrador') {
+    if (tabId === 'guia-manejo') {
+      switchTab('guia-manejo');
+      return;
+    }
+    if (tabId === 'prontuario-clinico') {
+      solicitarAutorizacao({
+        requiredRole: 'vet',
+        targetKey: 'prontuario-clinico',
+        title: 'Autorização do Médico Veterinário',
+        subtitle: 'Acesso ao Prontuário Clínico & CRMV',
+        message: 'O perfil de Adestrador possui acesso direto ao Guia de Manejo Silvestre. Para acessar o <strong>Prontuário Médico Veterinário</strong>, digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
+        onSuccess: () => switchTab('prontuario-clinico')
+      });
+      return;
+    }
+    if (tabId === 'agenda') {
+      solicitarAutorizacao({
+        requiredRole: 'atendente',
+        targetKey: 'agenda',
+        title: 'Autorização da Recepção',
+        subtitle: 'Acesso à Agenda & Atendimentos',
+        message: 'O perfil de Adestrador só possui acesso direto ao Dashboard e Guia de Manejo. Para acessar a Agenda, digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+        onSuccess: () => switchTab('agenda')
+      });
+      return;
+    }
+    if (tabId === 'tutores-pets') {
+      solicitarAutorizacao({
+        requiredRole: 'atendente',
+        targetKey: 'tutores-pets',
+        title: 'Autorização da Recepção',
+        subtitle: 'Acesso a Tutores & Pacientes',
+        message: 'A gestão de cadastros de tutores e pacientes é realizada pela Recepção. Digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+        onSuccess: () => switchTab('tutores-pets')
+      });
+      return;
+    }
+    // Para funcionarios
+    solicitarAutorizacao({
+      requiredRole: 'admin',
+      targetKey: tabId,
+      title: 'Autorização do Administrador',
+      subtitle: 'Acesso Restrito',
+      message: `O perfil de Adestrador só possui acesso ao Dashboard e Guia de Manejo Silvestre. Para acessar <strong>${getTabLabel(tabId)}</strong>, digite a <strong>Senha do Administrador</strong>.`,
+      onSuccess: () => switchTab(tabId)
+    });
+    return;
+  }
+
+  // Regras para Veterinário (apenas Dashboard e Prontuário Médico liberados diretamente)
+  if (currentUserRole === 'vet') {
+    if (tabId === 'prontuario-clinico') {
+      switchTab('prontuario-clinico');
+      return;
+    }
+    if (tabId === 'guia-manejo') {
+      solicitarAutorizacao({
+        requiredRole: 'adestrador',
+        targetKey: 'guia-manejo',
+        title: 'Autorização do Especialista em Silvestres',
+        subtitle: 'Acesso ao Guia de Manejo Silvestre',
+        message: 'O Médico Veterinário possui acesso direto ao Prontuário Médico. Para acessar o <strong>Guia de Manejo Silvestre & Bem-Estar</strong>, digite a <strong>Senha do Adestrador / Especialista em Silvestres</strong> (ou Administrador).',
+        onSuccess: () => switchTab('guia-manejo')
+      });
+      return;
+    }
+    if (tabId === 'agenda') {
+      solicitarAutorizacao({
+        requiredRole: 'atendente',
+        targetKey: 'agenda',
+        title: 'Autorização da Recepção',
+        subtitle: 'Acesso à Agenda & Atendimentos',
+        message: 'O Médico Veterinário só possui acesso direto ao Dashboard e Prontuário Clínico. Para acessar a Agenda, digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+        onSuccess: () => switchTab('agenda')
+      });
+      return;
+    }
+    if (tabId === 'tutores-pets') {
+      solicitarAutorizacao({
+        requiredRole: 'atendente',
+        targetKey: 'tutores-pets',
+        title: 'Autorização da Recepção',
+        subtitle: 'Acesso a Tutores & Pacientes',
+        message: 'A gestão de cadastros de tutores e pacientes é realizada pela Recepção. Digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+        onSuccess: () => switchTab('tutores-pets')
+      });
+      return;
+    }
+    // Para funcionarios
+    solicitarAutorizacao({
+      requiredRole: 'admin',
+      targetKey: tabId,
+      title: 'Autorização do Administrador',
+      subtitle: 'Acesso Restrito',
+      message: `O Médico Veterinário só possui acesso direto ao Dashboard e Prontuário Médico. Para acessar <strong>${getTabLabel(tabId)}</strong>, digite a <strong>Senha do Administrador</strong>.`,
+      onSuccess: () => switchTab(tabId)
+    });
+    return;
+  }
+
+  // Regras para Atendente / Recepcionista (acesso direto a Dashboard, Agenda e Tutores & Pacientes)
+  if (currentUserRole === 'recepcao') {
+    if (tabId === 'agenda' || tabId === 'tutores-pets') {
+      switchTab(tabId);
+      return;
+    }
+    if (tabId === 'prontuario-clinico') {
+      solicitarAutorizacao({
+        requiredRole: 'vet',
+        targetKey: 'prontuario-clinico',
+        title: 'Autorização do Médico Veterinário',
+        subtitle: 'Acesso ao Prontuário Clínico',
+        message: 'O perfil de Atendente possui acesso a agendamentos e cadastros. Para acessar o <strong>Prontuário Médico Veterinário</strong>, digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
+        onSuccess: () => switchTab('prontuario-clinico')
+      });
+      return;
+    }
+    if (tabId === 'guia-manejo') {
+      solicitarAutorizacao({
+        requiredRole: 'adestrador',
+        targetKey: 'guia-manejo',
+        title: 'Autorização do Especialista em Silvestres',
+        subtitle: 'Acesso ao Guia de Manejo',
+        message: 'O perfil de Atendente possui acesso a agendamentos e cadastros. Para acessar o <strong>Guia de Manejo Silvestre</strong>, digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).',
+        onSuccess: () => switchTab('guia-manejo')
+      });
+      return;
+    }
+    // Para funcionarios
+    solicitarAutorizacao({
+      requiredRole: 'admin',
+      targetKey: tabId,
+      title: 'Autorização do Administrador',
+      subtitle: 'Acesso Restrito',
+      message: `O perfil de Atendente possui acesso somente aos agendamentos e ao Dashboard. Para acessar <strong>${getTabLabel(tabId)}</strong>, digite a <strong>Senha do Administrador</strong>.`,
+      onSuccess: () => switchTab(tabId)
+    });
+    return;
+  }
+
+  switchTab(tabId);
 }
 
 function switchTab(tabId) {
@@ -366,7 +750,17 @@ function switchTab(tabId) {
   }
 }
 
+function updateNavAccessBadges() {
+  // Limpeza de quaisquer cadeados ou classes de bloqueio visual no menu
+  const lockBadges = document.querySelectorAll('.nav-lock-badge');
+  lockBadges.forEach(b => b.remove());
+  
+  const navItems = document.querySelectorAll('.nav-menu .nav-item');
+  navItems.forEach(n => n.classList.remove('nav-restricted'));
+}
+
 function switchUserRole(roleKey) {
+  sessionUnlockedTabs.clear();
   currentUserRole = roleKey;
   const user = USERS[roleKey];
 
@@ -387,6 +781,7 @@ function switchUserRole(roleKey) {
     }
   }
 
+  updateNavAccessBadges();
   updateRoleBanners();
 }
 
@@ -515,14 +910,70 @@ function renderFilaDia() {
 
 function alterarStatusAgendamento(id, novoStatus) {
   const ag = state.agendamentos.find(a => a.id === id);
-  if (ag) {
+  if (!ag) return;
+
+  const isManejo = ag.tipoServico.includes('Manejo') || ag.tipoServico.includes('Adestramento') || ag.tipoServico.includes('Recinto');
+
+  // Validação de perfil para alteração de status
+  if (currentUserRole === 'admin' || currentUserRole === 'recepcao') {
     ag.status = novoStatus;
     saveState();
     renderAll();
+    showToast(`Status atualizado para "${novoStatus}".`, 'success');
+    return;
   }
+
+  if (currentUserRole === 'adestrador' && isManejo) {
+    ag.status = novoStatus;
+    saveState();
+    renderAll();
+    showToast(`Status da consultoria atualizado para "${novoStatus}".`, 'success');
+    return;
+  }
+
+  if (currentUserRole === 'vet' && !isManejo) {
+    ag.status = novoStatus;
+    saveState();
+    renderAll();
+    showToast(`Status do atendimento clínico atualizado para "${novoStatus}".`, 'success');
+    return;
+  }
+
+  // Se não for do escopo do perfil, solicita senha de autorização
+  solicitarAutorizacao({
+    requiredRole: 'admin',
+    title: 'Autorização para Alterar Status',
+    subtitle: 'Ação fora do escopo do perfil',
+    message: `Para alterar o status deste atendimento (${ag.tipoServico}), digite a <strong>Senha do Administrador</strong> (ou Atendente).`,
+    onSuccess: () => {
+      ag.status = novoStatus;
+      saveState();
+      renderAll();
+      showToast(`Status atualizado para "${novoStatus}".`, 'success');
+    }
+  });
 }
 
 function iniciarAtendimentoVetDireto(petId) {
+  if (currentUserRole !== 'vet' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'vet',
+      targetKey: 'prontuario-clinico',
+      title: 'Acesso ao Prontuário Veterinário',
+      subtitle: 'Exclusivo Médico Veterinário',
+      message: 'O preenchimento e consulta de prontuários médicos é restrito a Médicos Veterinários e Administradores. Digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
+      onSuccess: () => {
+        switchTab('prontuario-clinico');
+        const petSelect = document.getElementById('vet-pet-select');
+        if (petSelect) {
+          petSelect.value = petId;
+          onSelectPetVet(petId);
+        }
+      }
+    });
+    return;
+  }
+
   switchTab('prontuario-clinico');
   const petSelect = document.getElementById('vet-pet-select');
   if (petSelect) {
@@ -532,6 +983,25 @@ function iniciarAtendimentoVetDireto(petId) {
 }
 
 function iniciarManejoDireto(petId) {
+  if (currentUserRole !== 'adestrador' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'adestrador',
+      targetKey: 'guia-manejo',
+      title: 'Acesso ao Guia de Manejo Silvestre',
+      subtitle: 'Exclusivo Adestrador / Silvestres',
+      message: 'A elaboração de consultoria comportamental e guia de manejo é restrita a Especialistas em Silvestres e Administradores. Digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).',
+      onSuccess: () => {
+        switchTab('guia-manejo');
+        const petSelect = document.getElementById('manejo-pet-select');
+        if (petSelect) {
+          petSelect.value = petId;
+          onSelectPetManejo(petId);
+        }
+      }
+    });
+    return;
+  }
+
   switchTab('guia-manejo');
   const petSelect = document.getElementById('manejo-pet-select');
   if (petSelect) {
@@ -542,6 +1012,23 @@ function iniciarManejoDireto(petId) {
 
 // 2. Cadastro & Edição de Funcionários
 function abrirModalNovoFuncionario() {
+  if (currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'admin',
+      targetKey: 'funcionarios',
+      title: 'Gestão do Corpo Clínico',
+      subtitle: 'Acesso Restrito ao Administrador',
+      message: 'O cadastro de novos funcionários é restrito à Administração. Digite a <strong>Senha do Administrador</strong> para prosseguir.',
+      onSuccess: () => {
+        executarAberturaModalNovoFuncionario();
+      }
+    });
+    return;
+  }
+  executarAberturaModalNovoFuncionario();
+}
+
+function executarAberturaModalNovoFuncionario() {
   document.getElementById('form-novo-funcionario').reset();
   document.getElementById('func-id').value = '';
   document.getElementById('modal-funcionario-title').innerText = 'Cadastrar Membro da Equipe';
@@ -551,6 +1038,23 @@ function abrirModalNovoFuncionario() {
 }
 
 function editarFuncionario(id) {
+  if (currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'admin',
+      targetKey: 'funcionarios',
+      title: 'Editar Membro da Equipe',
+      subtitle: 'Acesso Restrito ao Administrador',
+      message: 'A edição de cadastro de funcionários requer a <strong>Senha do Administrador</strong>.',
+      onSuccess: () => {
+        executarEdicaoFuncionario(id);
+      }
+    });
+    return;
+  }
+  executarEdicaoFuncionario(id);
+}
+
+function executarEdicaoFuncionario(id) {
   const f = state.funcionarios.find(item => item.id === id);
   if (!f) return;
 
@@ -569,8 +1073,35 @@ function editarFuncionario(id) {
   openModal('modal-novo-funcionario');
 }
 
+function removerFuncionario(id) {
+  if (currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'admin',
+      targetKey: 'funcionarios',
+      title: 'Excluir Membro da Equipe',
+      subtitle: 'Acesso Restrito ao Administrador',
+      message: 'A remoção de membros do corpo clínico requer a <strong>Senha do Administrador</strong>.',
+      onSuccess: () => {
+        executarRemocaoFuncionario(id);
+      }
+    });
+    return;
+  }
+  executarRemocaoFuncionario(id);
+}
+
+function executarRemocaoFuncionario(id) {
+  if (confirm('Deseja realmente remover este profissional da equipe?')) {
+    state.funcionarios = state.funcionarios.filter(f => f.id !== id);
+    saveState();
+    renderAll();
+    showToast('Profissional removido com sucesso.', 'warning');
+  }
+}
+
 function renderFuncionarios(filter = '') {
   const tbody = document.getElementById('funcionarios-tbody');
+  if (!tbody) return;
   tbody.innerHTML = '';
 
   const query = filter.toLowerCase().trim();
@@ -645,7 +1176,7 @@ function salvarFuncionario(e) {
       saveState();
       renderAll();
       closeModal('modal-novo-funcionario');
-      alert('Dados do profissional atualizados com sucesso!');
+      showToast('Dados do profissional atualizados com sucesso!', 'success');
       return;
     }
   }
@@ -666,15 +1197,7 @@ function salvarFuncionario(e) {
   renderAll();
   closeModal('modal-novo-funcionario');
   document.getElementById('form-novo-funcionario').reset();
-  alert('Profissional cadastrado com sucesso!');
-}
-
-function removerFuncionario(id) {
-  if (confirm('Deseja realmente remover este profissional da equipe?')) {
-    state.funcionarios = state.funcionarios.filter(f => f.id !== id);
-    saveState();
-    renderAll();
-  }
+  showToast('Profissional cadastrado com sucesso!', 'success');
 }
 
 function toggleCRMVField(cargo) {
@@ -688,6 +1211,23 @@ function toggleCRMVField(cargo) {
 
 // 3. Cadastros & Edição de Tutores & Pacientes (Pets)
 function abrirModalNovoTutor() {
+  if (currentUserRole === 'adestrador' || currentUserRole === 'vet') {
+    solicitarAutorizacao({
+      requiredRole: 'atendente',
+      targetKey: 'tutores-pets',
+      title: 'Cadastro de Tutor & Paciente',
+      subtitle: 'Permissão da Recepção',
+      message: 'O cadastro de tutores e pets é gerenciado pela Recepção e Administração. Digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarAberturaModalNovoTutor();
+      }
+    });
+    return;
+  }
+  executarAberturaModalNovoTutor();
+}
+
+function executarAberturaModalNovoTutor() {
   document.getElementById('form-novo-tutor').reset();
   document.getElementById('tutor-id').value = '';
   document.getElementById('tutor-pet-id').value = '';
@@ -698,6 +1238,23 @@ function abrirModalNovoTutor() {
 }
 
 function editarTutor(id) {
+  if (currentUserRole === 'adestrador' || currentUserRole === 'vet') {
+    solicitarAutorizacao({
+      requiredRole: 'atendente',
+      targetKey: 'tutores-pets',
+      title: 'Editar Tutor',
+      subtitle: 'Permissão da Recepção',
+      message: 'A alteração de dados do tutor requer a <strong>Senha do Atendente</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarEdicaoTutor(id);
+      }
+    });
+    return;
+  }
+  executarEdicaoTutor(id);
+}
+
+function executarEdicaoTutor(id) {
   const tutor = state.tutores.find(t => t.id === id);
   if (!tutor) return;
 
@@ -726,6 +1283,23 @@ function editarTutor(id) {
 }
 
 function editarPet(tutorId, petId) {
+  if (currentUserRole === 'adestrador' || currentUserRole === 'vet') {
+    solicitarAutorizacao({
+      requiredRole: 'atendente',
+      targetKey: 'tutores-pets',
+      title: 'Editar Paciente',
+      subtitle: 'Permissão da Recepção',
+      message: 'A alteração cadastral de pacientes requer a <strong>Senha do Atendente</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarEdicaoPet(tutorId, petId);
+      }
+    });
+    return;
+  }
+  executarEdicaoPet(tutorId, petId);
+}
+
+function executarEdicaoPet(tutorId, petId) {
   const tutor = state.tutores.find(t => t.id === tutorId);
   if (!tutor) return;
   const pet = tutor.pets.find(p => p.id === petId);
@@ -863,7 +1437,22 @@ function agendarParaTutor(tutorId, petId = null) {
   }
 
   const selectedPetId = petId || tutor.pets[0].id;
-  abrirModalNovoAgendamento(tutorId, selectedPetId);
+
+  if (currentUserRole === 'adestrador' || currentUserRole === 'vet') {
+    solicitarAutorizacao({
+      requiredRole: 'atendente',
+      targetKey: 'agenda',
+      title: 'Autorização para Agendamento',
+      subtitle: 'Permissão de Atendente Requerida',
+      message: 'Para agendar atendimentos para este paciente, digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarAberturaModalNovoAgendamento(tutorId, selectedPetId);
+      }
+    });
+    return;
+  }
+
+  executarAberturaModalNovoAgendamento(tutorId, selectedPetId);
 }
 
 // 4. Agenda Integrada
@@ -997,6 +1586,24 @@ function onAgendamentoTutorChange() {
 }
 
 function abrirModalNovoAgendamento(tutorId = null, petId = null) {
+  if (currentUserRole === 'adestrador' || currentUserRole === 'vet') {
+    solicitarAutorizacao({
+      requiredRole: 'atendente',
+      targetKey: 'agenda',
+      title: 'Autorização para Agendamento',
+      subtitle: 'Permissão de Atendente Requerida',
+      message: 'Para agendar consultas e atendimentos, digite a <strong>Senha do Atendente</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarAberturaModalNovoAgendamento(tutorId, petId);
+      }
+    });
+    return;
+  }
+
+  executarAberturaModalNovoAgendamento(tutorId, petId);
+}
+
+function executarAberturaModalNovoAgendamento(tutorId = null, petId = null) {
   populateAgendamentoTutorSelect(tutorId || '');
   updateAgendamentoPetSelectOptions(tutorId || '', petId);
   openModal('modal-novo-agendamento');
@@ -1161,6 +1768,24 @@ function salvarProntuarioVet(e) {
     return;
   }
 
+  if (currentUserRole !== 'vet' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'vet',
+      targetKey: 'prontuario-clinico',
+      title: 'Salvar Prontuário Clínico',
+      subtitle: 'Exclusivo Médico Veterinário',
+      message: 'Apenas Médicos Veterinários com CRMV ativo podem prescrever condutas médicas e assinar prontuários. Digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarSalvarProntuarioVet();
+      }
+    });
+    return;
+  }
+
+  executarSalvarProntuarioVet();
+}
+
+function executarSalvarProntuarioVet() {
   const queixa = document.getElementById('vet-queixa').value;
   const sinaisVitais = document.getElementById('vet-sinais-vitais').value;
   const mucosas = document.getElementById('vet-mucosas').value;
@@ -1171,11 +1796,11 @@ function salvarProntuarioVet(e) {
   const petId = activeVetPet.pet.id;
   if (!state.prontuariosClinicos[petId]) state.prontuariosClinicos[petId] = [];
 
-  const currentUser = USERS[currentUserRole];
+  const currentUser = USERS[currentUserRole] || USERS.vet;
 
   const novoRegistro = {
     data: new Date().toLocaleDateString('pt-BR'),
-    profissional: `${currentUser.name} (${currentUser.crmv || 'Médico Veterinário'})`,
+    profissional: `${currentUser.name} (${currentUser.crmv || 'CRMV/SP 12345'})`,
     queixa,
     sinaisVitais,
     mucosas,
@@ -1194,7 +1819,7 @@ function salvarProntuarioVet(e) {
 
   document.getElementById('form-prontuario-vet').reset();
   renderProntuarioVetTimeline(petId);
-  alert('Prontuário Clínico Veterinário salvo com sucesso e consulta finalizada!');
+  showToast('Prontuário Clínico Veterinário salvo com sucesso!', 'success');
 }
 
 function abrirModalReceitaVet() {
@@ -1202,6 +1827,21 @@ function abrirModalReceitaVet() {
     alert('Selecione um paciente em consulta clínica primeiro!');
     return;
   }
+
+  if (currentUserRole !== 'vet' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'vet',
+      targetKey: 'prontuario-clinico',
+      title: 'Emissão de Receita Médica Oficial',
+      subtitle: 'Exclusivo Médico Veterinário',
+      message: 'Apenas Médicos Veterinários com CRMV válido podem emitir receituários oficiais. Digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
+      onSuccess: () => {
+        openModal('modal-receita');
+      }
+    });
+    return;
+  }
+
   openModal('modal-receita');
 }
 
@@ -1327,6 +1967,24 @@ function salvarGuiaManejo(e) {
     return;
   }
 
+  if (currentUserRole !== 'adestrador' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'adestrador',
+      targetKey: 'guia-manejo',
+      title: 'Salvar Guia de Manejo Silvestre',
+      subtitle: 'Exclusivo Adestrador / Silvestres',
+      message: 'A elaboração de parâmetros de recinto e planos de enriquecimento é de competência do Especialista em Silvestres. Digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarSalvarGuiaManejo();
+      }
+    });
+    return;
+  }
+
+  executarSalvarGuiaManejo();
+}
+
+function executarSalvarGuiaManejo() {
   const queixa = document.getElementById('manejo-queixa').value;
   const dimensoes = document.getElementById('manejo-dimensoes').value;
   const iluminacao = document.getElementById('manejo-iluminacao').value;
@@ -1338,7 +1996,7 @@ function salvarGuiaManejo(e) {
   const petId = activeManejoPet.pet.id;
   if (!state.guiasManejo[petId]) state.guiasManejo[petId] = [];
 
-  const currentUser = USERS[currentUserRole];
+  const currentUser = USERS[currentUserRole] || USERS.adestrador;
 
   const novoRegistro = {
     data: new Date().toLocaleDateString('pt-BR'),
@@ -1362,7 +2020,7 @@ function salvarGuiaManejo(e) {
 
   document.getElementById('form-guia-manejo').reset();
   renderGuiaManejoTimeline(petId);
-  alert('Guia de Manejo Silvestre & Consultoria salvo com sucesso!');
+  showToast('Guia de Manejo Silvestre salvo com sucesso!', 'success');
 }
 
 function abrirModalGuiaManejo() {
@@ -1370,6 +2028,21 @@ function abrirModalGuiaManejo() {
     alert('Selecione um paciente em consultoria de manejo primeiro!');
     return;
   }
+
+  if (currentUserRole !== 'adestrador' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'adestrador',
+      targetKey: 'guia-manejo',
+      title: 'Emissão do Guia Oficial de Manejo',
+      subtitle: 'Exclusivo Adestrador / Silvestres',
+      message: 'A emissão do Guia Oficial de Manejo Silvestre requer autorização do Especialista em Silvestres. Digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).',
+      onSuccess: () => {
+        openModal('modal-guia-manejo');
+      }
+    });
+    return;
+  }
+
   openModal('modal-guia-manejo');
 }
 
@@ -1475,7 +2148,7 @@ function salvarTutorEPet(e) {
       saveState();
       renderAll();
       closeModal('modal-novo-tutor');
-      alert('Dados do tutor e paciente atualizados com sucesso!');
+      showToast('Dados do tutor e paciente atualizados com sucesso!', 'success');
       return;
     }
   }
@@ -1500,7 +2173,7 @@ function salvarTutorEPet(e) {
   renderAll();
   closeModal('modal-novo-tutor');
   document.getElementById('form-novo-tutor').reset();
-  alert('Tutor e Paciente cadastrados com sucesso!');
+  showToast('Tutor e Paciente cadastrados com sucesso!', 'success');
 }
 
 function salvarAgendamento(e) {
@@ -1569,7 +2242,7 @@ function salvarAgendamento(e) {
   renderAll();
   closeModal('modal-novo-agendamento');
   document.getElementById('form-novo-agendamento').reset();
-  alert('Atendimento agendado com sucesso!');
+  showToast('Atendimento agendado com sucesso!', 'success');
 }
 
 function salvarVacina(e) {
@@ -1579,6 +2252,24 @@ function salvarVacina(e) {
     return;
   }
 
+  if (currentUserRole !== 'vet' && currentUserRole !== 'admin') {
+    solicitarAutorizacao({
+      requiredRole: 'vet',
+      targetKey: 'prontuario-clinico',
+      title: 'Registro de Imunização / Vacina',
+      subtitle: 'Exclusivo Médico Veterinário',
+      message: 'O registro de protocolos vacinais é restrito a Médicos Veterinários. Digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
+      onSuccess: () => {
+        executarSalvarVacina();
+      }
+    });
+    return;
+  }
+
+  executarSalvarVacina();
+}
+
+function executarSalvarVacina() {
   const petId = activeVetPet.pet.id;
   const nome = document.getElementById('vacina-nome').value;
   const dataAplicacao = document.getElementById('vacina-data-aplicacao').value;
@@ -1591,7 +2282,7 @@ function salvarVacina(e) {
   renderPetVaccines(petId);
   closeModal('modal-nova-vacina');
   document.getElementById('form-nova-vacina').reset();
-  alert('Imunização / Tratamento registrado com sucesso!');
+  showToast('Imunização / Tratamento registrado com sucesso!', 'success');
 }
 
 function openModal(modalId) {
