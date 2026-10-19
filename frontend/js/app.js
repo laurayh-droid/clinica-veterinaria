@@ -1720,7 +1720,7 @@ function onSelectPetVet(petId) {
     
     const avatarEl = document.getElementById('vet-pet-avatar');
     avatarEl.className = `pet-avatar ${theme.avatarClass}`;
-    avatarEl.innerText = theme.icon;
+    avatarEl.innerHTML = theme.icon;
 
     document.getElementById('vet-pet-name').innerText = foundPet.nome;
     document.getElementById('vet-pet-species').innerText = `${foundPet.categoria} • ${foundPet.especieRaca} (${foundPet.sexo})`;
@@ -1936,7 +1936,7 @@ function onSelectPetManejo(petId) {
     
     const avatarEl = document.getElementById('manejo-pet-avatar');
     avatarEl.className = `pet-avatar ${theme.avatarClass}`;
-    avatarEl.innerText = theme.icon;
+    avatarEl.innerHTML = theme.icon;
 
     document.getElementById('manejo-pet-name').innerText = foundPet.nome;
     document.getElementById('manejo-pet-species').innerText = `${foundPet.categoria} • ${foundPet.especieRaca} (${foundPet.sexo})`;
