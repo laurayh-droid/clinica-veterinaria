@@ -155,7 +155,4 @@ Para uma demonstração puramente visual dos templates, basta abrir diretamente 
 
 ---
 
-## 📄 Licença & Direitos
 
-Projeto desenvolvido com foco em excelência arquitetural, inovação em saúde animal e medicina veterinária multidisciplinar.  
-© 2026 **ZooMed Fauna & Domésticos**. Todos os direitos reservados.
