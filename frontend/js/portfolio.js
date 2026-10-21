@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTourTabs();
   initRoleSimulator();
   initRoiCalculator();
+  initMobileMenu();
 });
 
 /* --------------------------------------------------------------------------
@@ -250,4 +251,46 @@ function initRoiCalculator() {
   if (sliderSilvestres) sliderSilvestres.addEventListener('input', calculate);
 
   calculate();
+}
+
+/* --------------------------------------------------------------------------
+   5. MENU MOBILE RESPONSIVO DO SHOWCASE
+   -------------------------------------------------------------------------- */
+function togglePortfolioMenu(force) {
+  const nav = document.getElementById('portfolio-nav-links');
+  const toggleBtn = document.getElementById('portfolio-mobile-toggle');
+  if (!nav) return;
+
+  const shouldOpen = force !== undefined ? force : !nav.classList.contains('mobile-open');
+  if (shouldOpen) {
+    nav.classList.add('mobile-open');
+    if (toggleBtn) toggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+  } else {
+    nav.classList.remove('mobile-open');
+    if (toggleBtn) toggleBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+  }
+}
+
+function initMobileMenu() {
+  const links = document.querySelectorAll('#portfolio-nav-links a');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      togglePortfolioMenu(false);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      togglePortfolioMenu(false);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    const nav = document.getElementById('portfolio-nav-links');
+    const toggleBtn = document.getElementById('portfolio-mobile-toggle');
+    if (!nav || !toggleBtn) return;
+    if (nav.classList.contains('mobile-open') && !nav.contains(e.target) && !toggleBtn.contains(e.target)) {
+      togglePortfolioMenu(false);
+    }
+  });
 }

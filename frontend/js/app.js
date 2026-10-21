@@ -559,6 +559,23 @@ function fazerLogout() {
    Navegação por Abas & Controle de Acesso
    ========================================================================== */
 
+function toggleMobileSidebar(force) {
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  if (!sidebar) return;
+
+  const shouldOpen = force !== undefined ? force : !sidebar.classList.contains('mobile-open');
+  if (shouldOpen) {
+    sidebar.classList.add('mobile-open');
+    if (backdrop) backdrop.classList.add('active');
+    document.body.classList.add('mobile-sidebar-active');
+  } else {
+    sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.classList.remove('mobile-sidebar-active');
+  }
+}
+
 function initNavigation() {
   const navItems = document.querySelectorAll('.nav-menu .nav-item');
   navItems.forEach(item => {
@@ -567,6 +584,13 @@ function initNavigation() {
       const tabId = item.getAttribute('data-tab');
       trySwitchTab(tabId);
     });
+  });
+
+  // Fechar menu mobile com tecla ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      toggleMobileSidebar(false);
+    }
   });
 }
 
@@ -756,6 +780,11 @@ function switchTab(tabId) {
   if (activeNav) activeNav.classList.add('active');
   if (activeTab) activeTab.classList.add('active');
 
+  // Fecha sidebar mobile ao mudar de tela em visualização responsiva
+  if (window.innerWidth <= 1024) {
+    toggleMobileSidebar(false);
+  }
+
   const titles = {
     'dashboard': { title: 'Dashboard & Fila do Dia', subtitle: 'Acompanhamento dos atendimentos em tempo real' },
     'funcionarios': { title: 'Corpo Clínico & Equipe', subtitle: 'Cadastro de veterinários, especialistas em silvestres e recepcionistas' },
@@ -769,6 +798,8 @@ function switchTab(tabId) {
     document.getElementById('page-title').innerText = titles[tabId].title;
     document.getElementById('page-subtitle').innerText = titles[tabId].subtitle;
   }
+
+  updateRoleBanners();
 }
 
 function updateNavAccessBadges() {
@@ -808,14 +839,61 @@ function switchUserRole(roleKey) {
 
 function updateRoleBanners() {
   const vetBanner = document.getElementById('vet-banner-text');
+  const adestradorBanner = document.getElementById('adestrador-banner-text');
   const user = USERS[currentUserRole];
 
-  if (vetBanner) {
+  if (vetBanner && user) {
     if (currentUserRole === 'vet') {
       vetBanner.innerHTML = `<strong>Módulo Clínico Veterinário (${user.name}):</strong> Preenchimento de exame físico, diagnóstico clínico e emissão de receita com CRMV (${user.crmv}).`;
     } else {
       vetBanner.innerHTML = `<strong>Aviso (${user.name}):</strong> Modo de visualização de prontuário. Apenas Médicos Veterinários com CRMV podem emitir receitas médicas oficiais.`;
     }
+  }
+
+  if (adestradorBanner && user) {
+    if (currentUserRole === 'adestrador') {
+      adestradorBanner.innerHTML = `<strong>Módulo de Manejo & Bem-Estar Silvestre (${user.name}):</strong> Avaliação comportamental, adequação de recinto e emissão do Guia Oficial de Manejo.`;
+    } else {
+      adestradorBanner.innerHTML = `<strong>Aviso (${user.name}):</strong> Modo de visualização de manejo. Apenas Adestradores / Especialistas em Silvestres podem emitir guias oficiais de manejo.`;
+    }
+  }
+
+  // Atualização visual dos botões de emissão conforme perfil ativo
+  const btnReceita = document.getElementById('btn-emitir-receita');
+  if (btnReceita) {
+    if (currentUserRole === 'vet') {
+      btnReceita.classList.remove('btn-restricted-action');
+      btnReceita.title = 'Emitir Receita Médica Oficial (CRMV)';
+      btnReceita.innerHTML = '<i class="fa-solid fa-file-prescription"></i> Emitir Receita Médica (CRMV)';
+    } else {
+      btnReceita.classList.add('btn-restricted-action');
+      btnReceita.title = 'Restrito ao Médico Veterinário com CRMV';
+      btnReceita.innerHTML = '<i class="fa-solid fa-lock"></i> Emitir Receita Médica (Restrito ao Vet)';
+    }
+  }
+
+  const btnGuia = document.getElementById('btn-emitir-guia');
+  if (btnGuia) {
+    if (currentUserRole === 'adestrador') {
+      btnGuia.classList.remove('btn-restricted-action');
+      btnGuia.title = 'Emitir Guia Oficial de Manejo Silvestre';
+      btnGuia.innerHTML = '<i class="fa-solid fa-file-lines"></i> Emitir Guia Oficial de Manejo';
+    } else {
+      btnGuia.classList.add('btn-restricted-action');
+      btnGuia.title = 'Restrito ao Adestrador / Especialista em Silvestres';
+      btnGuia.innerHTML = '<i class="fa-solid fa-lock"></i> Emitir Guia Oficial (Restrito ao Adestrador)';
+    }
+  }
+
+  // Aviso contextual acima do botão salvar prontuário clínico e sessão de manejo
+  const vetSaveWarn = document.getElementById('vet-save-warning');
+  if (vetSaveWarn) {
+    vetSaveWarn.style.display = (currentUserRole !== 'vet') ? 'flex' : 'none';
+  }
+
+  const manejoSaveWarn = document.getElementById('manejo-save-warning');
+  if (manejoSaveWarn) {
+    manejoSaveWarn.style.display = (currentUserRole !== 'adestrador') ? 'flex' : 'none';
   }
 }
 
@@ -1784,22 +1862,14 @@ function renderPetVaccines(petId) {
 function salvarProntuarioVet(e) {
   e.preventDefault();
 
-  if (!activeVetPet) {
-    alert('Por favor, selecione um paciente para consulta clínica!');
-    return;
+  // Regra: Qualquer perfil que não seja Médico Veterinário (ex: admin, atendente, adestrador mesmo com senha)
+  // deve receber o aviso antes de continuar com a ação de salvar o prontuário
+  if (currentUserRole !== 'vet') {
+    alert('consulte o médico ou adestrador responsável antes de continuar com esta ação');
   }
 
-  if (currentUserRole !== 'vet' && currentUserRole !== 'admin') {
-    solicitarAutorizacao({
-      requiredRole: 'vet',
-      targetKey: 'prontuario-clinico',
-      title: 'Salvar Prontuário Clínico',
-      subtitle: 'Exclusivo Médico Veterinário',
-      message: 'Apenas Médicos Veterinários com CRMV ativo podem prescrever condutas médicas e assinar prontuários. Digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
-      onSuccess: () => {
-        executarSalvarProntuarioVet();
-      }
-    });
+  if (!activeVetPet) {
+    alert('Por favor, selecione um paciente para consulta clínica!');
     return;
   }
 
@@ -1818,10 +1888,13 @@ function executarSalvarProntuarioVet() {
   if (!state.prontuariosClinicos[petId]) state.prontuariosClinicos[petId] = [];
 
   const currentUser = USERS[currentUserRole] || USERS.vet;
+  const profDesc = (currentUser && currentUser.crmv) 
+    ? `${currentUser.name} (${currentUser.crmv})` 
+    : `${currentUser.name} (${currentUser.role})`;
 
   const novoRegistro = {
     data: new Date().toLocaleDateString('pt-BR'),
-    profissional: `${currentUser.name} (${currentUser.crmv || 'CRMV/SP 12345'})`,
+    profissional: profDesc,
     queixa,
     sinaisVitais,
     mucosas,
@@ -1844,22 +1917,16 @@ function executarSalvarProntuarioVet() {
 }
 
 function abrirModalReceitaVet() {
-  if (!activeVetPet) {
-    alert('Selecione um paciente em consulta clínica primeiro!');
+  // Regra: A emissão de receita médica oficial com CRMV é restrita exclusivamente ao Médico Veterinário.
+  // Nem o Administrador nem qualquer outro perfil podem emitir receita oficial, mesmo entrando com senha nas abas bloqueadas.
+  if (currentUserRole !== 'vet') {
+    alert('Ação restrita: A emissão de receitas médicas oficiais com CRMV é restrita exclusivamente ao Médico Veterinário.');
+    showToast('Apenas Médicos Veterinários podem emitir receitas médicas.', 'error');
     return;
   }
 
-  if (currentUserRole !== 'vet' && currentUserRole !== 'admin') {
-    solicitarAutorizacao({
-      requiredRole: 'vet',
-      targetKey: 'prontuario-clinico',
-      title: 'Emissão de Receita Médica Oficial',
-      subtitle: 'Exclusivo Médico Veterinário',
-      message: 'Apenas Médicos Veterinários com CRMV válido podem emitir receituários oficiais. Digite a <strong>Senha do Médico Veterinário</strong> (ou Administrador).',
-      onSuccess: () => {
-        openModal('modal-receita');
-      }
-    });
+  if (!activeVetPet) {
+    alert('Selecione um paciente em consulta clínica primeiro!');
     return;
   }
 
@@ -1869,6 +1936,12 @@ function abrirModalReceitaVet() {
 function gerarVisualizacaoReceita(e) {
   e.preventDefault();
   
+  if (currentUserRole !== 'vet') {
+    alert('Ação restrita: Apenas Médicos Veterinários podem emitir receitas médicas.');
+    showToast('Apenas Médicos Veterinários podem emitir receitas médicas.', 'error');
+    return;
+  }
+
   if (!activeVetPet) {
     alert('Selecione um paciente antes de emitir a receita!');
     return;
@@ -1890,6 +1963,12 @@ function gerarVisualizacaoReceita(e) {
 }
 
 function imprimirReceita() {
+  if (currentUserRole !== 'vet') {
+    alert('Ação restrita: Apenas Médicos Veterinários podem imprimir receitas médicas oficiais.');
+    showToast('Apenas Médicos Veterinários podem emitir receitas médicas.', 'error');
+    return;
+  }
+
   const content = document.getElementById('recipe-preview-container');
   if (!content || content.style.display === 'none') {
     alert('Por favor, gere a visualização da receita antes de imprimir!');
@@ -1983,22 +2062,14 @@ function renderGuiaManejoTimeline(petId) {
 function salvarGuiaManejo(e) {
   e.preventDefault();
 
-  if (!activeManejoPet) {
-    alert('Por favor, selecione um paciente para consultoria de manejo!');
-    return;
+  // Regra: Qualquer perfil que não seja Adestrador / Especialista em Silvestres (ex: admin, atendente, veterinário mesmo com senha)
+  // deve receber o aviso antes de continuar com a ação de salvar a sessão de manejo
+  if (currentUserRole !== 'adestrador') {
+    alert('consulte o médico ou adestrador responsável antes de continuar com esta ação');
   }
 
-  if (currentUserRole !== 'adestrador' && currentUserRole !== 'admin') {
-    solicitarAutorizacao({
-      requiredRole: 'adestrador',
-      targetKey: 'guia-manejo',
-      title: 'Salvar Guia de Manejo Silvestre',
-      subtitle: 'Exclusivo Adestrador / Silvestres',
-      message: 'A elaboração de parâmetros de recinto e planos de enriquecimento é de competência do Especialista em Silvestres. Digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).',
-      onSuccess: () => {
-        executarSalvarGuiaManejo();
-      }
-    });
+  if (!activeManejoPet) {
+    alert('Por favor, selecione um paciente para consultoria de manejo!');
     return;
   }
 
@@ -2021,7 +2092,7 @@ function executarSalvarGuiaManejo() {
 
   const novoRegistro = {
     data: new Date().toLocaleDateString('pt-BR'),
-    profissional: `${currentUser.name} (Especialista em Silvestres / Adestrador)`,
+    profissional: `${currentUser.name} (${currentUser.role})`,
     queixa,
     dimensoes,
     iluminacao,
@@ -2045,22 +2116,16 @@ function executarSalvarGuiaManejo() {
 }
 
 function abrirModalGuiaManejo() {
-  if (!activeManejoPet) {
-    alert('Selecione um paciente em consultoria de manejo primeiro!');
+  // Regra: A emissão de Guia Oficial de Manejo é restrita exclusivamente ao Adestrador / Especialista em Silvestres.
+  // Nem o Administrador nem qualquer outro perfil podem emitir guia oficial, mesmo entrando com senha nas abas bloqueadas.
+  if (currentUserRole !== 'adestrador') {
+    alert('Ação restrita: A emissão do Guia Oficial de Manejo é restrita exclusivamente ao Adestrador / Especialista em Silvestres.');
+    showToast('Apenas Adestradores / Especialistas em Silvestres podem emitir o Guia de Manejo.', 'error');
     return;
   }
 
-  if (currentUserRole !== 'adestrador' && currentUserRole !== 'admin') {
-    solicitarAutorizacao({
-      requiredRole: 'adestrador',
-      targetKey: 'guia-manejo',
-      title: 'Emissão do Guia Oficial de Manejo',
-      subtitle: 'Exclusivo Adestrador / Silvestres',
-      message: 'A emissão do Guia Oficial de Manejo Silvestre requer autorização do Especialista em Silvestres. Digite a <strong>Senha do Adestrador / Silvestres</strong> (ou Administrador).',
-      onSuccess: () => {
-        openModal('modal-guia-manejo');
-      }
-    });
+  if (!activeManejoPet) {
+    alert('Selecione um paciente em consultoria de manejo primeiro!');
     return;
   }
 
@@ -2069,6 +2134,12 @@ function abrirModalGuiaManejo() {
 
 function gerarVisualizacaoGuia(e) {
   e.preventDefault();
+
+  if (currentUserRole !== 'adestrador') {
+    alert('Ação restrita: A emissão do Guia Oficial de Manejo é restrita exclusivamente ao Adestrador / Especialista em Silvestres.');
+    showToast('Apenas Adestradores podem emitir o Guia de Manejo.', 'error');
+    return;
+  }
 
   if (!activeManejoPet) {
     alert('Selecione um paciente antes de emitir o guia!');
@@ -2099,6 +2170,12 @@ function gerarVisualizacaoGuia(e) {
 }
 
 function imprimirGuiaManejo() {
+  if (currentUserRole !== 'adestrador') {
+    alert('Ação restrita: Apenas Adestradores / Especialistas em Silvestres podem emitir ou imprimir o Guia Oficial de Manejo.');
+    showToast('Apenas Adestradores podem emitir o Guia de Manejo.', 'error');
+    return;
+  }
+
   const content = document.getElementById('guia-preview-container');
   if (!content || content.style.display === 'none') {
     alert('Por favor, gere a visualização do guia antes de imprimir!');

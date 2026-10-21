@@ -58,7 +58,7 @@
       </a>
 
       <nav>
-        <ul class="nav-links">
+        <ul class="nav-links" id="portfolio-nav-links">
           <li><a href="#diferenciais">Diferenciais</a></li>
           <li><a href="#tour">Módulos do Sistema</a></li>
           <li><a href="#simulador">Visão por Perfil</a></li>
@@ -69,9 +69,12 @@
       </nav>
 
       <div class="header-actions">
-        <a href="#tour" class="btn-primary">
+        <a href="#tour" class="btn-primary header-cta-btn">
           <i class="fa-solid fa-layer-group"></i> Ver Módulos
         </a>
+        <button type="button" class="portfolio-mobile-toggle" id="portfolio-mobile-toggle" onclick="togglePortfolioMenu()" aria-label="Menu de Navegação">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
     </div>
   </header>

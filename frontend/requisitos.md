@@ -57,8 +57,9 @@ Sistema simplificado e direto para gerenciar as rotinas da clínica veterinária
 
 1. **RN01 - Vínculo Obrigatório:** Todo pet deve estar obrigatoriamente associado a um tutor cadastrado.
 2. **RN02 - Separação Rigorosa de Competências:** 
-   - Apenas o usuário com perfil de **Médico Veterinário** pode preencher o prontuário clínico e emitir receitas médicas oficiais com CRMV.
-   - O perfil de **Adestrador / Especialista em Silvestres** atua na consultoria comportamental, avaliação de recintos e emissão do Guia de Manejo Silvestre.
+   - Apenas o usuário com perfil de **Médico Veterinário** pode emitir receitas médicas oficiais com CRMV. Perfis como Administrador, Adestrador e Atendente são expressamente impedidos de emitir receitas, mesmo entrando com senha de autorização.
+   - Apenas o usuário com perfil de **Adestrador / Especialista em Silvestres** pode emitir o Guia Oficial de Manejo Silvestre. Administradores e outros perfis são expressamente impedidos de emitir guias oficiais.
+   - Qualquer perfil que não seja o profissional responsável (Médico Veterinário para prontuário ou Adestrador para manejo), ao salvar o prontuário clínico ou sessão de manejo, deve receber o aviso mandatório: `'consulte o médico ou adestrador responsável antes de continuar com esta ação'`.
 3. **RN03 - CRMV no Documento:** Toda receita médica emitida deve conter automaticamente o nome completo e o CRMV válido do profissional responsável.
 4. **RN04 - Parâmetros do Guia de Manejo:** O guia de manejo para animais silvestres e exóticos deve registrar obrigatoriamente parâmetros ambientais essenciais (iluminação UVB, fotoperíodo, temperatura e enriquecimento).
 5. **RN05 - Histórico Multidisciplinar Integrado:** A ficha do paciente permite visualizar tanto o histórico clínico quanto o histórico de manejo de forma organizada e independente.

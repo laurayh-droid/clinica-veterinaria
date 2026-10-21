@@ -1518,29 +1518,148 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.portfolio-mobile-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--p-border-solid);
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  color: var(--p-emerald-dark);
+  font-size: 1.2rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--p-shadow-sm);
+}
+
+.portfolio-mobile-toggle:hover {
+  background: var(--p-emerald-light);
+  color: var(--p-emerald);
+}
+
 @media (max-width: 768px) {
+  .portfolio-mobile-toggle {
+    display: flex;
+  }
+
+  .showcase-header {
+    position: relative;
+  }
+
   .nav-links {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--p-border-solid);
+    flex-direction: column;
+    padding: 18px 24px;
+    gap: 12px;
+    box-shadow: var(--p-shadow-lg);
+    z-index: 1000;
   }
+
+  .nav-links.mobile-open {
+    display: flex;
+    animation: portfolioDropdown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes portfolioDropdown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    border-bottom: 1px solid var(--p-border-solid);
+    color: var(--p-text-secondary);
+  }
+
+  .nav-links a:hover {
+    color: var(--p-emerald);
+    padding-left: 6px;
+  }
+
+  .header-cta-btn {
+    display: none;
+  }
+
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
   }
+
   .hero-stats-strip {
     grid-template-columns: 1fr;
   }
+
   .role-grid-benefits {
     grid-template-columns: 1fr;
   }
+
   .tech-grid {
     grid-template-columns: 1fr;
   }
+
   .comparison-table {
     display: block;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
+
   .footer-bottom {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
 }
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 0.98rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .tour-tab-btn {
+    min-width: 160px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+
+  .simulator-selector-tabs {
+    flex-wrap: wrap;
+  }
+
+  .sim-role-btn {
+    flex: 1 1 100%;
+  }
+}
+

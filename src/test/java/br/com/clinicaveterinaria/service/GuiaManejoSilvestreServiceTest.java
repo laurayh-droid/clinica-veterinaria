@@ -62,6 +62,26 @@ class GuiaManejoSilvestreServiceTest {
     }
 
     @Test
+    @DisplayName("RN02 - Deve impedir que Administrador emita Guia de Manejo Silvestre")
+    void deveImpedirAdministradorDeEmitirGuiaManejo() {
+        Pet pet = Pet.builder().id(101L).nome("Kiko").categoria(CategoriaPet.SILVESTRE).build();
+        Funcionario admin = Funcionario.builder().id(4L).nome("Mariana Oliveira").cargo(PerfilFuncionario.ADMINISTRADOR).build();
+
+        when(petService.obterEntidade(101L)).thenReturn(pet);
+        when(funcionarioService.obterEntidade(4L)).thenReturn(admin);
+
+        GuiaManejoSilvestreDTO.Request request = new GuiaManejoSilvestreDTO.Request(
+                101L,
+                4L,
+                "Queixa comportamental",
+                "2x2m", "UVB 5.0", "26C", "Pinus", "Forrageamento", "Target"
+        );
+
+        assertThrows(RegraDeNegocioException.class, () -> guiaManejoSilvestreService.registrarSessaoManejo(request));
+        verify(guiaRepository, never()).save(any());
+    }
+
+    @Test
     @DisplayName("RN04 - Deve exigir parâmetros ambientais em guias de animais silvestres/exóticos")
     void deveExigirParametrosAmbientaisParaSilvestres() {
         Pet pet = Pet.builder().id(101L).nome("Kiko").categoria(CategoriaPet.SILVESTRE).build();

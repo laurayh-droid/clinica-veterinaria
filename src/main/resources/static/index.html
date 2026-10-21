@@ -8,7 +8,7 @@
   
   <!-- Fontes do Google & Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2.5">
 </head>
 <body>
 
@@ -192,6 +192,12 @@
             <div><strong>Mariana</strong><br><small>Administração</small></div>
           </button>
         </div>
+        <div style="margin-top: 16px; text-align: center;">
+          <a href="portfolio.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; color: #059669; text-decoration: none; padding: 8px 16px; background: rgba(5, 150, 105, 0.08); border-radius: 50px; border: 1px solid rgba(5, 150, 105, 0.2); transition: all 0.2s ease;">
+            <i class="fa-solid fa-sparkles" style="color: #d97706;"></i> Ver Apresentação Comercial & Portfólio
+            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i>
+          </a>
+        </div>
       </div>
 
     </div>
@@ -202,8 +208,11 @@
   <!-- ========================================================================= -->
   <div id="app-container" style="display:none;">
     
+    <!-- Backdrop da Sidebar para Telas Mobile/Tablet -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleMobileSidebar(false)"></div>
+
     <!-- Sidebar de Navegação -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="app-sidebar">
       <div>
         <!-- Logo e Marca com Identidade Bio-Harmônica -->
         <div class="brand">
@@ -252,6 +261,11 @@
             <div class="brand-subtitle">Domésticos & Silvestres</div>
             <div class="brand-badge-pill">Atendimento Integrado</div>
           </div>
+
+          <!-- Botão Fechar Menu no Mobile -->
+          <button type="button" class="sidebar-mobile-close" id="sidebar-close-btn" onclick="toggleMobileSidebar(false)" aria-label="Fechar Menu">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
 
         <!-- Menu Lateral com Módulos Separados -->
@@ -311,9 +325,14 @@
       
       <!-- Topbar Header -->
       <header class="topbar">
-        <div class="page-header-info">
-          <h1 id="page-title">Dashboard & Fila do Dia</h1>
-          <p id="page-subtitle">Acompanhamento dos atendimentos clínicos e consultorias de manejo para pets comuns e silvestres</p>
+        <div class="topbar-left">
+          <button type="button" class="btn-hamburger" id="btn-hamburger" onclick="toggleMobileSidebar()" aria-label="Abrir Menu de Navegação">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-header-info">
+            <h1 id="page-title">Dashboard & Fila do Dia</h1>
+            <p id="page-subtitle">Acompanhamento dos atendimentos clínicos e consultorias de manejo para pets comuns e silvestres</p>
+          </div>
         </div>
 
         <div class="topbar-actions">
@@ -555,7 +574,7 @@
             <span id="vet-banner-text"><strong>Módulo Clínico Veterinário:</strong> Preenchimento de exame físico, diagnóstico clínico e emissão de receita com CRMV.</span>
           </div>
 
-          <div class="form-grid" style="grid-template-columns: 1fr 2.2fr;">
+          <div class="form-grid clinical-two-col">
             
             <!-- Painel Esquerdo: Paciente & Vacinas -->
             <div class="panel">
@@ -643,6 +662,11 @@
                   </div>
                 </div>
 
+                <div id="vet-save-warning" class="save-responsibility-warning" style="display:none; width:100%; margin-top:0.75rem; padding:0.65rem 0.9rem; background:#fffbeb; color:#b45309; border:1px solid #fde68a; border-radius:var(--radius-md); font-size:0.825rem; font-weight:600; align-items:center; gap:0.5rem;">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span>consulte o médico ou adestrador responsável antes de continuar com esta ação</span>
+                </div>
+
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem;" class="mt-2">
                   <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Salvar Prontuário Clínico
@@ -671,10 +695,10 @@
           
           <div id="adestrador-role-banner" class="alert-banner mb-2" style="background-color: var(--badge-adestrador-bg); color: var(--badge-adestrador-text); border-color: var(--badge-adestrador-border);">
             <i class="fa-solid fa-feather"></i>
-            <span><strong>Módulo de Manejo & Bem-Estar Silvestre:</strong> Avaliação comportamental, adequação de recinto e emissão do Guia Oficial de Manejo.</span>
+            <span id="adestrador-banner-text"><strong>Módulo de Manejo & Bem-Estar Silvestre:</strong> Avaliação comportamental, adequação de recinto e emissão do Guia Oficial de Manejo.</span>
           </div>
 
-          <div class="form-grid" style="grid-template-columns: 1fr 2.2fr;">
+          <div class="form-grid clinical-two-col">
             
             <!-- Painel Esquerdo: Paciente & Parâmetros Atuais do Recinto -->
             <div class="panel">
@@ -784,6 +808,11 @@
                     <label class="form-label">Plano de Treinamento e Orientações para o Tutor *</label>
                     <textarea id="manejo-treinamento" class="form-control" style="min-height:85px;" placeholder="Ex: Treinamento de alvo (target) para entrada voluntária na caixa de transporte; reforço positivo com semente favorita; rotina diária de 15 minutos..." required></textarea>
                   </div>
+                </div>
+
+                <div id="manejo-save-warning" class="save-responsibility-warning" style="display:none; width:100%; margin-top:0.75rem; padding:0.65rem 0.9rem; background:#fffbeb; color:#b45309; border:1px solid #fde68a; border-radius:var(--radius-md); font-size:0.825rem; font-weight:600; align-items:center; gap:0.5rem;">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span>consulte o médico ou adestrador responsável antes de continuar com esta ação</span>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem;" class="mt-2">
@@ -1313,6 +1342,6 @@
   <div id="print-guia-area"></div>
 
   <!-- Script Principal JavaScript -->
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=2.5"></script>
 </body>
 </html>

@@ -61,8 +61,8 @@ public class GuiaManejoSilvestreService {
         Pet pet = petService.obterEntidade(request.petId());
         Funcionario especialista = funcionarioService.obterEntidade(request.especialistaId());
 
-        // RN02: Apenas Adestrador / Especialista em Silvestres (ou Administrador) pode emitir Guia de Manejo Silvestre
-        if (especialista.getCargo() != PerfilFuncionario.ESPECIALISTA_SILVESTRES && especialista.getCargo() != PerfilFuncionario.ADMINISTRADOR) {
+        // RN02: Apenas Adestrador / Especialista em Silvestres pode emitir Guia de Manejo Silvestre
+        if (especialista.getCargo() != PerfilFuncionario.ESPECIALISTA_SILVESTRES) {
             throw new RegraDeNegocioException("Apenas Especialistas em Silvestres e Adestradores têm competência para emitir Guias de Manejo (RN02).");
         }
 

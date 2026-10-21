@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZooMed Fauna & Domésticos | Showcase & Apresentação Comercial do Sistema</title>
+  <meta name="description" content="Apresentação executiva e comercial do ZooMed: O primeiro software clínico veterinário e de consultoria de manejo unificado para pets domésticos e fauna silvestre/exótica.">
+  <meta name="keywords" content="clínica veterinária, pets silvestres, animais exóticos, prontuário veterinário, CRMV, guia de manejo silvestre, gestão veterinária">
+  <meta name="author" content="ZooMed Fauna & Domésticos">
+
+  <!-- Open Graph / Redes Sociais -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ZooMed Fauna & Domésticos - Sistema de Gestão Veterinária Integrada">
+  <meta property="og:description" content="Gestão clínica ágil, prontuário médico com CRMV e guia oficial de manejo para animais silvestres e domésticos.">
+  <meta property="og:image" content="assets/images/principal-silvestre.jpg">
+
+  <!-- Fontes & Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/portfolio.css">
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- NAVBAR FIXA / CABEÇALHO COM GLASSMORPHISM                                  -->
+  <!-- ========================================================================= -->
+  <header class="showcase-header">
+    <div class="header-container">
+      <a href="#hero" class="brand-link">
+        <svg class="brand-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="nav-grad-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#34d399" />
+              <stop offset="60%" stop-color="#10b981" />
+              <stop offset="100%" stop-color="#f59e0b" />
+            </linearGradient>
+            <linearGradient id="nav-grad-leaf" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#059669" />
+              <stop offset="100%" stop-color="#34d399" />
+            </linearGradient>
+            <linearGradient id="nav-grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fbbf24" />
+              <stop offset="100%" stop-color="#d97706" />
+            </linearGradient>
+          </defs>
+          <circle cx="24" cy="24" r="22" fill="#064e3b" stroke="url(#nav-grad-primary)" stroke-width="2" />
+          <path d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z" fill="url(#nav-grad-leaf)" opacity="0.95" />
+          <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z" fill="url(#nav-grad-amber)" />
+          <circle cx="11" cy="21" r="3.2" fill="#fef3c7" />
+          <circle cx="17" cy="16" r="3.5" fill="#fef3c7" />
+          <path d="M23 11 C25 9 28 11 28 14 C28 17 24 18 22 15 C22 13 22 12 23 11 Z" fill="#6ee7b7" />
+          <path d="M30 16 C33 14 36 17 35 20 C34 23 31 22 29 19 C29 17 29 17 30 16 Z" fill="#34d399" />
+          <path d="M17 30.5 H19.5 M18.25 29.25 V31.75" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+        </svg>
+        <div class="brand-text">
+          <h2>ZooMed <span>Fauna</span></h2>
+          <span class="brand-tag">Fauna & Domésticos</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="portfolio-nav-links">
+          <li><a href="#diferenciais">Diferenciais</a></li>
+          <li><a href="#tour">Módulos do Sistema</a></li>
+          <li><a href="#simulador">Visão por Perfil</a></li>
+          <li><a href="#silvestres">Manejo Silvestre</a></li>
+          <li><a href="#impacto">Calculadora de Impacto</a></li>
+          <li><a href="#arquitetura">Tecnologia</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#tour" class="btn-primary header-cta-btn">
+          <i class="fa-solid fa-layer-group"></i> Ver Módulos
+        </a>
+        <button type="button" class="portfolio-mobile-toggle" id="portfolio-mobile-toggle" onclick="togglePortfolioMenu()" aria-label="Menu de Navegação">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO SECTION                                                              -->
+  <!-- ========================================================================= -->
+  <section id="hero" class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fa-solid fa-sparkles"></i>
+          <span>O Software Clínico Mais Completo para a Medicina Veterinária Moderna</span>
+        </div>
+
+        <h1 class="hero-title">
+          Atendimento Clínico Ágil & Manejo de <span class="gradient-text">Fauna Silvestre e Domésticos</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Unifique a rotina da sua clínica: do exame físico e prescrição com <strong>CRMV automático</strong> para cães e gatos, até o controle detalhado de <strong>recintos, fotoperíodo e iluminação UVB</strong> para aves, répteis e animais exóticos.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#tour" class="btn-primary">
+            <i class="fa-solid fa-layer-group"></i> Conhecer os Módulos do Sistema
+          </a>
+          <a href="#diferenciais" class="btn-secondary">
+            <i class="fa-solid fa-award"></i> Ver Diferenciais
+          </a>
+        </div>
+
+        <div class="hero-stats-strip">
+          <div class="stat-item">
+            <h3>100%</h3>
+            <p>Digital & Sem Papéis</p>
+          </div>
+          <div class="stat-item">
+            <h3>-45%</h3>
+            <p>Tempo de Espera na Fila</p>
+          </div>
+          <div class="stat-item">
+            <h3>3 em 1</h3>
+            <p>Médico, Manejo & Gestão</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Visual com Imagem Real do Ecossistema -->
+      <div class="hero-visual">
+        <div class="hero-main-card">
+          <div class="hero-image-wrap">
+            <img src="assets/images/principal-silvestre.jpg" alt="Veterinária especialista em atendimento de fauna silvestre e pets exóticos" style="object-position: center 25%;">
+            <div class="hero-image-overlay">
+              <div class="hero-overlay-tag">
+                <i class="fa-solid fa-shield-heart"></i>
+                <span>Atendimento Multidisciplinar Integrado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges Flutuantes -->
+        <div class="hero-floating-badge badge-top-right">
+          <div class="badge-icon-box green">
+            <i class="fa-solid fa-file-prescription"></i>
+          </div>
+          <div>
+            <div class="badge-text-title">Receita com CRMV</div>
+            <div class="badge-text-sub">Emissão com 1 clique</div>
+          </div>
+        </div>
+
+        <div class="hero-floating-badge badge-bottom-left">
+          <div class="badge-icon-box amber">
+            <i class="fa-solid fa-sun"></i>
+          </div>
+          <div>
+            <div class="badge-text-title">Guia de Manejo UVB</div>
+            <div class="badge-text-sub">Exclusivo para Silvestres</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- BARRA DE DESTAQUES RÁPIDOS                                                -->
+  <!-- ========================================================================= -->
+  <div class="highlights-bar">
+    <div class="highlights-container">
+      <div class="highlight-pill">
+        <i class="fa-solid fa-paw"></i>
+        <span>Suporte a Cães, Gatos, Aves, Répteis e Exóticos</span>
+      </div>
+      <div class="highlight-pill">
+        <i class="fa-solid fa-clock"></i>
+        <span>Fila de Atendimento do Dia em Tempo Real</span>
+      </div>
+      <div class="highlight-pill">
+        <i class="fa-solid fa-certificate"></i>
+        <span>Prescrição Médica Oficial com CRMV Validado</span>
+      </div>
+      <div class="highlight-pill">
+        <i class="fa-solid fa-feather-pointed"></i>
+        <span>Diretrizes Oficiais de Recinto & Bem-Estar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PILARES DE VALOR / DIFERENCIAIS                                           -->
+  <!-- ========================================================================= -->
+  <section id="diferenciais" class="section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Por Que Escolher o ZooMed</span>
+        <h2 class="section-title">Construído para Superar as Limitações dos Softwares Tradicionais</h2>
+        <p class="section-desc">
+          Enquanto os sistemas comuns de pet shop tratam todo animal da mesma forma, o ZooMed foi desenhado especificamente para a complexidade clínica e as necessidades de bem-estar de espécies convencionais e não convencionais.
+        </p>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-icon" style="color:var(--p-emerald);">
+            <i class="fa-solid fa-stethoscope"></i>
+          </div>
+          <h4>Prontuário Médico Bio-Harmônico</h4>
+          <p>Anamnese organizada, registro de temperatura, frequência cardíaca, respiratória e cálculo de doses com emissão de receituário legalizado com CRMV.</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon" style="color:var(--p-amber);">
+            <i class="fa-solid fa-dna"></i>
+          </div>
+          <h4>Módulo Exclusivo Silvestre</h4>
+          <p>O único sistema com registro de fotoperíodo, parâmetros de lâmpada UVB, umidade de terrário, substrato e enriquecimento ambiental cognitivo e sensorial.</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon" style="color:var(--p-lagoon);">
+            <i class="fa-solid fa-users-gear"></i>
+          </div>
+          <h4>Segurança & Competências Rígidas</h4>
+          <p>Separação clara entre a conduta clínica privativa do Médico Veterinário e as orientações de manejo do Biólogo/Adestrador (Regra RN02).</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon" style="color:var(--p-reptil);">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <h4>Recepção Sem Fricção</h4>
+          <p>Fila do dia interativa com triagem instantânea, visualização do status do paciente e busca ultra-rápida de tutores por CPF ou nome do pet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- TOUR INTERATIVO DAS TELAS DO SISTEMA                                      -->
+  <!-- ========================================================================= -->
+  <section id="tour" class="section section-alt">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Tour de Demonstração</span>
+        <h2 class="section-title">Conheça Cada Módulo em Detalhes</h2>
+        <p class="section-desc">
+          Explore os fluxos de trabalho projetados para garantir máxima agilidade na recepção, precisão no consultório e excelência no manejo de animais exóticos.
+        </p>
+      </div>
+
+      <div class="tour-wrapper">
+        <!-- Barra de Abas de Navegação -->
+        <div class="tour-tabs-header">
+          <button type="button" class="tour-tab-btn active" data-target="tour-vet">
+            <i class="fa-solid fa-user-doctor"></i> Consultório & Prontuário
+          </button>
+          <button type="button" class="tour-tab-btn" data-target="tour-silvestre">
+            <i class="fa-solid fa-feather"></i> Manejo Silvestre & Recinto
+          </button>
+          <button type="button" class="tour-tab-btn" data-target="tour-recepcao">
+            <i class="fa-solid fa-clipboard-list"></i> Fila do Dia & Recepção
+          </button>
+          <button type="button" class="tour-tab-btn" data-target="tour-vacinas">
+            <i class="fa-solid fa-syringe"></i> Vacinação & Profilaxia
+          </button>
+          <button type="button" class="tour-tab-btn" data-target="tour-dashboard">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard & Indicadores
+          </button>
+        </div>
+
+        <!-- Painel 1: Consultório Médico -->
+        <div id="tour-vet" class="tour-content-panel active">
+          <div class="tour-info-side">
+            <span class="section-tag">Módulo do Médico Veterinário</span>
+            <h3>Prontuário Clínico & Prescrição Oficial</h3>
+            <p>
+              Projetado para dar agilidade à consulta médica veterinária, permitindo registrar queixas, exame clínico de órgãos vitais e condutas terapêuticas com rastreabilidade total.
+            </p>
+            <ul class="tour-feature-list">
+              <li><i class="fa-solid fa-circle-check"></i> Registro de parâmetros vitais (Temp, FC, FR, TPC, Peso e Escore Corporal).</li>
+              <li><i class="fa-solid fa-circle-check"></i> Emissão instantânea de Receita Médica com CRMV obrigatório e posologia formatada.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Histórico médico cronológico do animal com visualização em 1 clique.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Impressão direta de receituário profissional em papel timbrado.</li>
+            </ul>
+          </div>
+
+          <div class="tour-mockup-frame">
+            <div class="mockup-window-bar">
+              <div class="mockup-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <span class="mockup-title">ZooMed - Prontuário Clínico Médico</span>
+              <span><i class="fa-solid fa-user-doctor" style="color:var(--p-emerald);"></i> CRMV Ativo</span>
+            </div>
+            <div class="mockup-screen-body">
+              <div class="mockup-row">
+                <div class="mockup-card-metric">
+                  <span>PACIENTE EM ATENDIMENTO</span>
+                  <h4>Thor • Golden Retriever</h4>
+                  <small style="color:var(--p-text-muted);">Tutor: Mariana Costa • 4 anos • 32.5 kg</small>
+                </div>
+                <div class="mockup-card-metric blue">
+                  <span>PROFISSIONAL RESPONSÁVEL</span>
+                  <h4>Dr. Carlos Eduardo</h4>
+                  <small style="color:var(--p-lagoon); font-weight:700;">CRMV/SP 12345</small>
+                </div>
+              </div>
+
+              <div style="background:#f4f9f5; padding:14px; border-radius:10px; border:1px solid #dbe4dc;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <strong style="font-size:0.85rem; color:#064e3b;"><i class="fa-solid fa-heart-pulse"></i> Sinais Vitais Aferidos:</strong>
+                  <span style="font-size:0.75rem; color:#059669; font-weight:700;">Normal</span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; font-size:0.8rem; text-align:center;">
+                  <div style="background:#fff; padding:6px; border-radius:6px;">Temp: <strong>38.6 °C</strong></div>
+                  <div style="background:#fff; padding:6px; border-radius:6px;">FC: <strong>92 bpm</strong></div>
+                  <div style="background:#fff; padding:6px; border-radius:6px;">FR: <strong>24 mpm</strong></div>
+                  <div style="background:#fff; padding:6px; border-radius:6px;">TPC: <strong>&lt; 2s</strong></div>
+                </div>
+              </div>
+
+              <div style="background:#fff; border:1px dashed #059669; padding:12px; border-radius:10px; font-size:0.82rem;">
+                <strong style="color:#059669;"><i class="fa-solid fa-file-prescription"></i> Receituário Oficial Formatado:</strong>
+                <p style="margin-top:4px; color:#2d4538;">1. Amoxicilina + Clavulanato 500mg: 1 comprimido a cada 12h por 10 dias.</p>
+                <p style="color:#2d4538;">2. Meloxicam 2mg: 1 comprimido ao dia durante 4 dias após alimentação.</p>
+                <div style="margin-top:8px; text-align:right; font-size:0.75rem; color:#748c7d;">
+                  Assinado digitalmente por Dr. Carlos Eduardo - CRMV/SP 12345
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel 2: Manejo Silvestre -->
+        <div id="tour-silvestre" class="tour-content-panel">
+          <div class="tour-info-side">
+            <span class="section-tag amber">Módulo Exclusivo Silvestre</span>
+            <h3>Consultoria de Manejo & Auditoria de Recinto</h3>
+            <p>
+              Mais de 80% dos problemas de saúde em aves, répteis e roedores decorrem de erros ambientais. O ZooMed possui ferramentas dedicadas para adequação de habitat e comportamento animal.
+            </p>
+            <ul class="tour-feature-list">
+              <li><i class="fa-solid fa-circle-check" style="color:var(--p-amber);"></i> Avaliação de Recinto: Dimensões (C x L x A), tipo de substrato e ventilação.</li>
+              <li><i class="fa-solid fa-circle-check" style="color:var(--p-amber);"></i> Iluminação & UVB: Fotoperíodo diário (horas), espectro UVB e potência.</li>
+              <li><i class="fa-solid fa-circle-check" style="color:var(--p-amber);"></i> Gradiente Térmico: Registro de ponto quente e ponto frio para répteis ectotérmicos.</li>
+              <li><i class="fa-solid fa-circle-check" style="color:var(--p-amber);"></i> Emissão do <strong>Guia Oficial de Manejo Silvestre</strong> para o tutor seguir em casa.</li>
+            </ul>
+          </div>
+
+          <div class="tour-mockup-frame">
+            <div class="mockup-window-bar">
+              <div class="mockup-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <span class="mockup-title">ZooMed - Guia Oficial de Manejo Silvestre</span>
+              <span><i class="fa-solid fa-feather" style="color:var(--p-amber);"></i> Esp. Silvestres</span>
+            </div>
+            <div class="mockup-screen-body">
+              <div class="mockup-row">
+                <div class="mockup-card-metric amber">
+                  <span>PACIENTE SILVESTRE</span>
+                  <h4>Loki • Iguana Verde</h4>
+                  <small style="color:var(--p-amber); font-weight:700;">Espécie: Iguana iguana • 1.8 kg</small>
+                </div>
+                <div class="mockup-card-metric">
+                  <span>ESPECIALISTA RESPONSÁVEL</span>
+                  <h4>Lucas Mendes</h4>
+                  <small style="color:var(--p-emerald); font-weight:700;">Biólogo & Consultor Comportamental</small>
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div style="background:#fffbeb; border:1px solid #fef3c7; padding:10px; border-radius:8px; font-size:0.8rem;">
+                  <strong style="color:#b45309;"><i class="fa-solid fa-sun"></i> Iluminação & UVB:</strong>
+                  <div style="margin-top:4px;">• Lâmpada UVB 10.0 (distância: 30cm)</div>
+                  <div>• Fotoperíodo: 12h claro / 12h escuro</div>
+                </div>
+                <div style="background:#fffbeb; border:1px solid #fef3c7; padding:10px; border-radius:8px; font-size:0.8rem;">
+                  <strong style="color:#b45309;"><i class="fa-solid fa-temperature-three-quarters"></i> Gradiente Térmico:</strong>
+                  <div style="margin-top:4px;">• Ponto Quente (Basking): 34 °C</div>
+                  <div>• Zona Fria: 26 °C • Umidade: 70%</div>
+                </div>
+              </div>
+
+              <div style="background:#f4fdf8; border:1px solid #d1fae5; padding:10px; border-radius:8px; font-size:0.8rem;">
+                <strong style="color:#059669;"><i class="fa-solid fa-puzzle-piece"></i> Enriquecimento Ambiental 5D Prescrito:</strong>
+                <p style="margin-top:3px; color:#2d4538;">Troncos de cortiça rugosa para escalada, foliage densa para segurança e forrageamento de folhas escuras frescas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel 3: Fila do Dia & Recepção -->
+        <div id="tour-recepcao" class="tour-content-panel">
+          <div class="tour-info-side">
+            <span class="section-tag">Recepção & Triagem</span>
+            <h3>Fila de Espera Dinâmica em Tempo Real</h3>
+            <p>
+              Controle sem atritos: acompanhe exatamente quem chegou, quem está em triagem, em consulta clínica e quem já foi liberado, sincronizado instantaneamente entre a recepção e os consultórios.
+            </p>
+            <ul class="tour-feature-list">
+              <li><i class="fa-solid fa-circle-check"></i> Indicadores por status: <em>Agendado, Aguardando, Em Atendimento, Finalizado</em>.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Triagem visual rápida com fotos e badges por categoria (Doméstico, Silvestre ou Exótico).</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cadastro rápido de novos tutores e múltiplos pets com verificação de CPF.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Redução de filas e cancelamentos com histórico de comparecimento.</li>
+            </ul>
+          </div>
+
+          <div class="tour-mockup-frame">
+            <div class="mockup-window-bar">
+              <div class="mockup-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <span class="mockup-title">ZooMed - Fila de Atendimento do Dia</span>
+              <span><i class="fa-solid fa-list-check" style="color:var(--p-emerald);"></i> 18 Pacientes Hoje</span>
+            </div>
+            <div class="mockup-screen-body">
+              <table class="mockup-table-preview">
+                <thead>
+                  <tr>
+                    <th>Horário</th>
+                    <th>Animal / Espécie</th>
+                    <th>Tutor</th>
+                    <th>Profissional</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>09:30</strong></td>
+                    <td><strong>Pipoca</strong> (Calopsita)</td>
+                    <td>Fernanda Lima</td>
+                    <td>Lucas Mendes</td>
+                    <td><span class="badge-status-mock atendimento">Em Atendimento</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>10:00</strong></td>
+                    <td><strong>Max</strong> (Border Collie)</td>
+                    <td>Roberto Alves</td>
+                    <td>Dr. Carlos Eduardo</td>
+                    <td><span class="badge-status-mock aguardando">Aguardando</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>10:30</strong></td>
+                    <td><strong>Freya</strong> (Gato Siamês)</td>
+                    <td>Camila Rocha</td>
+                    <td>Dr. Carlos Eduardo</td>
+                    <td><span class="badge-status-mock finalizado">Finalizado</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>11:00</strong></td>
+                    <td><strong>Nagini</strong> (Corn Snake)</td>
+                    <td>Felipe Ramos</td>
+                    <td>Lucas Mendes</td>
+                    <td><span class="badge-status-mock aguardando">Aguardando</span></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="display:flex; justify-content:space-between; background:#edf7f0; padding:12px; border-radius:8px; font-size:0.8rem;">
+                <div><i class="fa-solid fa-clock"></i> Tempo médio de espera hoje: <strong>11 min</strong></div>
+                <div><i class="fa-solid fa-check-double" style="color:var(--p-emerald);"></i> 14 consultas realizadas com sucesso</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel 4: Vacinas -->
+        <div id="tour-vacinas" class="tour-content-panel">
+          <div class="tour-info-side">
+            <span class="section-tag">Medicina Preventiva</span>
+            <h3>Carteira de Vacinas & Linha do Tempo Imunológica</h3>
+            <p>
+              Fidelize seus clientes e garanta que nenhum reforço passe despercebido. Gestão de vacinas virais, bacterianas e vermifugação com histórico vitalício.
+            </p>
+            <ul class="tour-feature-list">
+              <li><i class="fa-solid fa-circle-check"></i> Controle de lote, fabricante, data de aplicação e data exata de revacinação.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Protocolos preventivos para cães (V10, Antirrábica, Giárida), gatos (V4, V5) e silvestres.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Histórico unificado impresso com facilidade para viagens e comprovantes.</li>
+            </ul>
+          </div>
+
+          <div class="tour-mockup-frame">
+            <div class="mockup-window-bar">
+              <div class="mockup-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <span class="mockup-title">ZooMed - Histórico Imunológico</span>
+              <span><i class="fa-solid fa-shield-virus" style="color:var(--p-emerald);"></i> Imunização</span>
+            </div>
+            <div class="mockup-screen-body">
+              <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h4 style="font-size:0.95rem; color:#065f46;"><i class="fa-solid fa-shield"></i> Protocolo Vacinal em Dia</h4>
+                  <p style="font-size:0.78rem; color:#166534;">Paciente: Luna (Golden Retriever) • Tutor: Rodrigo Mendes</p>
+                </div>
+                <span style="background:#dcfce7; color:#15803d; font-weight:700; font-size:0.75rem; padding:4px 10px; border-radius:50px;">Ativo</span>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; background:#fff; border:1px solid #e2ece4; padding:10px; border-radius:6px; font-size:0.8rem;">
+                  <div><strong>Vacina Múltipla V10 (Zoetis)</strong><br><small style="color:#748c7d;">Dose 3/3 • Lote: 99421A</small></div>
+                  <div style="text-align:right;"><span style="color:#059669; font-weight:700;">Aplicada</span><br><small>Reforço: 15/10/2027</small></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; background:#fff; border:1px solid #e2ece4; padding:10px; border-radius:6px; font-size:0.8rem;">
+                  <div><strong>Vacina Antirrábica Felina/Canina</strong><br><small style="color:#748c7d;">Dose Anual • Lote: 44219B</small></div>
+                  <div style="text-align:right;"><span style="color:#059669; font-weight:700;">Aplicada</span><br><small>Reforço: 20/08/2027</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel 5: Dashboard Executivo -->
+        <div id="tour-dashboard" class="tour-content-panel">
+          <div class="tour-info-side">
+            <span class="section-tag">Inteligência de Gestão</span>
+            <h3>Painel Executivo & Métricas Estratégicas</h3>
+            <p>
+              Tome decisões baseadas em dados em tempo real: volume de atendimentos diários, taxa de ocupação dos consultórios e distribuição por tipos de espécies.
+            </p>
+            <ul class="tour-feature-list">
+              <li><i class="fa-solid fa-circle-check"></i> Distribuição estatística entre caninos, felinos, aves, répteis e pequenos mamíferos.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Taxa de conversão de atendimentos e rotatividade dos leitos e salas.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Monitoramento de faturamento e agendamentos futuros da clínica.</li>
+            </ul>
+          </div>
+
+          <div class="tour-mockup-frame">
+            <div class="mockup-window-bar">
+              <div class="mockup-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <span class="mockup-title">ZooMed - Dashboard Administrativo</span>
+              <span><i class="fa-solid fa-chart-line" style="color:var(--p-emerald);"></i> KPI Ao Vivo</span>
+            </div>
+            <div class="mockup-screen-body">
+              <div class="mockup-row">
+                <div class="mockup-card-metric">
+                  <span>ATENDIMENTOS HOJE</span>
+                  <h4>24 Pacientes</h4>
+                  <small style="color:#059669; font-weight:700;">+18% vs semana passada</small>
+                </div>
+                <div class="mockup-card-metric amber">
+                  <span>SILVESTRES / EXÓTICOS</span>
+                  <h4>38% do Total</h4>
+                  <small style="color:#d97706; font-weight:700;">Aves, Répteis & Roedores</small>
+                </div>
+              </div>
+
+              <div style="background:#fff; border:1px solid #e2ece4; padding:14px; border-radius:10px;">
+                <strong style="font-size:0.85rem; color:#064e3b;"><i class="fa-solid fa-pie-chart"></i> Distribuição por Espécie Atendida:</strong>
+                <div style="display:flex; gap:12px; margin-top:10px; font-size:0.78rem;">
+                  <span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:6px; font-weight:700;">Caninos: 42%</span>
+                  <span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:700;">Aves Silvestres: 24%</span>
+                  <span style="background:#ecfccb; color:#4d7c0f; padding:4px 10px; border-radius:6px; font-weight:700;">Répteis: 14%</span>
+                  <span style="background:#fae8ff; color:#7e22ce; padding:4px 10px; border-radius:6px; font-weight:700;">Felinos: 20%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SIMULADOR INTERATIVO POR PERFIL DE USUÁRIO                                -->
+  <!-- ========================================================================= -->
+  <section id="simulador" class="section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Experiência Personalizada</span>
+        <h2 class="section-title">Como Cada Profissional Vivencia o ZooMed</h2>
+        <p class="section-desc">
+          O sistema adapta interfaces, formulários e permissões de acordo com o perfil de quem está operando, respeitando normas éticas e tornando o trabalho de cada membro muito mais produtivo.
+        </p>
+      </div>
+
+      <div class="simulator-container">
+        <!-- Coluna de Seleção de Perfil -->
+        <div class="role-selector-list">
+          <div class="role-select-card active" data-role="vet">
+            <div class="role-card-avatar blue">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div class="role-card-info">
+              <h4>Dr. Carlos Eduardo</h4>
+              <span>Médico Veterinário</span>
+            </div>
+          </div>
+
+          <div class="role-select-card" data-role="adestrador">
+            <div class="role-card-avatar amber">
+              <i class="fa-solid fa-feather"></i>
+            </div>
+            <div class="role-card-info">
+              <h4>Lucas Mendes</h4>
+              <span>Esp. Silvestres & Biólogo</span>
+            </div>
+          </div>
+
+          <div class="role-select-card" data-role="recepcao">
+            <div class="role-card-avatar green">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div class="role-card-info">
+              <h4>Ana Silva</h4>
+              <span>Atendente & Recepção</span>
+            </div>
+          </div>
+
+          <div class="role-select-card" data-role="admin">
+            <div class="role-card-avatar purple">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="role-card-info">
+              <h4>Mariana Oliveira</h4>
+              <span>Gestora & Administradora</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel Detalhado de Benefícios e Acesso do Perfil Selecionado -->
+        <div class="role-detail-display">
+          <div class="role-detail-header">
+            <div class="role-header-user">
+              <div id="sim-user-avatar" class="role-card-avatar blue">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+              <div>
+                <h3 id="sim-user-title">Dr. Carlos Eduardo</h3>
+                <span id="sim-user-role" style="color:var(--p-text-muted); font-size:0.9rem; font-weight:600;">
+                  Médico Veterinário Clínico • CRMV/SP 12345
+                </span>
+              </div>
+            </div>
+            <span id="sim-user-badge" class="role-header-badge">Módulo Clínico & Prescrição</span>
+          </div>
+
+          <div id="sim-benefits-grid" class="role-grid-benefits">
+            <div class="benefit-box">
+              <h5><i class="fa-solid fa-circle-check" style="color:var(--p-emerald);"></i> Prescrição com CRMV Automático</h5>
+              <p>Emissão ágil de receitas oficiais formatadas, com CRMV impresso por exigência do conselho, dosagens e orientações posológicas claras.</p>
+            </div>
+            <div class="benefit-box">
+              <h5><i class="fa-solid fa-circle-check" style="color:var(--p-emerald);"></i> Prontuário Médico Bio-Harmônico</h5>
+              <p>Registro completo de queixa, anamnese e parâmetros vitais (temperatura, FC, FR, TPC e peso) com histórico unificado do paciente.</p>
+            </div>
+            <div class="benefit-box">
+              <h5><i class="fa-solid fa-circle-check" style="color:var(--p-emerald);"></i> Linha do Tempo Vacinal</h5>
+              <p>Controle preciso de vacinas, vermífugos e tratamentos profiláticos com agendamento da próxima dose.</p>
+            </div>
+            <div class="benefit-box">
+              <h5><i class="fa-solid fa-circle-check" style="color:var(--p-emerald);"></i> Segurança & Segregação Ética</h5>
+              <p>Garantia de que apenas o médico veterinário habilitado assina o receituário e responde pelos procedimentos clínicos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- DESTAQUE EXCLUSIVO: MANEJO SILVESTRE                                      -->
+  <!-- ========================================================================= -->
+  <section id="silvestres" class="section section-alt">
+    <div class="section-container">
+      <div class="wildlife-feature-grid">
+        <div class="wildlife-feature-img">
+          <img src="assets/images/manejo-silvestre.jpg" alt="Exame veterinário e consultoria técnica de manejo de réptil e fauna silvestre" style="object-position: center center;">
+        </div>
+
+        <div class="wildlife-feature-text">
+          <span class="section-tag amber">Inovação Veterinária</span>
+          <h3>O Especialista em Fauna Silvestre Que Sua Clínica Sempre Quis Ter</h3>
+          <p>
+            Manter animais não convencionais em ambiente doméstico exige parâmetros técnicos muito rígidos. O módulo de manejo do ZooMed transforma a consulta em uma verdadeira consultoria de adequação ambiental e nutricional.
+          </p>
+
+          <div class="env-specs-grid">
+            <div class="env-spec-card">
+              <i class="fa-solid fa-sun"></i>
+              <div>
+                <h5>Fotoperíodo & Radiação UVB</h5>
+                <span>Prevenção de Doença Óssea Metabólica (MBD) com especificação de lâmpada e horas diárias de luz.</span>
+              </div>
+            </div>
+
+            <div class="env-spec-card">
+              <i class="fa-solid fa-temperature-arrow-up"></i>
+              <div>
+                <h5>Gradiente Térmico & Umidade</h5>
+                <span>Mapeamento exato de ponto quente (basking area) e zona fria para digestão correta de ectotérmicos.</span>
+              </div>
+            </div>
+
+            <div class="env-spec-card">
+              <i class="fa-solid fa-tree"></i>
+              <div>
+                <h5>Enriquecimento Ambiental 5D</h5>
+                <span>Estímulos cognitivos, sensoriais e alimentares para eliminar comportamentos estereotipados como arrancamento de penas.</span>
+              </div>
+            </div>
+
+            <div class="env-spec-card">
+              <i class="fa-solid fa-print"></i>
+              <div>
+                <h5>Guia Oficial Impresso</h5>
+                <span>Documento com valor legal e pedagógico para que o tutor execute as recomendações com fidelidade.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela Comparativa -->
+      <div class="section-header" style="margin-bottom:32px;">
+        <span class="section-tag">Análise Comparativa</span>
+        <h2 class="section-title">Softwares de Pet Shop Tradicionais vs. ZooMed Fauna</h2>
+      </div>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Funcionalidade / Capacidade</th>
+              <th>Softwares Veterinários Comuns</th>
+              <th>ZooMed Fauna & Domésticos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Suporte a Animais Silvestres & Exóticos</strong></td>
+              <td>Apenas campos genéricos de "observação"</td>
+              <td><strong>Campos nativos de recinto, UVB, fotoperíodo e dieta específica</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Emissão de Receita com CRMV Obrigatório</strong></td>
+              <td>Muitas vezes texto livre sem travas éticas</td>
+              <td><strong>Validação rigorosa com assinatura e CRMV automático</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Segregação de Perfis (Médico vs Adestrador/Biólogo)</strong></td>
+              <td>Todos têm o mesmo tipo de tela genérica</td>
+              <td><strong>Módulos independentes com senhas e competências separadas</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Fila do Dia com Triagem por Espécie</strong></td>
+              <td>Agendas estáticas em lista simples</td>
+              <td><strong>Monitoramento visual em tempo real com status integrado</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Emissão do Guia Oficial de Manejo</strong></td>
+              <td>Inexistente no mercado veterinário</td>
+              <td><strong>Guia oficial padronizado com impressão em 1 clique</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- CALCULADORA DE IMPACTO / RETORNO PARA A CLÍNICA                           -->
+  <!-- ========================================================================= -->
+  <section id="impacto" class="section">
+    <div class="section-container">
+      <div class="roi-card">
+        <div class="roi-intro">
+          <span class="section-tag" style="background:rgba(255,255,255,0.2); color:#fff;">Calculadora Interativa</span>
+          <h3>Simule o Ganho de Tempo da Sua Equipe</h3>
+          <p>
+            Veja como a automação de prontuários, receitas com CRMV e emissão do guia de manejo reduzem o tempo burocrático e aumentam a receita e a satisfação dos tutores.
+          </p>
+
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Volume Médio Diário de Atendimentos:</span>
+              <strong id="val-consultas">18 atendimentos/dia</strong>
+            </div>
+            <input type="range" id="slider-consultas" class="roi-slider" min="5" max="60" value="18" step="1">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Proporção de Animais Silvestres / Exóticos:</span>
+              <strong id="val-silvestres">35% do total</strong>
+            </div>
+            <input type="range" id="slider-silvestres" class="roi-slider" min="5" max="80" value="35" step="5">
+          </div>
+        </div>
+
+        <div class="roi-results-box">
+          <div class="roi-stat-block">
+            <h4 id="res-horas-semana">~25h</h4>
+            <p><i class="fa-solid fa-clock-rotate-left"></i> Economizadas por semana em burocracia e anotações manuais</p>
+          </div>
+
+          <div class="roi-stat-block">
+            <h4 id="res-reducao-espera">-41%</h4>
+            <p><i class="fa-solid fa-bolt"></i> Redução estimada no tempo de espera do tutor na recepção</p>
+          </div>
+
+          <div class="roi-stat-block">
+            <h4 id="res-fidelizacao">+73%</h4>
+            <p><i class="fa-solid fa-heart"></i> Aumento no índice de retorno de tutores com o Guia de Manejo impresso</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- TECNOLOGIAS & ENGENHARIA ROBUSTA                                          -->
+  <!-- ========================================================================= -->
+  <section id="arquitetura" class="section section-alt">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Engenharia de Software</span>
+        <h2 class="section-title">Arquitetura Moderna, Auditável & Pronta para Produção</h2>
+        <p class="section-desc">
+          Construído sob os mais altos padrões corporativos de estabilidade, segurança e integridade de dados para ambientes médicos veterinários de missão crítica.
+        </p>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-icon" style="color:#6db33f;">
+            <i class="fa-brands fa-java"></i>
+          </div>
+          <h4>Java 17 & Spring Boot 3.3.3</h4>
+          <p>Backend de alta performance com arquitetura em camadas desacoplada (Controller, Service, Repository, DTOs e Exceptions personalizadas).</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon" style="color:#00758f;">
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <h4>MySQL 8 & Spring Data JPA</h4>
+          <p>Modelagem relacional consistente com transações atômicas, isolamento de dados e chaves estrangeiras que impedem inconsistências cadastrais.</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon" style="color:#2496ed;">
+            <i class="fa-brands fa-docker"></i>
+          </div>
+          <h4>Docker & Docker Compose</h4>
+          <p>Containerização completa do backend e do banco de dados com script de saúde (healthcheck) e inicialização com um único comando.</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon" style="color:#d33833;">
+            <i class="fa-brands fa-jenkins"></i>
+          </div>
+          <h4>CI/CD Automatizado via Jenkins</h4>
+          <p>Pipeline com build, compilação de testes automatizados, empacotamento JAR e criação de imagem Docker para deploy contínuo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FECHAMENTO DO PORTFÓLIO                                                   -->
+  <!-- ========================================================================= -->
+  <section class="final-cta-section">
+    <div class="cta-box">
+      <span class="section-tag" style="background:rgba(255,255,255,0.15); color:#fff; margin-bottom:20px;">ZooMed Fauna & Domésticos</span>
+      <h2>Inovação em Saúde Animal & Gestão Veterinária</h2>
+      <p>
+        Um ecossistema moderno que une a precisão médica ao respeito e rigor técnico no manejo de pets convencionais e fauna silvestre.
+      </p>
+
+      <div class="cta-buttons">
+        <a href="#hero" class="btn-primary" style="padding:16px 36px; font-size:1.05rem;">
+          <i class="fa-solid fa-arrow-up"></i> Voltar ao Topo
+        </a>
+        <a href="#tour" class="btn-secondary" style="padding:16px 30px; font-size:1.05rem; background:transparent; color:#fff; border-color:rgba(255,255,255,0.3);">
+          <i class="fa-solid fa-layer-group"></i> Rever Módulos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- RODAPÉ                                                                    -->
+  <!-- ========================================================================= -->
+  <footer class="showcase-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>ZooMed Fauna & Domésticos</h3>
+        <p>
+          Sistema de excelência para gestão clínica veterinária, recepção integrada e consultoria especializada de manejo de pets domésticos e fauna silvestre/exótica.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#hero">Início</a></li>
+          <li><a href="#diferenciais">Diferenciais</a></li>
+          <li><a href="#tour">Módulos</a></li>
+          <li><a href="#simulador">Visão por Perfil</a></li>
+          <li><a href="#silvestres">Manejo Silvestre</a></li>
+          <li><a href="#impacto">Calculadora</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Documentação</h4>
+        <ul>
+          <li><a href="requisitos.md" target="_blank"><i class="fa-solid fa-file-lines"></i> Requisitos do Sistema</a></li>
+          <li><a href="README.md" target="_blank"><i class="fa-solid fa-book"></i> Documentação Técnica</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 ZooMed Fauna & Domésticos. Todos os direitos reservados.</div>
+      <div>Desenvolvido com Spring Boot 3 & Interface Bio-Harmônica</div>
+    </div>
+  </footer>
+
+  <!-- Script Interativo do Showcase -->
+  <script src="js/portfolio.js"></script>
+</body>
+</html>

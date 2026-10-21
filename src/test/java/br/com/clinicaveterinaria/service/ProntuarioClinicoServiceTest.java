@@ -70,6 +70,34 @@ class ProntuarioClinicoServiceTest {
     }
 
     @Test
+    @DisplayName("RN02 - Deve impedir que Administrador registre prontuário clínico ou emita receita")
+    void deveImpedirAdministradorDeRegistrarProntuario() {
+        Pet pet = Pet.builder().id(101L).nome("Kiko").categoria(CategoriaPet.SILVESTRE).especieRaca("Papagaio").build();
+        Funcionario admin = Funcionario.builder()
+                .id(4L)
+                .nome("Mariana Oliveira")
+                .cargo(PerfilFuncionario.ADMINISTRADOR)
+                .crmv(null)
+                .build();
+
+        when(petService.obterEntidade(101L)).thenReturn(pet);
+        when(funcionarioService.obterEntidade(4L)).thenReturn(admin);
+
+        ProntuarioClinicoDTO.Request request = new ProntuarioClinicoDTO.Request(
+                101L,
+                4L,
+                "Exame geral",
+                null, null, null,
+                "Hígido",
+                "Sem medicação",
+                null
+        );
+
+        assertThrows(RegraDeNegocioException.class, () -> prontuarioService.registrarAtendimento(request));
+        verify(prontuarioRepository, never()).save(any());
+    }
+
+    @Test
     @DisplayName("RN02 e RN03 - Deve registrar prontuário quando executado por Médico Veterinário com CRMV")
     void deveRegistrarProntuarioComVeterinarioComCrmv() {
         Tutor tutor = Tutor.builder().id(1L).nome("Mariana").build();
