@@ -92,7 +92,7 @@ docker exec -it zoomed-app sh
 
 ## 🐙 5. Docker Compose (Orquestração de Múltiplos Serviços)
 
-Comandos para gerenciar o conjunto de serviços definidos no [docker-compose.yml](file:///c:/Users/evand/Documents/clinica-veterinaria/docker-compose.yml):
+Comandos para gerenciar o conjunto de serviços definidos no [docker-compose.yml](file:///c:/Users/laura.sousa/Documents/clinica-veterinaria/docker-compose.yml):
 
 | Comando | Descrição |
 | :--- | :--- |
