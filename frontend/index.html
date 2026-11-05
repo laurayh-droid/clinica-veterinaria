@@ -92,84 +92,34 @@
         <p>Centro Clínico & Manejo de Pets Domésticos e Silvestres</p>
       </div>
 
-      <!-- Abas de Alternância: Entrar vs. Cadastre-se -->
-      <div class="login-tabs">
-        <button type="button" class="login-tab-btn active" id="btn-tab-login" onclick="switchAuthTab('login')">
-          <i class="fa-solid fa-right-to-bracket"></i> Entrar
+      <!-- Formulário de Login de Usuário -->
+      <form id="form-login" onsubmit="fazerLogin(event)" style="margin-top: 1.25rem;">
+        <div class="form-group mb-2">
+          <label class="form-label" for="login-email">E-mail Profissional</label>
+          <input type="email" id="login-email" class="form-control" placeholder="carlos.vet@zoomed.com" value="carlos.vet@zoomed.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Senha de Acesso</label>
+          <div class="password-input-wrap">
+            <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="123456" required>
+            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', 'login-pwd-icon')">
+              <i class="fa-solid fa-eye" id="login-pwd-icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions-bar">
+          <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+            <input type="checkbox" checked style="accent-color:var(--primary);"> Lembrar-me
+          </label>
+          <a href="javascript:void(0)" onclick="alert('Instruções de recuperação enviadas para o e-mail cadastrado.')" style="color:var(--primary-hover); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary login-submit-btn">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Acessar Sistema
         </button>
-        <button type="button" class="login-tab-btn" id="btn-tab-cadastro" onclick="switchAuthTab('cadastro')">
-          <i class="fa-solid fa-user-plus"></i> Novo Cadastro
-        </button>
-      </div>
-
-      <!-- Formulário 1: Login de Usuário Existente -->
-      <div id="auth-login-view" class="auth-form-view active">
-        <form id="form-login" onsubmit="fazerLogin(event)">
-          <div class="form-group mb-2">
-            <label class="form-label" for="login-email">E-mail Profissional</label>
-            <input type="email" id="login-email" class="form-control" placeholder="carlos.vet@zoomed.com" value="carlos.vet@zoomed.com" required>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="login-password">Senha de Acesso</label>
-            <div class="password-input-wrap">
-              <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="123456" required>
-              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', 'login-pwd-icon')">
-                <i class="fa-solid fa-eye" id="login-pwd-icon"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="form-actions-bar">
-            <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
-              <input type="checkbox" checked style="accent-color:var(--primary);"> Lembrar-me
-            </label>
-            <a href="javascript:void(0)" onclick="alert('Instruções de recuperação enviadas para o e-mail cadastrado.')" style="color:var(--primary-hover); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
-          </div>
-
-          <button type="submit" class="btn btn-primary login-submit-btn">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Acessar Sistema
-          </button>
-        </form>
-      </div>
-
-      <!-- Formulário 2: Novo Cadastro de Profissional -->
-      <div id="auth-cadastro-view" class="auth-form-view">
-        <form id="form-cadastro-auth" onsubmit="fazerCadastroAuth(event)">
-          <div class="form-group mb-2">
-            <label class="form-label">Nome Completo *</label>
-            <input type="text" id="auth-reg-nome" class="form-control" placeholder="Ex: Dra. Juliana Matos" required>
-          </div>
-
-          <div class="form-group mb-2">
-            <label class="form-label">E-mail *</label>
-            <input type="email" id="auth-reg-email" class="form-control" placeholder="juliana.vet@zoomed.com" required>
-          </div>
-
-          <div class="form-group mb-2">
-            <label class="form-label">Cargo / Especialidade *</label>
-            <select id="auth-reg-cargo" class="form-control" required onchange="toggleAuthRegCRMV(this.value)">
-              <option value="Veterinário">Médico(a) Veterinário(a)</option>
-              <option value="Adestrador / Esp. Silvestres">Adestrador / Especialista em Silvestres</option>
-              <option value="Atendente">Atendente / Recepcionista</option>
-            </select>
-          </div>
-
-          <div class="form-group mb-2" id="auth-reg-crmv-group">
-            <label class="form-label">Número do CRMV *</label>
-            <input type="text" id="auth-reg-crmv" class="form-control" placeholder="CRMV/SP 99887">
-          </div>
-
-          <div class="form-group mb-2">
-            <label class="form-label">Criar Senha *</label>
-            <input type="password" id="auth-reg-password" class="form-control" placeholder="Mínimo 6 caracteres" required>
-          </div>
-
-          <button type="submit" class="btn btn-primary login-submit-btn mt-1">
-            <i class="fa-solid fa-check"></i> Concluir Cadastro & Entrar
-          </button>
-        </form>
-      </div>
+      </form>
 
       <!-- Seção de Acesso Rápido (Demonstração de Perfis) -->
       <div class="login-quick-section">
@@ -422,7 +372,7 @@
               <table class="custom-table">
                 <thead>
                   <tr>
-                    <th>Horário</th>
+                    <th>Horário (Início - Término)</th>
                     <th>Paciente (Pet & Categoria)</th>
                     <th>Tutor Responsável</th>
                     <th>Tipo de Serviço</th>
@@ -547,7 +497,7 @@
               <table class="custom-table">
                 <thead>
                   <tr>
-                    <th>Data / Hora</th>
+                    <th>Data / Horário (Início - Término)</th>
                     <th>Paciente (Pet & Categoria)</th>
                     <th>Tutor Responsável</th>
                     <th>Tipo de Atendimento</th>
@@ -624,9 +574,14 @@
                   <i class="fa-solid fa-notes-medical"></i>
                   Prontuário Médico Veterinário
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="abrirModalReceitaVet()" id="btn-emitir-receita">
-                  <i class="fa-solid fa-file-prescription"></i> Emitir Receita Médica (CRMV)
-                </button>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <button class="btn btn-outline btn-sm" onclick="agendarRetornoParaPetAtivo()" id="btn-agendar-retorno" type="button" title="Agendar consulta de retorno clínico para este paciente">
+                    <i class="fa-solid fa-calendar-plus"></i> Agendar Retorno
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="abrirModalReceitaVet()" id="btn-emitir-receita">
+                    <i class="fa-solid fa-file-prescription"></i> Emitir Receita Médica (CRMV)
+                  </button>
+                </div>
               </div>
 
               <form id="form-prontuario-vet" onsubmit="salvarProntuarioVet(event)">
@@ -874,6 +829,16 @@
             <input type="email" id="func-email" class="form-control" placeholder="profissional@zoomed.com" required>
           </div>
 
+          <div class="form-group full-width">
+            <label class="form-label" for="func-senha">Senha de Acesso *</label>
+            <div class="password-input-wrap">
+              <input type="password" id="func-senha" class="form-control" placeholder="Defina a senha de acesso (mínimo 6 caracteres)" required>
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('func-senha', 'func-pwd-icon')">
+                <i class="fa-solid fa-eye" id="func-pwd-icon"></i>
+              </button>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Cargo / Especialidade *</label>
             <select id="func-cargo" class="form-control" required onchange="toggleCRMVField(this.value)">
@@ -1076,21 +1041,44 @@
             <label class="form-label">Tipo de Serviço *</label>
             <select id="agendamento-tipo-servico" class="form-control" onchange="filterProfissionaisPorTipoServico()" required>
               <option value="Consulta Clínica Veterinária">Consulta Clínica Veterinária (Vet)</option>
+              <option value="Retorno Clínico / Reavaliação">Retorno Clínico / Reavaliação (Vet)</option>
               <option value="Consultoria de Manejo & Adestramento Silvestre">Consultoria de Manejo & Adestramento (Silvestres)</option>
-              <option value="Check-up Nutricional e Recinto">Check-up de Recinto & Bem-Estar</option>
-              <option value="Retorno Clínico">Retorno Clínico (Vet)</option>
+              <option value="Check-up Nutricional e Recinto">Check-up de Recinto & Bem-Estar (Silvestres)</option>
               <option value="Vacinação & Imunização">Vacinação & Imunização (Vet)</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Data *</label>
-            <input type="date" id="agendamento-data" class="form-control" required>
+            <label class="form-label" id="label-agendamento-data" for="agendamento-data">Data *</label>
+            <input type="date" id="agendamento-data" class="form-control" required onchange="onAgendamentoDataChange()">
           </div>
 
           <div class="form-group">
-            <label class="form-label">Horário *</label>
-            <input type="time" id="agendamento-hora" class="form-control" required>
+            <label class="form-label" id="label-agendamento-hora" for="agendamento-hora">Horário de Início *</label>
+            <input type="time" id="agendamento-hora" class="form-control" required oninput="onAgendamentoHorarioInput()">
+            <div id="agendamento-horario-previsao" class="previsao-termino-box">
+              <i class="fa-regular fa-clock"></i> Duração padrão: 15 min | Término: <span id="hora-termino-previsao" style="margin-left:3px;">--:--</span>
+            </div>
+          </div>
+
+          <!-- Banner de Aviso de Conflito de Horário (RN07) exibido na própria aba/modal -->
+          <div id="agendamento-conflito-aviso" class="alerta-conflito-horario" style="display: none;">
+            <div class="alerta-conflito-header">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span id="agendamento-conflito-titulo">Conflito de Horário (RN07)</span>
+            </div>
+            <div class="alerta-conflito-corpo" id="agendamento-conflito-mensagem">
+              <!-- Mensagem detalhada dinâmica -->
+            </div>
+            <div class="alerta-conflito-rodape">
+              <i class="fa-regular fa-clock"></i> Tempo padrão: 15 min por consulta. Por favor, escolha outro horário ou dia disponível.
+            </div>
+          </div>
+
+          <div class="form-group full-width" style="margin-top:-0.2rem;">
+            <small style="color:var(--text-muted); font-size:0.78rem;">
+              <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> <strong>Regra RN07:</strong> Tempo padrão de 15 minutos por atendimento. Não é permitido agendar no mesmo horário para o mesmo paciente ou profissional.
+            </small>
           </div>
 
           <div class="form-group full-width">

@@ -14,10 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class AgendamentoService {
+
+    public static final int DURACAO_PADRAO_MINUTOS = 15;
 
     private final AgendamentoRepository agendamentoRepository;
     private final PetService petService;
@@ -73,9 +77,18 @@ public class AgendamentoService {
         }
         validarCompetenciaProfissional(request.tipoServico(), profissional);
 
+        String horaInicio = formatarHora(request.hora());
+        String horaFim = (request.horaFim() != null && !request.horaFim().isBlank())
+                ? formatarHora(request.horaFim())
+                : Agendamento.calcularHoraFim(horaInicio, DURACAO_PADRAO_MINUTOS);
+
+        // Validação RN07: Duração padrão de 15 minutos e bloqueio de consultas no mesmo horário para o mesmo paciente ou profissional
+        validarConflitoHorarios(request.data(), horaInicio, horaFim, pet, profissional, null);
+
         Agendamento agendamento = Agendamento.builder()
                 .data(request.data())
-                .hora(request.hora().trim())
+                .hora(horaInicio)
+                .horaFim(horaFim)
                 .pet(pet)
                 .tutor(pet.getTutor())
                 .tipoServico(request.tipoServico())
@@ -105,6 +118,77 @@ public class AgendamentoService {
     public void remover(Long id) {
         Agendamento agendamento = obterEntidade(id);
         agendamentoRepository.delete(agendamento);
+    }
+
+    /**
+     * Valida conflito de horários (RN07).
+     * Cada atendimento tem duração padrão de 15 minutos.
+     * Não é permitido agendar no mesmo horário para o mesmo paciente ou com o mesmo profissional.
+     */
+    public void validarConflitoHorarios(LocalDate data, String horaInicioStr, String horaFimStr, Pet pet, Funcionario profissional, Long agendamentoIdIgnorado) {
+        LocalTime novoInicio = LocalTime.parse(horaInicioStr, DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime novoFim = LocalTime.parse(horaFimStr, DateTimeFormatter.ofPattern("HH:mm"));
+
+        if (!novoFim.isAfter(novoInicio)) {
+            throw new RegraDeNegocioException("O horário de término da consulta deve ser posterior ao horário de início.");
+        }
+
+        List<Agendamento> agendamentosDoDia = agendamentoRepository.findByDataOrderByHoraAsc(data);
+
+        for (Agendamento existente : agendamentosDoDia) {
+            if (agendamentoIdIgnorado != null && agendamentoIdIgnorado.equals(existente.getId())) {
+                continue;
+            }
+            if (existente.getStatus() == StatusAgendamento.CANCELADO) {
+                continue;
+            }
+
+            LocalTime exInicio = LocalTime.parse(formatarHora(existente.getHora()), DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime exFim = (existente.getHoraFim() != null && !existente.getHoraFim().isBlank())
+                    ? LocalTime.parse(formatarHora(existente.getHoraFim()), DateTimeFormatter.ofPattern("HH:mm"))
+                    : exInicio.plusMinutes(DURACAO_PADRAO_MINUTOS);
+
+            // Verifica sobreposição de intervalos: [novoInicio, novoFim) e [exInicio, exFim)
+            boolean sobreposicao = novoInicio.isBefore(exFim) && exInicio.isBefore(novoFim);
+
+            if (sobreposicao) {
+                if (existente.getPet() != null && pet != null && existente.getPet().getId().equals(pet.getId())) {
+                    throw new RegraDeNegocioException(String.format(
+                            "Conflito de agendamento: Não é permitido marcar consultas no mesmo horário para o mesmo paciente. O pet '%s' já possui atendimento agendado no dia %s das %s às %s. A duração padrão da consulta é de %d minutos; novo agendamento só é permitido a partir das %s (RN07).",
+                            pet.getNome(),
+                            data,
+                            exInicio.format(DateTimeFormatter.ofPattern("HH:mm")),
+                            exFim.format(DateTimeFormatter.ofPattern("HH:mm")),
+                            DURACAO_PADRAO_MINUTOS,
+                            exFim.format(DateTimeFormatter.ofPattern("HH:mm"))
+                    ));
+                }
+
+                if (existente.getProfissional() != null && profissional != null && existente.getProfissional().getId().equals(profissional.getId())) {
+                    throw new RegraDeNegocioException(String.format(
+                            "Conflito de agendamento: O profissional '%s' já possui atendimento agendado no dia %s das %s às %s (duração padrão de %d minutos). Escolha outro horário disponível (RN07).",
+                            profissional.getNome(),
+                            data,
+                            exInicio.format(DateTimeFormatter.ofPattern("HH:mm")),
+                            exFim.format(DateTimeFormatter.ofPattern("HH:mm")),
+                            DURACAO_PADRAO_MINUTOS
+                    ));
+                }
+            }
+        }
+    }
+
+    private String formatarHora(String hora) {
+        if (hora == null || hora.isBlank()) {
+            throw new RegraDeNegocioException("O horário do agendamento é obrigatório.");
+        }
+        String limpa = hora.trim();
+        if (limpa.length() == 4 && limpa.charAt(1) == ':') {
+            limpa = "0" + limpa;
+        } else if (limpa.length() > 5) {
+            limpa = limpa.substring(0, 5);
+        }
+        return limpa;
     }
 
     private void validarCompetenciaProfissional(TipoServico tipoServico, Funcionario profissional) {

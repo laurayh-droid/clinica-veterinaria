@@ -60,19 +60,40 @@ function validatePassword(requiredRole, typed) {
   const adminPwds = USERS.admin.passwords || ['admin123', '123456', 'admin'];
   if (adminPwds.includes(password)) return true;
 
+  // Verifica funcionários cadastrados no state com cargo de Administrador
+  if (state && Array.isArray(state.funcionarios)) {
+    const adminFuncs = state.funcionarios.filter(f => (f.cargo || '').toLowerCase().includes('admin'));
+    if (adminFuncs.some(f => f.senha && f.senha === password)) return true;
+  }
+
   if (requiredRole === 'atendente' || requiredRole === 'recepcao') {
     const atendentePwds = USERS.recepcao.passwords || ['atendente123', '123456', 'recepcao', 'atendente'];
-    return atendentePwds.includes(password);
+    if (atendentePwds.includes(password)) return true;
+    if (state && Array.isArray(state.funcionarios)) {
+      const matching = state.funcionarios.filter(f => (f.cargo || '').toLowerCase().includes('atendente') || (f.cargo || '').toLowerCase().includes('recep'));
+      if (matching.some(f => f.senha && f.senha === password)) return true;
+    }
+    return false;
   }
 
   if (requiredRole === 'vet') {
     const vetPwds = USERS.vet.passwords || ['vet123', '123456', 'veterinario'];
-    return vetPwds.includes(password);
+    if (vetPwds.includes(password)) return true;
+    if (state && Array.isArray(state.funcionarios)) {
+      const matching = state.funcionarios.filter(f => (f.cargo || '').toLowerCase().includes('vet'));
+      if (matching.some(f => f.senha && f.senha === password)) return true;
+    }
+    return false;
   }
 
   if (requiredRole === 'adestrador') {
     const adestradorPwds = USERS.adestrador.passwords || ['adestrador123', '123456', 'adestrador'];
-    return adestradorPwds.includes(password);
+    if (adestradorPwds.includes(password)) return true;
+    if (state && Array.isArray(state.funcionarios)) {
+      const matching = state.funcionarios.filter(f => (f.cargo || '').toLowerCase().includes('adestrador') || (f.cargo || '').toLowerCase().includes('silvestre'));
+      if (matching.some(f => f.senha && f.senha === password)) return true;
+    }
+    return false;
   }
 
   return false;
@@ -251,12 +272,100 @@ function getPetTheme(pet) {
   return { icon: '<i class="fa-solid fa-paw"></i>', badgeClass: 'badge-domestico', avatarClass: 'pet-avatar-domestico', typeName: 'Pet Doméstico' };
 }
 
+// Constantes e Funções Utilitárias para Duração de Atendimento (RN07)
+const DURACAO_PADRAO_CONSULTA_MINUTOS = 15;
+
+function calcularHoraTermino(horaInicio, duracaoMinutos = DURACAO_PADRAO_CONSULTA_MINUTOS) {
+  if (!horaInicio) return '';
+  const partes = horaInicio.trim().split(':');
+  const h = parseInt(partes[0], 10);
+  const m = parseInt(partes[1], 10);
+  if (isNaN(h) || isNaN(m)) return horaInicio;
+  const totalMin = h * 60 + m + duracaoMinutos;
+  const fimH = Math.floor(totalMin / 60) % 24;
+  const fimM = totalMin % 60;
+  return `${String(fimH).padStart(2, '0')}:${String(fimM).padStart(2, '0')}`;
+}
+
+function horarioParaMinutos(horaStr) {
+  if (!horaStr) return 0;
+  const [h, m] = horaStr.trim().split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
+
+function atualizarPrevisaoTerminoAgendamento() {
+  const horaInput = document.getElementById('agendamento-hora');
+  const spanPrevisao = document.getElementById('hora-termino-previsao');
+  if (!horaInput || !spanPrevisao) return;
+  if (horaInput.value) {
+    spanPrevisao.textContent = calcularHoraTermino(horaInput.value, DURACAO_PADRAO_CONSULTA_MINUTOS);
+  } else {
+    spanPrevisao.textContent = '--:--';
+  }
+}
+
+function limparErroConflitoAgendamento() {
+  const dataInput = document.getElementById('agendamento-data');
+  const horaInput = document.getElementById('agendamento-hora');
+  const petSelect = document.getElementById('agendamento-pet-select');
+  const profSelect = document.getElementById('agendamento-profissional-select');
+  const labelData = document.getElementById('label-agendamento-data');
+  const labelHora = document.getElementById('label-agendamento-hora');
+  const avisoBox = document.getElementById('agendamento-conflito-aviso');
+  const previsaoBox = document.getElementById('agendamento-horario-previsao');
+
+  if (dataInput) dataInput.classList.remove('input-error');
+  if (horaInput) horaInput.classList.remove('input-error');
+  if (petSelect) petSelect.classList.remove('input-error');
+  if (profSelect) profSelect.classList.remove('input-error');
+  if (labelData) labelData.classList.remove('label-error');
+  if (labelHora) labelHora.classList.remove('label-error');
+  if (avisoBox) avisoBox.style.display = 'none';
+  if (previsaoBox) previsaoBox.classList.remove('previsao-erro');
+}
+
+function exibirAvisoConflitoAgendamento(titulo, mensagemHtml) {
+  const dataInput = document.getElementById('agendamento-data');
+  const horaInput = document.getElementById('agendamento-hora');
+  const labelData = document.getElementById('label-agendamento-data');
+  const labelHora = document.getElementById('label-agendamento-hora');
+  const avisoBox = document.getElementById('agendamento-conflito-aviso');
+  const tituloEl = document.getElementById('agendamento-conflito-titulo');
+  const msgEl = document.getElementById('agendamento-conflito-mensagem');
+  const previsaoBox = document.getElementById('agendamento-horario-previsao');
+
+  // Sinalização visual mandatória: Horário e Data em VERMELHO
+  if (dataInput) dataInput.classList.add('input-error');
+  if (horaInput) horaInput.classList.add('input-error');
+  if (labelData) labelData.classList.add('label-error');
+  if (labelHora) labelHora.classList.add('label-error');
+
+  if (tituloEl) tituloEl.textContent = titulo;
+  if (msgEl) msgEl.innerHTML = mensagemHtml;
+  if (avisoBox) {
+    avisoBox.style.display = 'block';
+  }
+  if (previsaoBox) previsaoBox.classList.add('previsao-erro');
+
+  showToast(titulo, 'error');
+  if (horaInput) horaInput.focus();
+}
+
+function onAgendamentoHorarioInput() {
+  atualizarPrevisaoTerminoAgendamento();
+  limparErroConflitoAgendamento();
+}
+
+function onAgendamentoDataChange() {
+  limparErroConflitoAgendamento();
+}
+
 // Estado Inicial Pré-carregado com Prontuários e Guias de Manejo Separados
 let state = {
   funcionarios: [
-    { id: 1, nome: 'Dr. Carlos Eduardo', cpf: '111.222.333-44', email: 'carlos.vet@zoomed.com', telefone: '(11) 98888-1111', cargo: 'Veterinário', crmv: 'CRMV/SP 12345' },
-    { id: 2, nome: 'Lucas Mendes', cpf: '555.666.777-88', email: 'lucas.adestrador@zoomed.com', telefone: '(11) 97777-2222', cargo: 'Adestrador / Esp. Silvestres', crmv: '' },
-    { id: 3, nome: 'Ana Silva', cpf: '999.888.777-66', email: 'ana.recepcao@zoomed.com', telefone: '(11) 96666-3333', cargo: 'Atendente', crmv: '' }
+    { id: 1, nome: 'Dr. Carlos Eduardo', cpf: '111.222.333-44', email: 'carlos.vet@zoomed.com', telefone: '(11) 98888-1111', cargo: 'Veterinário', crmv: 'CRMV/SP 12345', senha: '123456' },
+    { id: 2, nome: 'Lucas Mendes', cpf: '555.666.777-88', email: 'lucas.adestrador@zoomed.com', telefone: '(11) 97777-2222', cargo: 'Adestrador / Esp. Silvestres', crmv: '', senha: '123456' },
+    { id: 3, nome: 'Ana Silva', cpf: '999.888.777-66', email: 'ana.recepcao@zoomed.com', telefone: '(11) 96666-3333', cargo: 'Atendente', crmv: '', senha: '123456' }
   ],
   tutores: [
     {
@@ -302,10 +411,10 @@ let state = {
     }
   ],
   agendamentos: [
-    { id: 1, data: CURRENT_DATE, hora: '09:00', petId: 101, petNome: 'Kiko (Papagaio)', tutorNome: 'Mariana Oliveira', tipoServico: 'Consultoria de Manejo & Adestramento Silvestre', profissional: 'Lucas Mendes (Adestrador / Esp. Silvestres)', status: 'Em Atendimento' },
-    { id: 2, data: CURRENT_DATE, hora: '10:30', petId: 102, petNome: 'Tufão (Jabuti)', tutorNome: 'Roberto Almeida', tipoServico: 'Consulta Clínica Veterinária', profissional: 'Dr. Carlos Eduardo (Veterinário)', status: 'Aguardando' },
-    { id: 3, data: CURRENT_DATE, hora: '14:00', petId: 103, petNome: 'Thor (Golden)', tutorNome: 'Fernanda Costa', tipoServico: 'Consulta Clínica Veterinária', profissional: 'Dr. Carlos Eduardo (Veterinário)', status: 'Agendado' },
-    { id: 4, data: CURRENT_DATE, hora: '15:30', petId: 105, petNome: 'Pipoca (Ferret)', tutorNome: 'Bruno Albuquerque', tipoServico: 'Check-up Nutricional e Recinto', profissional: 'Lucas Mendes (Adestrador / Esp. Silvestres)', status: 'Agendado' }
+    { id: 1, data: CURRENT_DATE, hora: '09:00', horaFim: '09:15', duracaoMinutos: 15, petId: 101, petNome: 'Kiko (Papagaio)', tutorNome: 'Mariana Oliveira', tipoServico: 'Consultoria de Manejo & Adestramento Silvestre', profissional: 'Lucas Mendes (Adestrador / Esp. Silvestres)', status: 'Em Atendimento' },
+    { id: 2, data: CURRENT_DATE, hora: '10:30', horaFim: '10:45', duracaoMinutos: 15, petId: 102, petNome: 'Tufão (Jabuti)', tutorNome: 'Roberto Almeida', tipoServico: 'Consulta Clínica Veterinária', profissional: 'Dr. Carlos Eduardo (Veterinário)', status: 'Aguardando' },
+    { id: 3, data: CURRENT_DATE, hora: '14:00', horaFim: '14:15', duracaoMinutos: 15, petId: 103, petNome: 'Thor (Golden)', tutorNome: 'Fernanda Costa', tipoServico: 'Consulta Clínica Veterinária', profissional: 'Dr. Carlos Eduardo (Veterinário)', status: 'Agendado' },
+    { id: 4, data: CURRENT_DATE, hora: '15:30', horaFim: '15:45', duracaoMinutos: 15, petId: 105, petNome: 'Pipoca (Ferret)', tutorNome: 'Bruno Albuquerque', tipoServico: 'Check-up Nutricional e Recinto', profissional: 'Lucas Mendes (Adestrador / Esp. Silvestres)', status: 'Agendado' }
   ],
   // 1. Histórico Clínico Médico (Médico Veterinário)
   prontuariosClinicos: {
@@ -368,6 +477,23 @@ function loadState() {
       state = JSON.parse(saved);
       if (!state.prontuariosClinicos) state.prontuariosClinicos = {};
       if (!state.guiasManejo) state.guiasManejo = {};
+      if (state.funcionarios && Array.isArray(state.funcionarios)) {
+        state.funcionarios.forEach(f => {
+          if (!f.senha) {
+            f.senha = '123456';
+          }
+        });
+      }
+      if (state.agendamentos && Array.isArray(state.agendamentos)) {
+        state.agendamentos.forEach(ag => {
+          if (!ag.horaFim && ag.hora) {
+            ag.horaFim = calcularHoraTermino(ag.hora, DURACAO_PADRAO_CONSULTA_MINUTOS);
+          }
+          if (!ag.duracaoMinutos) {
+            ag.duracaoMinutos = DURACAO_PADRAO_CONSULTA_MINUTOS;
+          }
+        });
+      }
     } catch (e) {
       console.warn('Erro ao carregar localStorage, mantendo padrão.', e);
     }
@@ -488,63 +614,68 @@ function fazerLogin(e) {
   const email = document.getElementById('login-email').value.trim().toLowerCase();
   const password = document.getElementById('login-password').value.trim();
   
-  // Verifica se corresponde a algum perfil existente
-  let matchedRole = 'vet';
-  for (const [key, u] of Object.entries(USERS)) {
-    if (u.email.toLowerCase() === email) {
-      matchedRole = key;
-      break;
+  // 1. Verifica se é a Administradora padrão
+  if (email === USERS.admin.email.toLowerCase()) {
+    const adminPwds = USERS.admin.passwords || ['admin123', '123456', 'admin'];
+    if (adminPwds.includes(password)) {
+      loginQuick('admin');
+      return;
+    } else {
+      alert('Senha incorreta para a conta de Administrador.');
+      return;
     }
   }
 
-  // Validação de senha simples
-  const targetUser = USERS[matchedRole];
-  const validPasswords = targetUser.passwords || ['123456'];
-  if (password && !validPasswords.includes(password) && password !== '123456') {
-    alert('Senha incorreta para o e-mail informado.');
-    return;
+  // 2. Verifica nos membros da equipe cadastrados (aba Corpo Clínico & Equipe)
+  if (state && Array.isArray(state.funcionarios)) {
+    const func = state.funcionarios.find(f => f.email && f.email.toLowerCase() === email);
+    if (func) {
+      const validSenha = func.senha || '123456';
+      const adminPwds = USERS.admin.passwords || ['admin123', '123456', 'admin'];
+      if (password === validSenha || adminPwds.includes(password)) {
+        let roleKey = 'vet';
+        const cargoLower = (func.cargo || '').toLowerCase();
+        if (cargoLower.includes('adestrador') || cargoLower.includes('silvestre')) {
+          roleKey = 'adestrador';
+        } else if (cargoLower.includes('atendente') || cargoLower.includes('recep')) {
+          roleKey = 'recepcao';
+        } else if (cargoLower.includes('admin')) {
+          roleKey = 'admin';
+        }
+
+        // Atualiza o perfil correspondente com os dados do profissional logado
+        USERS[roleKey] = {
+          name: func.nome,
+          role: func.cargo,
+          crmv: func.crmv || '',
+          cargoKey: func.cargo,
+          email: func.email,
+          passwords: [func.senha || '123456', '123456']
+        };
+
+        loginQuick(roleKey);
+        return;
+      } else {
+        alert('Senha incorreta para o e-mail informado.');
+        return;
+      }
+    }
   }
 
-  loginQuick(matchedRole);
-}
+  // 3. Fallback para os perfis fixos de demonstração em USERS
+  for (const [key, u] of Object.entries(USERS)) {
+    if (u.email && u.email.toLowerCase() === email) {
+      const validPasswords = u.passwords || ['123456'];
+      if (password && !validPasswords.includes(password) && password !== '123456') {
+        alert('Senha incorreta para o e-mail informado.');
+        return;
+      }
+      loginQuick(key);
+      return;
+    }
+  }
 
-function fazerCadastroAuth(e) {
-  e.preventDefault();
-  const nome = document.getElementById('auth-reg-nome').value;
-  const email = document.getElementById('auth-reg-email').value;
-  const cargo = document.getElementById('auth-reg-cargo').value;
-  const crmv = document.getElementById('auth-reg-crmv').value;
-  const password = document.getElementById('auth-reg-password').value;
-
-  const novoFuncionario = {
-    id: Date.now(),
-    nome,
-    cpf: '000.000.000-00',
-    telefone: '(11) 99999-0000',
-    email,
-    cargo,
-    crmv: cargo === 'Veterinário' ? (crmv || 'CRMV/SP 00000') : ''
-  };
-
-  state.funcionarios.push(novoFuncionario);
-  saveState();
-  renderFuncionarios();
-
-  let roleKey = 'vet';
-  if (cargo.includes('Adestrador') || cargo.includes('Silvestres')) roleKey = 'adestrador';
-  if (cargo.includes('Atendente')) roleKey = 'recepcao';
-
-  USERS[roleKey] = {
-    name: nome,
-    role: cargo,
-    crmv: novoFuncionario.crmv,
-    cargoKey: cargo,
-    email: email,
-    passwords: [password, '123456']
-  };
-
-  alert(`Cadastro realizado com sucesso! Bem-vindo(a), ${nome}.`);
-  loginQuick(roleKey);
+  alert('Usuário não encontrado. O cadastro de novos membros deve ser realizado pelo Administrador na aba Corpo Clínico & Equipe.');
 }
 
 function fazerLogout() {
@@ -968,9 +1099,16 @@ function renderFilaDia() {
     if (ag.status === 'Finalizado') statusClass = 'status-finalizado';
     if (ag.status === 'Cancelado') statusClass = 'status-cancelado';
 
+    const horaFim = ag.horaFim || calcularHoraTermino(ag.hora, DURACAO_PADRAO_CONSULTA_MINUTOS);
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${ag.hora}</strong></td>
+      <td>
+        <div class="horario-slot">
+          <span class="horario-slot-time"><i class="fa-regular fa-clock"></i> ${ag.hora} às ${horaFim}</span>
+          <span class="badge-duracao">15 min</span>
+        </div>
+      </td>
       <td>
         <div class="entity-info">
           <div class="pet-avatar ${theme.avatarClass}">${theme.icon}</div>
@@ -1130,6 +1268,8 @@ function abrirModalNovoFuncionario() {
 function executarAberturaModalNovoFuncionario() {
   document.getElementById('form-novo-funcionario').reset();
   document.getElementById('func-id').value = '';
+  const pwdEl = document.getElementById('func-senha');
+  if (pwdEl) pwdEl.value = '';
   document.getElementById('modal-funcionario-title').innerText = 'Cadastrar Membro da Equipe';
   document.getElementById('btn-salvar-funcionario').innerText = 'Salvar Membro';
   toggleCRMVField('Veterinário');
@@ -1162,6 +1302,8 @@ function executarEdicaoFuncionario(id) {
   document.getElementById('func-cpf').value = f.cpf;
   document.getElementById('func-telefone').value = f.telefone;
   document.getElementById('func-email').value = f.email;
+  const pwdEl = document.getElementById('func-senha');
+  if (pwdEl) pwdEl.value = f.senha || '123456';
   document.getElementById('func-cargo').value = f.cargo;
   document.getElementById('func-crmv').value = f.crmv || '';
 
@@ -1246,8 +1388,16 @@ function salvarFuncionario(e) {
   const cpf = document.getElementById('func-cpf').value.trim();
   const telefone = document.getElementById('func-telefone').value.trim();
   const email = document.getElementById('func-email').value.trim();
+  const pwdEl = document.getElementById('func-senha');
+  const senha = pwdEl ? pwdEl.value.trim() : '';
   const cargo = document.getElementById('func-cargo').value;
   const crmv = document.getElementById('func-crmv').value.trim();
+
+  if (!senha) {
+    alert('Por favor, informe a senha de acesso para o membro da equipe.');
+    if (pwdEl) pwdEl.focus();
+    return;
+  }
 
   if (idStr) {
     // Editar funcionário existente
@@ -1261,6 +1411,7 @@ function salvarFuncionario(e) {
         cpf,
         telefone,
         email,
+        senha: senha || state.funcionarios[index].senha || '123456',
         cargo,
         crmv: cargo === 'Veterinário' ? (crmv || 'CRMV/SP 00000') : ''
       };
@@ -1287,6 +1438,7 @@ function salvarFuncionario(e) {
     cpf,
     telefone,
     email,
+    senha: senha || '123456',
     cargo,
     crmv: cargo === 'Veterinário' ? (crmv || 'CRMV/SP 00000') : ''
   };
@@ -1574,10 +1726,17 @@ function renderAgendaTable(dateVal) {
     }
     const theme = petObj ? getPetTheme(petObj) : { icon: '<i class="fa-solid fa-paw"></i>', badgeClass: 'badge-domestico' };
     const isManejo = ag.tipoServico.includes('Manejo') || ag.tipoServico.includes('Adestramento') || ag.tipoServico.includes('Recinto');
+    const horaFim = ag.horaFim || calcularHoraTermino(ag.hora, DURACAO_PADRAO_CONSULTA_MINUTOS);
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${ag.data} às ${ag.hora}</strong></td>
+      <td>
+        <div class="horario-slot">
+          <strong><i class="fa-regular fa-calendar"></i> ${ag.data}</strong>
+          <span class="horario-slot-time" style="font-size:0.83rem;"><i class="fa-regular fa-clock"></i> ${ag.hora} às ${horaFim}</span>
+          <span class="badge-duracao">15 min</span>
+        </div>
+      </td>
       <td><span class="status-badge ${theme.badgeClass}">${theme.icon} ${ag.petNome}</span></td>
       <td>${ag.tutorNome}</td>
       <td><span class="status-badge ${isManejo ? 'badge-adestrador' : 'badge-vet'}">${ag.tipoServico}</span></td>
@@ -1684,7 +1843,7 @@ function onAgendamentoTutorChange() {
   updateAgendamentoPetSelectOptions(tutorId);
 }
 
-function abrirModalNovoAgendamento(tutorId = null, petId = null) {
+function abrirModalNovoAgendamento(tutorId = null, petId = null, tipoServicoPredefinido = null) {
   if (currentUserRole === 'adestrador' || currentUserRole === 'vet') {
     solicitarAutorizacao({
       requiredRole: 'atendente',
@@ -1693,19 +1852,43 @@ function abrirModalNovoAgendamento(tutorId = null, petId = null) {
       subtitle: 'Permissão de Atendente Requerida',
       message: 'Para agendar consultas e atendimentos, digite a <strong>Senha do Atendente</strong> (ou Administrador).',
       onSuccess: () => {
-        executarAberturaModalNovoAgendamento(tutorId, petId);
+        executarAberturaModalNovoAgendamento(tutorId, petId, tipoServicoPredefinido);
       }
     });
     return;
   }
 
-  executarAberturaModalNovoAgendamento(tutorId, petId);
+  executarAberturaModalNovoAgendamento(tutorId, petId, tipoServicoPredefinido);
 }
 
-function executarAberturaModalNovoAgendamento(tutorId = null, petId = null) {
+function executarAberturaModalNovoAgendamento(tutorId = null, petId = null, tipoServicoPredefinido = null) {
+  limparErroConflitoAgendamento();
   populateAgendamentoTutorSelect(tutorId || '');
   updateAgendamentoPetSelectOptions(tutorId || '', petId);
+
+  const tipoSelect = document.getElementById('agendamento-tipo-servico');
+  if (tipoSelect && tipoServicoPredefinido) {
+    tipoSelect.value = tipoServicoPredefinido;
+  }
+  filterProfissionaisPorTipoServico();
+
   openModal('modal-novo-agendamento');
+  atualizarPrevisaoTerminoAgendamento();
+}
+
+function agendarRetornoParaPetAtivo() {
+  if (!activeVetPet) {
+    alert('Selecione um paciente primeiro no Prontuário Clínico para agendar o retorno!');
+    return;
+  }
+  let tutorId = null;
+  for (const t of state.tutores) {
+    if (t.pets.some(p => p.id === activeVetPet.id)) {
+      tutorId = t.id;
+      break;
+    }
+  }
+  abrirModalNovoAgendamento(tutorId, activeVetPet.id, 'Retorno Clínico / Reavaliação');
 }
 
 function populateProfissionalSelects() {
@@ -2276,6 +2459,8 @@ function salvarTutorEPet(e) {
 
 function salvarAgendamento(e) {
   e.preventDefault();
+  limparErroConflitoAgendamento();
+
   const petId = parseInt(document.getElementById('agendamento-pet-select').value);
   const tipoServico = document.getElementById('agendamento-tipo-servico').value;
   const data = document.getElementById('agendamento-data').value;
@@ -2283,12 +2468,16 @@ function salvarAgendamento(e) {
   const profissional = document.getElementById('agendamento-profissional-select').value;
 
   if (!petId) {
-    alert('Por favor, selecione um paciente!');
+    const petSelect = document.getElementById('agendamento-pet-select');
+    if (petSelect) petSelect.classList.add('input-error');
+    exibirAvisoConflitoAgendamento('Paciente Obrigatório', 'Por favor, selecione um paciente (pet) para realizar o agendamento.');
     return;
   }
 
   if (!profissional) {
-    alert('Por favor, selecione um profissional responsável compatível com o tipo de atendimento!');
+    const profSelect = document.getElementById('agendamento-profissional-select');
+    if (profSelect) profSelect.classList.add('input-error');
+    exibirAvisoConflitoAgendamento('Profissional Obrigatório', 'Por favor, selecione um profissional responsável compatível com o tipo de atendimento.');
     return;
   }
 
@@ -2298,15 +2487,15 @@ function salvarAgendamento(e) {
   const funcEncontrado = state.funcionarios.find(f => profissional.includes(f.nome));
   if (funcEncontrado) {
     if (funcEncontrado.cargo === 'Atendente') {
-      alert('Erro: Recepcionistas/Atendentes não prestam atendimento técnico/clínico e não podem ser designados como profissional responsável.');
+      exibirAvisoConflitoAgendamento('Perfil Incompatível (RN02)', 'Recepcionistas e Atendentes não realizam atendimento técnico ou clínico e não podem ser designados como responsável.');
       return;
     }
     if (isVetService && !funcEncontrado.cargo.includes('Veterinário')) {
-      alert(`Erro: O tipo de atendimento "${tipoServico}" exige um Médico Veterinário. O profissional "${funcEncontrado.nome}" é "${funcEncontrado.cargo}".`);
+      exibirAvisoConflitoAgendamento('Competência Clínica Exigida (RN02)', `O tipo de atendimento "<strong>${tipoServico}</strong>" exige um Médico Veterinário. O profissional "<strong>${funcEncontrado.nome}</strong>" possui o cargo "${funcEncontrado.cargo}".`);
       return;
     }
     if (isManejoService && !funcEncontrado.cargo.includes('Adestrador') && !funcEncontrado.cargo.includes('Silvestres') && !funcEncontrado.cargo.includes('Administrador')) {
-      alert(`Erro: O tipo de atendimento "${tipoServico}" exige um Especialista em Silvestres / Adestrador. O profissional "${funcEncontrado.nome}" é "${funcEncontrado.cargo}".`);
+      exibirAvisoConflitoAgendamento('Especialista em Silvestres Exigido (RN02)', `O tipo de atendimento "<strong>${tipoServico}</strong>" exige um Especialista em Silvestres / Adestrador. O profissional "<strong>${funcEncontrado.nome}</strong>" possui o cargo "${funcEncontrado.cargo}".`);
       return;
     }
   }
@@ -2323,10 +2512,59 @@ function salvarAgendamento(e) {
     }
   }
 
+  // --- Regra de Negócio RN07: Duração Padrão de 15 Minutos e Conflito de Horários ---
+  const horaFim = calcularHoraTermino(hora, DURACAO_PADRAO_CONSULTA_MINUTOS);
+  const novoInicioMin = horarioParaMinutos(hora);
+  const novoFimMin = novoInicioMin + DURACAO_PADRAO_CONSULTA_MINUTOS;
+
+  // 1. Não permitir agendar no mesmo horário para o MESMO paciente
+  const conflitoPaciente = state.agendamentos.find(a => {
+    if (a.status === 'Cancelado') return false;
+    if (a.data !== data) return false;
+    if (a.petId !== petId) return false;
+
+    const aInicioMin = horarioParaMinutos(a.hora);
+    const aFimMin = a.horaFim ? horarioParaMinutos(a.horaFim) : (aInicioMin + DURACAO_PADRAO_CONSULTA_MINUTOS);
+    return novoInicioMin < aFimMin && aInicioMin < novoFimMin;
+  });
+
+  if (conflitoPaciente) {
+    const horaFimExistente = conflitoPaciente.horaFim || calcularHoraTermino(conflitoPaciente.hora, DURACAO_PADRAO_CONSULTA_MINUTOS);
+    const msg = `Não é permitido marcar consultas no mesmo horário para o mesmo paciente.<br><br>` +
+                `O paciente <strong>${petNome || 'selecionado'}</strong> já possui atendimento agendado no dia <strong>${data}</strong> das <strong>${conflitoPaciente.hora} às ${horaFimExistente}</strong>.<br><br>` +
+                `Como cada consulta possui duração padrão de <strong>${DURACAO_PADRAO_CONSULTA_MINUTOS} minutos</strong>, um novo agendamento para este paciente só é permitido a partir das <strong>${horaFimExistente}</strong>.`;
+    exibirAvisoConflitoAgendamento('Conflito de Horário do Paciente (RN07)', msg);
+    return;
+  }
+
+  // 2. Não permitir agendar no mesmo horário para o MESMO profissional
+  const conflitoProfissional = state.agendamentos.find(a => {
+    if (a.status === 'Cancelado') return false;
+    if (a.data !== data) return false;
+
+    const profNomeLimpo = profissional.split('(')[0].trim().toLowerCase();
+    const aProfNomeLimpo = (a.profissional || '').split('(')[0].trim().toLowerCase();
+    if (!profNomeLimpo || !aProfNomeLimpo || profNomeLimpo !== aProfNomeLimpo) return false;
+
+    const aInicioMin = horarioParaMinutos(a.hora);
+    const aFimMin = a.horaFim ? horarioParaMinutos(a.horaFim) : (aInicioMin + DURACAO_PADRAO_CONSULTA_MINUTOS);
+    return novoInicioMin < aFimMin && aInicioMin < novoFimMin;
+  });
+
+  if (conflitoProfissional) {
+    const horaFimExistente = conflitoProfissional.horaFim || calcularHoraTermino(conflitoProfissional.hora, DURACAO_PADRAO_CONSULTA_MINUTOS);
+    const msg = `O profissional <strong>${profissional}</strong> já possui atendimento agendado no dia <strong>${data}</strong> das <strong>${conflitoProfissional.hora} às ${horaFimExistente}</strong>.<br><br>` +
+                `A duração padrão de cada atendimento é de <strong>${DURACAO_PADRAO_CONSULTA_MINUTOS} minutos</strong>. Por favor, escolha outro horário livre.`;
+    exibirAvisoConflitoAgendamento('Conflito de Agenda do Profissional (RN07)', msg);
+    return;
+  }
+
   const novo = {
     id: Date.now(),
     data,
     hora,
+    horaFim,
+    duracaoMinutos: DURACAO_PADRAO_CONSULTA_MINUTOS,
     petId,
     petNome,
     tutorNome,
@@ -2338,8 +2576,11 @@ function salvarAgendamento(e) {
   state.agendamentos.push(novo);
   saveState();
   renderAll();
+  limparErroConflitoAgendamento();
   closeModal('modal-novo-agendamento');
   document.getElementById('form-novo-agendamento').reset();
+  const spanPrevisao = document.getElementById('hora-termino-previsao');
+  if (spanPrevisao) spanPrevisao.textContent = '--:--';
   showToast('Atendimento agendado com sucesso!', 'success');
 }
 
@@ -2396,4 +2637,7 @@ function openModal(modalId) {
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) modal.classList.remove('active');
+  if (modalId === 'modal-novo-agendamento') {
+    limparErroConflitoAgendamento();
+  }
 }

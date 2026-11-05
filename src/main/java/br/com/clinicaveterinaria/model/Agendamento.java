@@ -9,6 +9,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Entidade JPA que representa um agendamento na recepção e controle da fila diária.
@@ -35,6 +37,9 @@ public class Agendamento {
     @NotBlank(message = "O horário do agendamento é obrigatório.")
     @Column(nullable = false, length = 10)
     private String hora;
+
+    @Column(length = 10)
+    private String horaFim;
 
     @NotNull(message = "O paciente pet é obrigatório.")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -68,10 +73,33 @@ public class Agendamento {
     private LocalDateTime dataCriacao;
 
     @PrePersist
-    protected void onCreate() {
-        this.dataCriacao = LocalDateTime.now();
+    @PreUpdate
+    protected void onPersistOrUpdate() {
+        if (this.dataCriacao == null) {
+            this.dataCriacao = LocalDateTime.now();
+        }
         if (this.status == null) {
             this.status = StatusAgendamento.AGENDADO;
         }
+        if (this.hora != null && (this.horaFim == null || this.horaFim.isBlank())) {
+            this.horaFim = calcularHoraFim(this.hora, 15);
+        }
+    }
+
+    /**
+     * Calcula o horário de término com base no horário de início e duração em minutos.
+     */
+    public static String calcularHoraFim(String horaInicio, int duracaoMinutos) {
+        if (horaInicio == null || horaInicio.isBlank()) {
+            return null;
+        }
+        String limpa = horaInicio.trim();
+        if (limpa.length() == 4 && limpa.charAt(1) == ':') {
+            limpa = "0" + limpa;
+        } else if (limpa.length() > 5) {
+            limpa = limpa.substring(0, 5);
+        }
+        LocalTime t = LocalTime.parse(limpa, DateTimeFormatter.ofPattern("HH:mm"));
+        return t.plusMinutes(duracaoMinutos).format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 }

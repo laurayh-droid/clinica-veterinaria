@@ -73,6 +73,7 @@ public class FuncionarioService {
                 .nome(request.nome().trim())
                 .cpf(request.cpf().trim())
                 .email(request.email().trim().toLowerCase())
+                .senha(request.senha() != null && !request.senha().isBlank() ? request.senha().trim() : "123456")
                 .telefone(request.telefone().trim())
                 .cargo(request.cargo())
                 .crmv(request.cargo() == PerfilFuncionario.VETERINARIO ? request.crmv().trim() : null)
@@ -101,6 +102,9 @@ public class FuncionarioService {
         funcionario.setNome(request.nome().trim());
         funcionario.setCpf(request.cpf().trim());
         funcionario.setEmail(request.email().trim().toLowerCase());
+        if (request.senha() != null && !request.senha().isBlank()) {
+            funcionario.setSenha(request.senha().trim());
+        }
         funcionario.setTelefone(request.telefone().trim());
         funcionario.setCargo(request.cargo());
         funcionario.setCrmv(request.cargo() == PerfilFuncionario.VETERINARIO ? request.crmv().trim() : null);

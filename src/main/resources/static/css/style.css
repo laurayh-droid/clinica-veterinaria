@@ -2361,3 +2361,131 @@ body.mobile-sidebar-active {
   }
 }
 
+/* ==========================================================================
+   Estilos de Horários, Duração Padrão e Previsão de Término (RN07)
+   ========================================================================== */
+.horario-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.horario-slot-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.92rem;
+}
+
+.horario-slot-time i {
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
+.badge-duracao {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: fit-content;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.12rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--badge-atendente-bg);
+  color: var(--badge-atendente-text);
+  border: 1px solid var(--badge-atendente-border);
+}
+
+.previsao-termino-box {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  color: #166534;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+/* --- Sinalização de Erro e Conflito de Horário / Data em Vermelho (RN07) --- */
+.form-control.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+  animation: shakeHorario 0.35s ease-in-out;
+}
+
+@keyframes shakeHorario {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.form-label.label-error {
+  color: #dc2626 !important;
+  font-weight: 700;
+}
+
+.previsao-termino-box.previsao-erro {
+  background-color: #fef2f2 !important;
+  border-color: #fca5a5 !important;
+  color: #b91c1c !important;
+}
+
+.alerta-conflito-horario {
+  grid-column: 1 / -1;
+  background-color: #fef2f2;
+  border: 1.5px solid #f87171;
+  border-left: 5px solid #dc2626;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  color: #991b1b;
+  margin-top: 0.35rem;
+  animation: fadeInAviso 0.25s ease-in-out;
+}
+
+@keyframes fadeInAviso {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.alerta-conflito-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #b91c1c;
+}
+
+.alerta-conflito-header i {
+  color: #dc2626;
+  font-size: 1.1rem;
+}
+
+.alerta-conflito-corpo {
+  margin-top: 0.4rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: #7f1d1d;
+}
+
+.alerta-conflito-rodape {
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed #fca5a5;
+  font-size: 0.76rem;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+

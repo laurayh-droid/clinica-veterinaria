@@ -19,6 +19,8 @@ public class AgendamentoDTO {
             @NotBlank(message = "O horário é obrigatório.")
             String hora,
 
+            String horaFim,
+
             @NotNull(message = "O ID do pet é obrigatório.")
             Long petId,
 
@@ -27,7 +29,11 @@ public class AgendamentoDTO {
 
             Long profissionalId,
             String observacoes
-    ) {}
+    ) {
+        public Request(LocalDate data, String hora, Long petId, TipoServico tipoServico, Long profissionalId, String observacoes) {
+            this(data, hora, null, petId, tipoServico, profissionalId, observacoes);
+        }
+    }
 
     public record StatusUpdateRequest(
             @NotNull(message = "O novo status é obrigatório.")
@@ -38,6 +44,7 @@ public class AgendamentoDTO {
             Long id,
             LocalDate data,
             String hora,
+            String horaFim,
             Long petId,
             String petNome,
             String petEspecieRaca,
@@ -57,10 +64,15 @@ public class AgendamentoDTO {
             LocalDateTime dataCriacao
     ) {
         public static Response fromEntity(Agendamento a) {
+            String horaFimCalculada = a.getHoraFim();
+            if ((horaFimCalculada == null || horaFimCalculada.isBlank()) && a.getHora() != null) {
+                horaFimCalculada = Agendamento.calcularHoraFim(a.getHora(), 15);
+            }
             return new Response(
                     a.getId(),
                     a.getData(),
                     a.getHora(),
+                    horaFimCalculada,
                     a.getPet() != null ? a.getPet().getId() : null,
                     a.getPet() != null ? a.getPet().getNome() : "",
                     a.getPet() != null ? a.getPet().getEspecieRaca() : "",

@@ -23,7 +23,7 @@ Sistema simplificado e direto para gerenciar as rotinas da clínica veterinária
 ## 3. Requisitos Funcionais (RF)
 
 ### 3.1. Cadastros Básicos
-* **RF01 - Cadastro de Funcionários:** Registro de funcionários da clínica (Nome, CPF, E-mail, Telefone, Perfil: *Atendente, Veterinário (com CRMV)* ou *Adestrador/Especialista em Silvestres*).
+* **RF01 - Cadastro de Funcionários:** Registro de membros da equipe realizado exclusivamente pelo Administrador na aba *Corpo Clínico & Equipe* (Nome, CPF, Telefone, E-mail Corporativo, Senha de Acesso, Perfil: *Atendente, Veterinário (com CRMV)* ou *Adestrador/Especialista em Silvestres*). A tela de login é destinada exclusivamente à autenticação.
 * **RF02 - Cadastro de Tutores:** Registro de nome, CPF, telefone (WhatsApp) e endereço.
 * **RF03 - Cadastro de Pets (Domésticos e Silvestres):** Registro do animal vinculado ao tutor (nome, espécie, raça/categoria, sexo, idade, peso e observações de manejo/hábito silvestre).
 
@@ -63,3 +63,10 @@ Sistema simplificado e direto para gerenciar as rotinas da clínica veterinária
 3. **RN03 - CRMV no Documento:** Toda receita médica emitida deve conter automaticamente o nome completo e o CRMV válido do profissional responsável.
 4. **RN04 - Parâmetros do Guia de Manejo:** O guia de manejo para animais silvestres e exóticos deve registrar obrigatoriamente parâmetros ambientais essenciais (iluminação UVB, fotoperíodo, temperatura e enriquecimento).
 5. **RN05 - Histórico Multidisciplinar Integrado:** A ficha do paciente permite visualizar tanto o histórico clínico quanto o histórico de manejo de forma organizada e independente.
+6. **RN06 - Gestão da Fila do Dia:** Ao registrar atendimento clínico ou sessão de manejo, o agendamento do paciente na fila do dia é automaticamente finalizado.
+7. **RN07 - Conflito de Horários & Duração Padrão das Consultas:** 
+   - Cada consulta, atendimento ou retorno tem duração padrão de **15 minutos**.
+   - É expressamente proibido agendar consultas no mesmo horário (ou com sobreposição dentro do intervalo de 15 minutos) para o **mesmo paciente (pet)** ou para o **mesmo profissional responsável** na mesma data.
+   - Um novo agendamento para o mesmo paciente ou profissional só é permitido após o término do atendimento anterior (ex: consulta das 10:00 às 10:15 libera novo horário a partir das 10:15). Horários de atendimentos cancelados são liberados automaticamente.
+   - As visualizações da **Fila de Atendimento do Dia** e da **Agenda Geral** exibem obrigatoriamente o horário de início e de término do atendimento (ex: `10:00 às 10:15`), além da tag indicativa de duração (15 min).
+   - Inclusão e suporte explícito ao serviço de **Retorno Clínico / Reavaliação (Vet)** com fluxo rápido a partir do prontuário do paciente.
