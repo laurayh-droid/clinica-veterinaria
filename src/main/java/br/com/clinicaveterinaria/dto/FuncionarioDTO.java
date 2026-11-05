@@ -21,6 +21,8 @@ public class FuncionarioDTO {
             @Email(message = "E-mail inválido.")
             String email,
 
+            String senha,
+
             @NotBlank(message = "O telefone é obrigatório.")
             String telefone,
 
@@ -28,7 +30,11 @@ public class FuncionarioDTO {
             PerfilFuncionario cargo,
 
             String crmv
-    ) {}
+    ) {
+        public Request(String nome, String cpf, String email, String telefone, PerfilFuncionario cargo, String crmv) {
+            this(nome, cpf, email, "123456", telefone, cargo, crmv);
+        }
+    }
 
     public record Response(
             Long id,

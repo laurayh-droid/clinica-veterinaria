@@ -40,6 +40,9 @@ public class Funcionario {
     @Column(nullable = false, unique = true, length = 120)
     private String email;
 
+    @Column(length = 100)
+    private String senha;
+
     @NotBlank(message = "O telefone é obrigatório.")
     @Column(nullable = false, length = 30)
     private String telefone;
