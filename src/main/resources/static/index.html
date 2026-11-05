@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZooMed Fauna & Domésticos - Clínica Veterinária & Silvestres</title>
-  <meta name="description" content="Sistema de gestão veterinária especializado em atendimento clínico médico e consultoria de manejo para pets domésticos e fauna silvestre/exótica.">
-  
+  <meta name="description"
+    content="Sistema de gestão veterinária especializado em atendimento clínico médico e consultoria de manejo para pets domésticos e fauna silvestre/exótica.">
+
   <!-- Fontes do Google & Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css?v=2.5">
+  <link rel="stylesheet" href="css/style.css?v=3.0">
 </head>
+
 <body>
 
   <!-- ========================================================================= -->
   <!-- TELA DE LOGIN & AUTENTICAÇÃO (Fundo Florestal Esmeralda & Card Vidro Fosco)  -->
   <!-- ========================================================================= -->
   <div id="login-screen" class="login-screen">
-    
+
     <!-- Imagem de Fundo com Textura Natural e Camada de Ofuscamento Esmeralda -->
     <div class="login-bg-photo">
       <img src="assets/images/forest-bg.jpg" alt="Floresta Fauna" class="login-forest-img">
@@ -46,8 +49,10 @@
           </linearGradient>
         </defs>
         <circle cx="24" cy="24" r="22" fill="#064e3b" stroke="url(#wm-grad-primary)" stroke-width="2" />
-        <path d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z" fill="url(#wm-grad-leaf)" opacity="0.95" />
-        <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z" fill="url(#wm-grad-amber)" />
+        <path d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z"
+          fill="url(#wm-grad-leaf)" opacity="0.95" />
+        <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z"
+          fill="url(#wm-grad-amber)" />
         <circle cx="11" cy="21" r="3.2" fill="#fef3c7" />
         <circle cx="17" cy="16" r="3.5" fill="#fef3c7" />
         <path d="M23 11 C25 9 28 11 28 14 C28 17 24 18 22 15 C22 13 22 12 23 11 Z" fill="#6ee7b7" />
@@ -58,7 +63,7 @@
 
     <!-- Card de Login Centralizado em Vidro Fosco -->
     <div class="login-card-glass">
-      
+
       <!-- Cabeçalho com Emblema da Marca -->
       <div class="login-header">
         <div class="brand-logo-wrap login-logo-center">
@@ -79,8 +84,10 @@
               </linearGradient>
             </defs>
             <circle cx="24" cy="24" r="22" fill="#064e3b" stroke="url(#login-grad-primary)" stroke-width="2" />
-            <path d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z" fill="url(#login-grad-leaf)" opacity="0.95" />
-            <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z" fill="url(#login-grad-amber)" />
+            <path d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z"
+              fill="url(#login-grad-leaf)" opacity="0.95" />
+            <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z"
+              fill="url(#login-grad-amber)" />
             <circle cx="11" cy="21" r="3.2" fill="#fef3c7" />
             <circle cx="17" cy="16" r="3.5" fill="#fef3c7" />
             <path d="M23 11 C25 9 28 11 28 14 C28 17 24 18 22 15 C22 13 22 12 23 11 Z" fill="#6ee7b7" />
@@ -107,14 +114,17 @@
         <form id="form-login" onsubmit="fazerLogin(event)">
           <div class="form-group mb-2">
             <label class="form-label" for="login-email">E-mail Profissional</label>
-            <input type="email" id="login-email" class="form-control" placeholder="carlos.vet@zoomed.com" value="carlos.vet@zoomed.com" required>
+            <input type="email" id="login-email" class="form-control" placeholder="carlos.vet@zoomed.com"
+              value="carlos.vet@zoomed.com" required>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="login-password">Senha de Acesso</label>
             <div class="password-input-wrap">
-              <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="123456" required>
-              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', 'login-pwd-icon')">
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="123456"
+                required>
+              <button type="button" class="password-toggle-btn"
+                onclick="togglePasswordVisibility('login-password', 'login-pwd-icon')">
                 <i class="fa-solid fa-eye" id="login-pwd-icon"></i>
               </button>
             </div>
@@ -124,7 +134,8 @@
             <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
               <input type="checkbox" checked style="accent-color:var(--primary);"> Lembrar-me
             </label>
-            <a href="javascript:void(0)" onclick="alert('Instruções de recuperação enviadas para o e-mail cadastrado.')" style="color:var(--primary-hover); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
+            <a href="javascript:void(0)" onclick="alert('Instruções de recuperação enviadas para o e-mail cadastrado.')"
+              style="color:var(--primary-hover); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
           </div>
 
           <button type="submit" class="btn btn-primary login-submit-btn">
@@ -162,7 +173,8 @@
 
           <div class="form-group mb-2">
             <label class="form-label">Criar Senha *</label>
-            <input type="password" id="auth-reg-password" class="form-control" placeholder="Mínimo 6 caracteres" required>
+            <input type="password" id="auth-reg-password" class="form-control" placeholder="Mínimo 6 caracteres"
+              required>
           </div>
 
           <button type="submit" class="btn btn-primary login-submit-btn mt-1">
@@ -179,7 +191,8 @@
             <i class="fa-solid fa-user-doctor"></i>
             <div><strong>Dr. Carlos</strong><br><small>Médico Veterinário</small></div>
           </button>
-          <button type="button" class="quick-user-btn" onclick="loginQuick('adestrador')" title="Entrar como Lucas Mendes">
+          <button type="button" class="quick-user-btn" onclick="loginQuick('adestrador')"
+            title="Entrar como Lucas Mendes">
             <i class="fa-solid fa-feather"></i>
             <div><strong>Lucas Mendes</strong><br><small>Manejo Silvestres</small></div>
           </button>
@@ -193,7 +206,8 @@
           </button>
         </div>
         <div style="margin-top: 16px; text-align: center;">
-          <a href="portfolio.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; color: #059669; text-decoration: none; padding: 8px 16px; background: rgba(5, 150, 105, 0.08); border-radius: 50px; border: 1px solid rgba(5, 150, 105, 0.2); transition: all 0.2s ease;">
+          <a href="portfolio.html" target="_blank"
+            style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; color: #059669; text-decoration: none; padding: 8px 16px; background: rgba(5, 150, 105, 0.08); border-radius: 50px; border: 1px solid rgba(5, 150, 105, 0.2); transition: all 0.2s ease;">
             <i class="fa-solid fa-sparkles" style="color: #d97706;"></i> Ver Apresentação Comercial & Portfólio
             <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i>
           </a>
@@ -207,7 +221,7 @@
   <!-- APLICAÇÃO PRINCIPAL (APP CONTAINER)                                       -->
   <!-- ========================================================================= -->
   <div id="app-container" style="display:none;">
-    
+
     <!-- Backdrop da Sidebar para Telas Mobile/Tablet -->
     <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleMobileSidebar(false)"></div>
 
@@ -233,29 +247,34 @@
                   <stop offset="100%" stop-color="#d97706" />
                 </linearGradient>
               </defs>
-              
+
               <!-- Círculo de Proteção e Fundo Orgânico -->
               <circle cx="24" cy="24" r="22" fill="#064e3b" stroke="url(#logo-grad-primary)" stroke-width="2" />
-              
+
               <!-- Folha Tropical & Silhueta Silvestre -->
-              <path d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z" fill="url(#logo-grad-leaf)" opacity="0.95" />
-              <path d="M24 6 C28 14 31 22 29 39" stroke="#a7f3d0" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-              <path d="M27 16 C31 16 34 18 36 22" stroke="#a7f3d0" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+              <path
+                d="M24 6 C32 6 40 14 39 26 C38 31 34 36 29 39 C29 35 32 30 31 24 C30 18 25 14 20 12 C21 9 23 6 24 6Z"
+                fill="url(#logo-grad-leaf)" opacity="0.95" />
+              <path d="M24 6 C28 14 31 22 29 39" stroke="#a7f3d0" stroke-width="1.2" stroke-linecap="round"
+                opacity="0.6" />
+              <path d="M27 16 C31 16 34 18 36 22" stroke="#a7f3d0" stroke-width="1.2" stroke-linecap="round"
+                opacity="0.6" />
 
               <!-- Pata Pet Doméstica Acolhedora -->
-              <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z" fill="url(#logo-grad-amber)" />
-              
+              <path d="M16 26 C12 26 10 30 11 34 C12 37 16 39 20 38 C24 37 25 33 24 29 C23 26 19 26 16 26 Z"
+                fill="url(#logo-grad-amber)" />
+
               <!-- Dígitos de Transição Doméstico -> Silvestre -->
               <circle cx="11" cy="21" r="3.2" fill="#fef3c7" />
               <circle cx="17" cy="16" r="3.5" fill="#fef3c7" />
               <path d="M23 11 C25 9 28 11 28 14 C28 17 24 18 22 15 C22 13 22 12 23 11 Z" fill="#6ee7b7" />
               <path d="M30 16 C33 14 36 17 35 20 C34 23 31 22 29 19 C29 17 29 17 30 16 Z" fill="#34d399" />
-              
+
               <!-- Cruz de Saúde Veterinária -->
               <path d="M17 30.5 H19.5 M18.25 29.25 V31.75" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
             </svg>
           </div>
-          
+
           <div class="brand-text-container">
             <div class="brand-title">ZooMed <span class="accent-text">Fauna</span></div>
             <div class="brand-subtitle">Domésticos & Silvestres</div>
@@ -263,7 +282,8 @@
           </div>
 
           <!-- Botão Fechar Menu no Mobile -->
-          <button type="button" class="sidebar-mobile-close" id="sidebar-close-btn" onclick="toggleMobileSidebar(false)" aria-label="Fechar Menu">
+          <button type="button" class="sidebar-mobile-close" id="sidebar-close-btn" onclick="toggleMobileSidebar(false)"
+            aria-label="Fechar Menu">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -287,7 +307,7 @@
             <i class="fa-solid fa-calendar-check"></i>
             <span>Agenda & Atendimentos</span>
           </a>
-          
+
           <!-- Módulo Médico Separado -->
           <a class="nav-item" data-tab="prontuario-clinico" id="nav-vet-item">
             <i class="fa-solid fa-stethoscope"></i>
@@ -322,16 +342,18 @@
 
     <!-- Área Principal -->
     <div class="main-wrapper">
-      
+
       <!-- Topbar Header -->
       <header class="topbar">
         <div class="topbar-left">
-          <button type="button" class="btn-hamburger" id="btn-hamburger" onclick="toggleMobileSidebar()" aria-label="Abrir Menu de Navegação">
+          <button type="button" class="btn-hamburger" id="btn-hamburger" onclick="toggleMobileSidebar()"
+            aria-label="Abrir Menu de Navegação">
             <i class="fa-solid fa-bars"></i>
           </button>
           <div class="page-header-info">
             <h1 id="page-title">Dashboard & Fila do Dia</h1>
-            <p id="page-subtitle">Acompanhamento dos atendimentos clínicos e consultorias de manejo para pets comuns e silvestres</p>
+            <p id="page-subtitle">Acompanhamento dos atendimentos clínicos e consultorias de manejo para pets comuns e
+              silvestres</p>
           </div>
         </div>
 
@@ -340,7 +362,8 @@
             <i class="fa-solid fa-user-doctor"></i>
             <span id="role-badge-text">Dr. Carlos Eduardo (Médico Veterinário)</span>
           </div>
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;" id="current-date-display">--/--/----</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;"
+            id="current-date-display">--/--/----</span>
         </div>
       </header>
 
@@ -351,12 +374,14 @@
         <!-- ABA 1: DASHBOARD & FILA DO DIA                                      -->
         <!-- =================================================================== -->
         <section id="dashboard" class="tab-content active">
-          
+
           <!-- Banner Temático Bio-Harmônico -->
           <div class="hero-welcome-banner">
             <div class="hero-content">
               <h2><i class="fa-solid fa-leaf"></i> Centro Veterinário Integrado: Fauna & Pets</h2>
-              <p>Módulos especializados e independentes para <strong>Atendimento Médico Veterinário (Prontuário & CRMV)</strong> e <strong>Consultoria de Manejo Silvestre (Recinto, Enriquecimento e Bem-Estar)</strong>.</p>
+              <p>Módulos especializados e independentes para <strong>Atendimento Médico Veterinário (Prontuário &
+                  CRMV)</strong> e <strong>Consultoria de Manejo Silvestre (Recinto, Enriquecimento e
+                  Bem-Estar)</strong>.</p>
               <div class="hero-tags">
                 <span class="hero-tag"><i class="fa-solid fa-stethoscope"></i> Prontuário Clínico</span>
                 <span class="hero-tag"><i class="fa-solid fa-feather-pointed"></i> Guia de Manejo Silvestre</span>
@@ -457,7 +482,8 @@
             <div class="search-filter-bar">
               <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" class="search-input" placeholder="Buscar por nome, cargo ou CPF..." onkeyup="filterFuncionarios(this.value)">
+                <input type="text" class="search-input" placeholder="Buscar por nome, cargo ou CPF..."
+                  onkeyup="filterFuncionarios(this.value)">
               </div>
             </div>
 
@@ -498,7 +524,9 @@
             <div class="search-filter-bar">
               <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-tutor-input" class="search-input" placeholder="Buscar por Nome do Tutor, CPF, Espécie ou Nome do Pet..." onkeyup="filterTutores(this.value)">
+                <input type="text" id="search-tutor-input" class="search-input"
+                  placeholder="Buscar por Nome do Tutor, CPF, Espécie ou Nome do Pet..."
+                  onkeyup="filterTutores(this.value)">
               </div>
             </div>
 
@@ -538,8 +566,10 @@
 
             <div class="search-filter-bar">
               <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.6rem;">
-                <label class="form-label" for="agenda-date-filter"><i class="fa-solid fa-filter" style="color:var(--primary);"></i> Filtrar por Data:</label>
-                <input type="date" id="agenda-date-filter" class="form-control" style="width: auto;" onchange="loadAgendaTable(this.value)">
+                <label class="form-label" for="agenda-date-filter"><i class="fa-solid fa-filter"
+                    style="color:var(--primary);"></i> Filtrar por Data:</label>
+                <input type="date" id="agenda-date-filter" class="form-control" style="width: auto;"
+                  onchange="loadAgendaTable(this.value)">
               </div>
             </div>
 
@@ -568,14 +598,16 @@
         <!-- ABA 5: PRONTUÁRIO CLÍNICO (MÉDICO VETERINÁRIO)                     -->
         <!-- =================================================================== -->
         <section id="prontuario-clinico" class="tab-content">
-          
-          <div id="vet-role-banner" class="alert-banner mb-2" style="background-color: var(--badge-vet-bg); color: var(--badge-vet-text); border-color: var(--badge-vet-border);">
+
+          <div id="vet-role-banner" class="alert-banner mb-2"
+            style="background-color: var(--badge-vet-bg); color: var(--badge-vet-text); border-color: var(--badge-vet-border);">
             <i class="fa-solid fa-user-doctor"></i>
-            <span id="vet-banner-text"><strong>Módulo Clínico Veterinário:</strong> Preenchimento de exame físico, diagnóstico clínico e emissão de receita com CRMV.</span>
+            <span id="vet-banner-text"><strong>Módulo Clínico Veterinário:</strong> Preenchimento de exame físico,
+              diagnóstico clínico e emissão de receita com CRMV.</span>
           </div>
 
           <div class="form-grid clinical-two-col">
-            
+
             <!-- Painel Esquerdo: Paciente & Vacinas -->
             <div class="panel">
               <div class="panel-header">
@@ -591,7 +623,8 @@
                 </select>
               </div>
 
-              <div id="vet-selected-pet-card" class="mt-2" style="display:none; background-color: var(--bg-main); padding: 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+              <div id="vet-selected-pet-card" class="mt-2"
+                style="display:none; background-color: var(--bg-main); padding: 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
                 <div class="entity-info mb-2">
                   <div class="pet-avatar" id="vet-pet-avatar"><i class="fa-solid fa-paw"></i></div>
                   <div class="entity-details">
@@ -600,8 +633,10 @@
                   </div>
                 </div>
                 <hr style="border:0; border-top:1px solid var(--border-subtle); margin:0.75rem 0;">
-                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Tutor:</strong> <span id="vet-pet-tutor">Mariana Oliveira</span></p>
-                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Idade / Peso:</strong> <span id="vet-pet-age-weight">4 anos | 420g</span></p>
+                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Tutor:</strong>
+                  <span id="vet-pet-tutor">Mariana Oliveira</span></p>
+                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Idade /
+                    Peso:</strong> <span id="vet-pet-age-weight">4 anos | 420g</span></p>
               </div>
 
               <!-- Vacinas e Vermifugação -->
@@ -633,36 +668,45 @@
                 <div class="form-grid mb-2">
                   <div class="form-group full-width">
                     <label class="form-label">Queixa Clínica Principal & Anamnese Médica *</label>
-                    <textarea id="vet-queixa" class="form-control" placeholder="Descreva os sintomas clínicos relatados pelo tutor (ex: apatia, tosse, êmese, lesões cutâneas, alterações em fezes)..." required></textarea>
+                    <textarea id="vet-queixa" class="form-control"
+                      placeholder="Descreva os sintomas clínicos relatados pelo tutor (ex: apatia, tosse, êmese, lesões cutâneas, alterações em fezes)..."
+                      required></textarea>
                   </div>
 
                   <div class="form-group">
                     <label class="form-label">Temperatura (°C) / FC / FR</label>
-                    <input type="text" id="vet-sinais-vitais" class="form-control" placeholder="Ex: T: 38.5°C | FC: 120 bpm | FR: 30 mpm">
+                    <input type="text" id="vet-sinais-vitais" class="form-control"
+                      placeholder="Ex: T: 38.5°C | FC: 120 bpm | FR: 30 mpm">
                   </div>
 
                   <div class="form-group">
                     <label class="form-label">Mucosas & Hidratação</label>
-                    <input type="text" id="vet-mucosas" class="form-control" placeholder="Ex: Normocoradas, TPC 2s, Hidratado">
+                    <input type="text" id="vet-mucosas" class="form-control"
+                      placeholder="Ex: Normocoradas, TPC 2s, Hidratado">
                   </div>
 
                   <div class="form-group full-width">
                     <label class="form-label">Achados do Exame Físico Específico</label>
-                    <textarea id="vet-exame-fisico" class="form-control" style="min-height:75px;" placeholder="Ausculta cardiopulmonar, palpação abdominal, carapaça/escamas ou pelagem, cavidade oral..."></textarea>
+                    <textarea id="vet-exame-fisico" class="form-control" style="min-height:75px;"
+                      placeholder="Ausculta cardiopulmonar, palpação abdominal, carapaça/escamas ou pelagem, cavidade oral..."></textarea>
                   </div>
 
                   <div class="form-group full-width">
                     <label class="form-label">Diagnóstico Clínico / Hipótese Diagnóstica *</label>
-                    <textarea id="vet-diagnostico" class="form-control" style="min-height:75px;" placeholder="Diagnóstico definitivo ou suspeita clínica fundamentada..." required></textarea>
+                    <textarea id="vet-diagnostico" class="form-control" style="min-height:75px;"
+                      placeholder="Diagnóstico definitivo ou suspeita clínica fundamentada..." required></textarea>
                   </div>
 
                   <div class="form-group full-width">
                     <label class="form-label">Conduta Terapêutica, Exames Solicitados & Prescrição *</label>
-                    <textarea id="vet-conduta" class="form-control" style="min-height:85px;" placeholder="Prescrição de medicamentos, dosagens, fluidoterapia, exames complementares (RX, sangue, coproparasitológico)..." required></textarea>
+                    <textarea id="vet-conduta" class="form-control" style="min-height:85px;"
+                      placeholder="Prescrição de medicamentos, dosagens, fluidoterapia, exames complementares (RX, sangue, coproparasitológico)..."
+                      required></textarea>
                   </div>
                 </div>
 
-                <div id="vet-save-warning" class="save-responsibility-warning" style="display:none; width:100%; margin-top:0.75rem; padding:0.65rem 0.9rem; background:#fffbeb; color:#b45309; border:1px solid #fde68a; border-radius:var(--radius-md); font-size:0.825rem; font-weight:600; align-items:center; gap:0.5rem;">
+                <div id="vet-save-warning" class="save-responsibility-warning"
+                  style="display:none; width:100%; margin-top:0.75rem; padding:0.65rem 0.9rem; background:#fffbeb; color:#b45309; border:1px solid #fde68a; border-radius:var(--radius-md); font-size:0.825rem; font-weight:600; align-items:center; gap:0.5rem;">
                   <i class="fa-solid fa-triangle-exclamation"></i>
                   <span>consulte o médico ou adestrador responsável antes de continuar com esta ação</span>
                 </div>
@@ -676,11 +720,14 @@
 
               <!-- Histórico Clínico Médico -->
               <div class="mt-2" style="border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
-                <h3 style="font-size:0.95rem; font-family:var(--font-heading); font-weight:700; color:var(--text-main);">
-                  <i class="fa-solid fa-clock-rotate-left" style="color:var(--primary);"></i> Histórico de Consultas Clínicas
+                <h3
+                  style="font-size:0.95rem; font-family:var(--font-heading); font-weight:700; color:var(--text-main);">
+                  <i class="fa-solid fa-clock-rotate-left" style="color:var(--primary);"></i> Histórico de Consultas
+                  Clínicas
                 </h3>
                 <div id="vet-timeline-container" class="timeline">
-                  <p style="font-size:0.85rem; color:var(--text-muted); padding-top:0.5rem;">Nenhum paciente selecionado.</p>
+                  <p style="font-size:0.85rem; color:var(--text-muted); padding-top:0.5rem;">Nenhum paciente
+                    selecionado.</p>
                 </div>
               </div>
             </div>
@@ -692,14 +739,16 @@
         <!-- ABA 6: GUIA DE MANEJO SILVESTRE (ADESTRADOR / SILVESTRES)          -->
         <!-- =================================================================== -->
         <section id="guia-manejo" class="tab-content">
-          
-          <div id="adestrador-role-banner" class="alert-banner mb-2" style="background-color: var(--badge-adestrador-bg); color: var(--badge-adestrador-text); border-color: var(--badge-adestrador-border);">
+
+          <div id="adestrador-role-banner" class="alert-banner mb-2"
+            style="background-color: var(--badge-adestrador-bg); color: var(--badge-adestrador-text); border-color: var(--badge-adestrador-border);">
             <i class="fa-solid fa-feather"></i>
-            <span id="adestrador-banner-text"><strong>Módulo de Manejo & Bem-Estar Silvestre:</strong> Avaliação comportamental, adequação de recinto e emissão do Guia Oficial de Manejo.</span>
+            <span id="adestrador-banner-text"><strong>Módulo de Manejo & Bem-Estar Silvestre:</strong> Avaliação
+              comportamental, adequação de recinto e emissão do Guia Oficial de Manejo.</span>
           </div>
 
           <div class="form-grid clinical-two-col">
-            
+
             <!-- Painel Esquerdo: Paciente & Parâmetros Atuais do Recinto -->
             <div class="panel">
               <div class="panel-header">
@@ -715,18 +764,23 @@
                 </select>
               </div>
 
-              <div id="manejo-selected-pet-card" class="mt-2" style="display:none; background-color: var(--bg-main); padding: 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+              <div id="manejo-selected-pet-card" class="mt-2"
+                style="display:none; background-color: var(--bg-main); padding: 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
                 <div class="entity-info mb-2">
-                  <div class="pet-avatar pet-avatar-silvestre" id="manejo-pet-avatar"><i class="fa-solid fa-feather"></i></div>
+                  <div class="pet-avatar pet-avatar-silvestre" id="manejo-pet-avatar"><i
+                      class="fa-solid fa-feather"></i></div>
                   <div class="entity-details">
                     <div class="title" id="manejo-pet-name">Kiko</div>
                     <div class="subtitle" id="manejo-pet-species">Silvestre • Papagaio Verdadeiro</div>
                   </div>
                 </div>
                 <hr style="border:0; border-top:1px solid var(--border-subtle); margin:0.75rem 0;">
-                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Tutor:</strong> <span id="manejo-pet-tutor">Mariana Oliveira</span></p>
-                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Idade / Peso:</strong> <span id="manejo-pet-age-weight">4 anos | 420g</span></p>
-                <p style="font-size:0.8rem; color:var(--text-secondary);" class="mt-1"><strong>Recinto Atual Cadastrado:</strong> <span id="manejo-pet-habitat">Viveiro de 4m² com luz natural.</span></p>
+                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Tutor:</strong>
+                  <span id="manejo-pet-tutor">Mariana Oliveira</span></p>
+                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom: 4px;"><strong>Idade /
+                    Peso:</strong> <span id="manejo-pet-age-weight">4 anos | 420g</span></p>
+                <p style="font-size:0.8rem; color:var(--text-secondary);" class="mt-1"><strong>Recinto Atual
+                    Cadastrado:</strong> <span id="manejo-pet-habitat">Viveiro de 4m² com luz natural.</span></p>
               </div>
 
               <!-- Dicas Rápidas de Manejo Silvestre -->
@@ -737,8 +791,10 @@
               </div>
 
               <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">
-                <p style="margin-bottom:6px;"><strong>1. Recinto:</strong> Espaço tridimensional, gradiente térmico e radiação UVB.</p>
-                <p style="margin-bottom:6px;"><strong>2. Forrageamento:</strong> Alimentos escondidos que estimulam busca ativa.</p>
+                <p style="margin-bottom:6px;"><strong>1. Recinto:</strong> Espaço tridimensional, gradiente térmico e
+                  radiação UVB.</p>
+                <p style="margin-bottom:6px;"><strong>2. Forrageamento:</strong> Alimentos escondidos que estimulam
+                  busca ativa.</p>
                 <p><strong>3. Condicionamento:</strong> Treinamento de alvos com reforço positivo.</p>
               </div>
             </div>
@@ -759,7 +815,9 @@
                 <div class="form-grid mb-2">
                   <div class="form-group full-width">
                     <label class="form-label">Queixa Comportamental & Sinais de Estresse Observados *</label>
-                    <textarea id="manejo-queixa" class="form-control" placeholder="Descreva os comportamentos atípicos (ex: arranque de penas, bicagem destrutiva, agressividade territorial, estereotipia, sedentarismo)..." required></textarea>
+                    <textarea id="manejo-queixa" class="form-control"
+                      placeholder="Descreva os comportamentos atípicos (ex: arranque de penas, bicagem destrutiva, agressividade territorial, estereotipia, sedentarismo)..."
+                      required></textarea>
                   </div>
 
                   <h4 class="full-width guia-section-title">
@@ -768,22 +826,26 @@
 
                   <div class="form-group">
                     <label class="form-label">Dimensões Recomendadas (m / cm)</label>
-                    <input type="text" id="manejo-dimensoes" class="form-control" placeholder="Ex: 2.0m (C) x 1.5m (L) x 2.0m (A)">
+                    <input type="text" id="manejo-dimensoes" class="form-control"
+                      placeholder="Ex: 2.0m (C) x 1.5m (L) x 2.0m (A)">
                   </div>
 
                   <div class="form-group">
                     <label class="form-label">Fotoperíodo & Iluminação UVB</label>
-                    <input type="text" id="manejo-iluminacao" class="form-control" placeholder="Ex: Lâmpada UVB 5.0 | 12h luz / 12h escuro total">
+                    <input type="text" id="manejo-iluminacao" class="form-control"
+                      placeholder="Ex: Lâmpada UVB 5.0 | 12h luz / 12h escuro total">
                   </div>
 
                   <div class="form-group">
                     <label class="form-label">Gradiente Térmico & Umidade</label>
-                    <input type="text" id="manejo-temperatura" class="form-control" placeholder="Ex: Ponto quente 32°C / Frio 25°C | Umidade 60%">
+                    <input type="text" id="manejo-temperatura" class="form-control"
+                      placeholder="Ex: Ponto quente 32°C / Frio 25°C | Umidade 60%">
                   </div>
 
                   <div class="form-group">
                     <label class="form-label">Substrato & Poleiros Naturais</label>
-                    <input type="text" id="manejo-substrato" class="form-control" placeholder="Ex: Galhos naturais de diâmetros variados (goiabeira)">
+                    <input type="text" id="manejo-substrato" class="form-control"
+                      placeholder="Ex: Galhos naturais de diâmetros variados (goiabeira)">
                   </div>
 
                   <h4 class="full-width guia-section-title">
@@ -792,12 +854,15 @@
 
                   <div class="form-group full-width">
                     <label class="form-label">Enriquecimento Alimentar & Forrageamento *</label>
-                    <textarea id="manejo-alimentar" class="form-control" style="min-height:75px;" placeholder="Ex: Alimentos oferecidos dentro de pinhas, quebra-cabeças de papel pardo e comedouros suspensos em locais variados..." required></textarea>
+                    <textarea id="manejo-alimentar" class="form-control" style="min-height:75px;"
+                      placeholder="Ex: Alimentos oferecidos dentro de pinhas, quebra-cabeças de papel pardo e comedouros suspensos em locais variados..."
+                      required></textarea>
                   </div>
 
                   <div class="form-group full-width">
                     <label class="form-label">Enriquecimento Físico, Sensorial & Cognitivo</label>
-                    <textarea id="manejo-cognitivo" class="form-control" style="min-height:75px;" placeholder="Ex: Introdução de brinquedos de destruição com palha de milho, sons de natureza e escaladores em corda de sisal atóxica..."></textarea>
+                    <textarea id="manejo-cognitivo" class="form-control" style="min-height:75px;"
+                      placeholder="Ex: Introdução de brinquedos de destruição com palha de milho, sons de natureza e escaladores em corda de sisal atóxica..."></textarea>
                   </div>
 
                   <h4 class="full-width guia-section-title">
@@ -806,11 +871,14 @@
 
                   <div class="form-group full-width">
                     <label class="form-label">Plano de Treinamento e Orientações para o Tutor *</label>
-                    <textarea id="manejo-treinamento" class="form-control" style="min-height:85px;" placeholder="Ex: Treinamento de alvo (target) para entrada voluntária na caixa de transporte; reforço positivo com semente favorita; rotina diária de 15 minutos..." required></textarea>
+                    <textarea id="manejo-treinamento" class="form-control" style="min-height:85px;"
+                      placeholder="Ex: Treinamento de alvo (target) para entrada voluntária na caixa de transporte; reforço positivo com semente favorita; rotina diária de 15 minutos..."
+                      required></textarea>
                   </div>
                 </div>
 
-                <div id="manejo-save-warning" class="save-responsibility-warning" style="display:none; width:100%; margin-top:0.75rem; padding:0.65rem 0.9rem; background:#fffbeb; color:#b45309; border:1px solid #fde68a; border-radius:var(--radius-md); font-size:0.825rem; font-weight:600; align-items:center; gap:0.5rem;">
+                <div id="manejo-save-warning" class="save-responsibility-warning"
+                  style="display:none; width:100%; margin-top:0.75rem; padding:0.65rem 0.9rem; background:#fffbeb; color:#b45309; border:1px solid #fde68a; border-radius:var(--radius-md); font-size:0.825rem; font-weight:600; align-items:center; gap:0.5rem;">
                   <i class="fa-solid fa-triangle-exclamation"></i>
                   <span>consulte o médico ou adestrador responsável antes de continuar com esta ação</span>
                 </div>
@@ -824,11 +892,14 @@
 
               <!-- Histórico de Manejo Silvestre -->
               <div class="mt-2" style="border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
-                <h3 style="font-size:0.95rem; font-family:var(--font-heading); font-weight:700; color:var(--text-main);">
-                  <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent-amber);"></i> Histórico de Consultorias de Manejo & Bem-Estar
+                <h3
+                  style="font-size:0.95rem; font-family:var(--font-heading); font-weight:700; color:var(--text-main);">
+                  <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent-amber);"></i> Histórico de
+                  Consultorias de Manejo & Bem-Estar
                 </h3>
                 <div id="manejo-timeline-container" class="timeline">
-                  <p style="font-size:0.85rem; color:var(--text-muted); padding-top:0.5rem;">Nenhum paciente selecionado.</p>
+                  <p style="font-size:0.85rem; color:var(--text-muted); padding-top:0.5rem;">Nenhum paciente
+                    selecionado.</p>
                 </div>
               </div>
             </div>
@@ -856,7 +927,8 @@
         <div class="modal-body form-grid">
           <div class="form-group full-width">
             <label class="form-label">Nome Completo *</label>
-            <input type="text" id="func-nome" class="form-control" placeholder="Ex: Dr. Carlos Eduardo ou Lucas Mendes" required>
+            <input type="text" id="func-nome" class="form-control" placeholder="Ex: Dr. Carlos Eduardo ou Lucas Mendes"
+              required>
           </div>
 
           <div class="form-group">
@@ -890,7 +962,8 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-novo-funcionario')">Cancelar</button>
+          <button type="button" class="btn btn-secondary"
+            onclick="closeModal('modal-novo-funcionario')">Cancelar</button>
           <button type="submit" id="btn-salvar-funcionario" class="btn btn-primary">Salvar Membro</button>
         </div>
       </form>
@@ -908,10 +981,11 @@
         <input type="hidden" id="tutor-id" value="">
         <input type="hidden" id="tutor-pet-id" value="">
         <div class="modal-body form-grid">
-          <h3 class="full-width" style="font-size:0.95rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.35rem; color:var(--primary-dark); font-weight:700;">
+          <h3 class="full-width"
+            style="font-size:0.95rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.35rem; color:var(--primary-dark); font-weight:700;">
             <i class="fa-solid fa-user"></i> Dados do Tutor
           </h3>
-          
+
           <div class="form-group">
             <label class="form-label">Nome Completo *</label>
             <input type="text" id="tutor-nome" class="form-control" placeholder="Ex: Mariana Oliveira" required>
@@ -932,7 +1006,8 @@
             <input type="text" id="tutor-endereco" class="form-control" placeholder="Rua, Número, Bairro, Cidade">
           </div>
 
-          <h3 class="full-width mt-2" id="modal-tutor-pet-heading" style="font-size:0.95rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.35rem; color:var(--primary-dark); font-weight:700;">
+          <h3 class="full-width mt-2" id="modal-tutor-pet-heading"
+            style="font-size:0.95rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.35rem; color:var(--primary-dark); font-weight:700;">
             <i class="fa-solid fa-paw"></i> Dados do Paciente (Pet Doméstico ou Silvestre)
           </h3>
 
@@ -951,7 +1026,8 @@
 
           <div class="form-group" id="group-pet-especie">
             <label class="form-label">Espécie / Raça *</label>
-            <input type="text" id="pet-especie-raca" class="form-control" placeholder="Ex: Papagaio Verdadeiro, Jabuti, Calopsita, Golden..." required>
+            <input type="text" id="pet-especie-raca" class="form-control"
+              placeholder="Ex: Papagaio Verdadeiro, Jabuti, Calopsita, Golden..." required>
           </div>
 
           <div class="form-group" id="group-pet-sexo">
@@ -975,7 +1051,8 @@
 
           <div class="form-group full-width" id="group-pet-habitat">
             <label class="form-label">Observações Iniciais de Recinto & Hábitos</label>
-            <textarea id="pet-habitat" class="form-control" style="min-height:65px;" placeholder="Ex: Vive em viveiro telado de 4m² com enriquecimento; dieta balanceada com sementes e frutas..."></textarea>
+            <textarea id="pet-habitat" class="form-control" style="min-height:65px;"
+              placeholder="Ex: Vive em viveiro telado de 4m² com enriquecimento; dieta balanceada com sementes e frutas..."></textarea>
           </div>
         </div>
 
@@ -1013,7 +1090,8 @@
 
           <div class="form-group">
             <label class="form-label">Espécie / Raça *</label>
-            <input type="text" id="edit-pet-especie-raca" class="form-control" placeholder="Ex: Papagaio Verdadeiro, Jabuti, Calopsita..." required>
+            <input type="text" id="edit-pet-especie-raca" class="form-control"
+              placeholder="Ex: Papagaio Verdadeiro, Jabuti, Calopsita..." required>
           </div>
 
           <div class="form-group">
@@ -1037,13 +1115,15 @@
 
           <div class="form-group full-width">
             <label class="form-label">Observações de Recinto & Hábitos</label>
-            <textarea id="edit-pet-habitat" class="form-control" style="min-height:65px;" placeholder="Ex: Recinto telado de 4m² com enriquecimento; hábitos e dieta..."></textarea>
+            <textarea id="edit-pet-habitat" class="form-control" style="min-height:65px;"
+              placeholder="Ex: Recinto telado de 4m² com enriquecimento; hábitos e dieta..."></textarea>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeModal('modal-editar-pet')">Cancelar</button>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar
+            Alterações</button>
         </div>
       </form>
     </div>
@@ -1074,9 +1154,11 @@
 
           <div class="form-group full-width">
             <label class="form-label">Tipo de Serviço *</label>
-            <select id="agendamento-tipo-servico" class="form-control" onchange="filterProfissionaisPorTipoServico()" required>
+            <select id="agendamento-tipo-servico" class="form-control" onchange="filterProfissionaisPorTipoServico()"
+              required>
               <option value="Consulta Clínica Veterinária">Consulta Clínica Veterinária (Vet)</option>
-              <option value="Consultoria de Manejo & Adestramento Silvestre">Consultoria de Manejo & Adestramento (Silvestres)</option>
+              <option value="Consultoria de Manejo & Adestramento Silvestre">Consultoria de Manejo & Adestramento
+                (Silvestres)</option>
               <option value="Check-up Nutricional e Recinto">Check-up de Recinto & Bem-Estar</option>
               <option value="Retorno Clínico">Retorno Clínico (Vet)</option>
               <option value="Vacinação & Imunização">Vacinação & Imunização (Vet)</option>
@@ -1102,7 +1184,8 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-novo-agendamento')">Cancelar</button>
+          <button type="button" class="btn btn-secondary"
+            onclick="closeModal('modal-novo-agendamento')">Cancelar</button>
           <button type="submit" class="btn btn-primary">Confirmar Agendamento</button>
         </div>
       </form>
@@ -1113,15 +1196,18 @@
   <div id="modal-receita" class="modal-overlay">
     <div class="modal-card" style="max-width:720px;">
       <div class="modal-header">
-        <h2><i class="fa-solid fa-file-prescription" style="color:var(--primary);"></i> Emitir Receita Médica Veterinária Oficial</h2>
+        <h2><i class="fa-solid fa-file-prescription" style="color:var(--primary);"></i> Emitir Receita Médica
+          Veterinária Oficial</h2>
         <button class="modal-close" onclick="closeModal('modal-receita')">&times;</button>
       </div>
       <div class="modal-body">
-        
+
         <form id="form-receita" onsubmit="gerarVisualizacaoReceita(event)">
           <div class="form-group mb-2">
             <label class="form-label">Prescrição Medicamentosa, Dosagens & Instruções de Uso:</label>
-            <textarea id="receita-texto" class="form-control" style="min-height:120px;" placeholder="Ex: 1. Meloxicam 0.2% gotas - Dar 2 gotas a cada 24h por 5 dias...&#10;2. Suplemento Vitamínico A/D3 - 1 gota na água por 15 dias..." required></textarea>
+            <textarea id="receita-texto" class="form-control" style="min-height:120px;"
+              placeholder="Ex: 1. Meloxicam 0.2% gotas - Dar 2 gotas a cada 24h por 5 dias...&#10;2. Suplemento Vitamínico A/D3 - 1 gota na água por 15 dias..."
+              required></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary mb-2">
@@ -1146,14 +1232,17 @@
           </div>
 
           <div class="recipe-medications">
-            <h4 style="font-size:0.9rem; text-transform:uppercase; color:var(--primary-dark); border-bottom:1px solid var(--border-subtle); padding-bottom:0.35rem;" class="mb-2">Prescrição Medicamentosa:</h4>
+            <h4
+              style="font-size:0.9rem; text-transform:uppercase; color:var(--primary-dark); border-bottom:1px solid var(--border-subtle); padding-bottom:0.35rem;"
+              class="mb-2">Prescrição Medicamentosa:</h4>
             <div id="recipe-meds-list" style="white-space: pre-wrap; font-size:0.9rem; line-height:1.6;"></div>
           </div>
 
           <div class="recipe-footer">
             <div class="signature-line"></div>
             <p style="font-size:0.85rem; font-weight:700;" id="recipe-vet-signature">Dr. Carlos Eduardo</p>
-            <p style="font-size:0.75rem; color:var(--text-muted);" id="recipe-crmv-signature">Médico Veterinário — CRMV/SP 12345</p>
+            <p style="font-size:0.75rem; color:var(--text-muted);" id="recipe-crmv-signature">Médico Veterinário —
+              CRMV/SP 12345</p>
           </div>
         </div>
 
@@ -1171,15 +1260,18 @@
   <div id="modal-guia-manejo" class="modal-overlay">
     <div class="modal-card" style="max-width:720px;">
       <div class="modal-header">
-        <h2><i class="fa-solid fa-book-open-reader" style="color:var(--accent-amber);"></i> Emitir Guia Oficial de Manejo Silvestre & Bem-Estar</h2>
+        <h2><i class="fa-solid fa-book-open-reader" style="color:var(--accent-amber);"></i> Emitir Guia Oficial de
+          Manejo Silvestre & Bem-Estar</h2>
         <button class="modal-close" onclick="closeModal('modal-guia-manejo')">&times;</button>
       </div>
       <div class="modal-body">
-        
+
         <form id="form-doc-guia" onsubmit="gerarVisualizacaoGuia(event)">
           <div class="form-group mb-2">
             <label class="form-label">Orientações Gerais de Manejo, Dieta e Rotinas:</label>
-            <textarea id="doc-guia-texto" class="form-control" style="min-height:110px;" placeholder="Insira recomendações complementares de ambientação, horários de forrageamento e sessões de condicionamento para o tutor..." required></textarea>
+            <textarea id="doc-guia-texto" class="form-control" style="min-height:110px;"
+              placeholder="Insira recomendações complementares de ambientação, horários de forrageamento e sessões de condicionamento para o tutor..."
+              required></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary mb-2">
@@ -1190,7 +1282,8 @@
         <div id="guia-preview-container" class="guia-preview-box mt-2" style="display:none;">
           <div class="guia-header">
             <h2><i class="fa-solid fa-leaf"></i> ZooMed Fauna & Domésticos</h2>
-            <p style="font-size:0.85rem; color:var(--text-secondary);">Centro de Manejo, Enriquecimento e Bem-Estar de Animais Silvestres & Exóticos</p>
+            <p style="font-size:0.85rem; color:var(--text-secondary);">Centro de Manejo, Enriquecimento e Bem-Estar de
+              Animais Silvestres & Exóticos</p>
             <div class="status-badge badge-adestrador mt-1" id="guia-consultor-info">
               Lucas Mendes — Especialista em Manejo & Comportamento
             </div>
@@ -1219,8 +1312,10 @@
             </div>
           </div>
 
-          <h4 class="guia-section-title"><i class="fa-solid fa-puzzle-piece"></i> Plano de Enriquecimento & Forrageamento</h4>
-          <div id="guia-enrichment-text" style="font-size:0.875rem; line-height:1.6; margin-bottom:1rem; white-space:pre-wrap;"></div>
+          <h4 class="guia-section-title"><i class="fa-solid fa-puzzle-piece"></i> Plano de Enriquecimento &
+            Forrageamento</h4>
+          <div id="guia-enrichment-text"
+            style="font-size:0.875rem; line-height:1.6; margin-bottom:1rem; white-space:pre-wrap;"></div>
 
           <h4 class="guia-section-title"><i class="fa-solid fa-bullseye"></i> Metas de Condicionamento & Rotina</h4>
           <div id="guia-training-text" style="font-size:0.875rem; line-height:1.6; white-space:pre-wrap;"></div>
@@ -1228,7 +1323,8 @@
           <div class="recipe-footer">
             <div class="signature-line"></div>
             <p style="font-size:0.85rem; font-weight:700;" id="guia-consultor-signature">Lucas Mendes</p>
-            <p style="font-size:0.75rem; color:var(--text-muted);">Consultor em Manejo & Adestramento de Animais Silvestres</p>
+            <p style="font-size:0.75rem; color:var(--text-muted);">Consultor em Manejo & Adestramento de Animais
+              Silvestres</p>
           </div>
         </div>
 
@@ -1253,7 +1349,8 @@
         <div class="modal-body form-grid">
           <div class="form-group full-width">
             <label class="form-label">Nome da Vacina / Vermífugo / Suplementação *</label>
-            <input type="text" id="vacina-nome" class="form-control" placeholder="Ex: V10, Antirrábica, Suplementação Cálcio D3, Vermífugo..." required>
+            <input type="text" id="vacina-nome" class="form-control"
+              placeholder="Ex: V10, Antirrábica, Suplementação Cálcio D3, Vermífugo..." required>
           </div>
 
           <div class="form-group">
@@ -1285,12 +1382,13 @@
           </div>
           <div>
             <h2 id="modal-auth-pwd-title" style="font-size:1.15rem; margin:0;">Autorização Necessária</h2>
-            <span style="font-size:0.75rem; color:var(--text-muted);" id="modal-auth-pwd-subtitle">Acesso restrito por perfil</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);" id="modal-auth-pwd-subtitle">Acesso restrito por
+              perfil</span>
           </div>
         </div>
         <button class="modal-close" onclick="closeAuthPasswordModal()">&times;</button>
       </div>
-      
+
       <div class="modal-body" style="padding: 1.25rem 1.5rem;">
         <div class="auth-warning-box mb-2" id="auth-warning-box">
           <i class="fa-solid fa-triangle-exclamation" id="auth-warning-icon"></i>
@@ -1305,8 +1403,10 @@
               <i class="fa-solid fa-key"></i> Senha do Administrador:
             </label>
             <div class="password-input-wrap">
-              <input type="password" id="auth-input-password" class="form-control" placeholder="Digite a senha..." required autocomplete="off">
-              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('auth-input-password', 'auth-pwd-toggle-icon')">
+              <input type="password" id="auth-input-password" class="form-control" placeholder="Digite a senha..."
+                required autocomplete="off">
+              <button type="button" class="password-toggle-btn"
+                onclick="togglePasswordVisibility('auth-input-password', 'auth-pwd-toggle-icon')">
                 <i class="fa-solid fa-eye" id="auth-pwd-toggle-icon"></i>
               </button>
             </div>
@@ -1326,7 +1426,8 @@
             </div>
           </div>
 
-          <div class="modal-footer" style="padding: 1rem 0 0 0; margin-top: 1rem; border-top: 1px solid var(--border-subtle);">
+          <div class="modal-footer"
+            style="padding: 1rem 0 0 0; margin-top: 1rem; border-top: 1px solid var(--border-subtle);">
             <button type="button" class="btn btn-secondary" onclick="closeAuthPasswordModal()">Cancelar</button>
             <button type="submit" class="btn btn-primary" id="btn-confirm-auth">
               <i class="fa-solid fa-unlock"></i> Confirmar & Liberar
@@ -1342,6 +1443,7 @@
   <div id="print-guia-area"></div>
 
   <!-- Script Principal JavaScript -->
-  <script src="js/app.js?v=2.5"></script>
+  <script src="js/app.js?v=3.0"></script>
 </body>
+
 </html>
