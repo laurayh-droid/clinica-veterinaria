@@ -1478,13 +1478,125 @@ function abrirModalNovoTutor() {
   executarAberturaModalNovoTutor();
 }
 
+function criarBlocoPetHtml(index, total) {
+  const removerBtn = total > 1
+    ? `<button type="button" class="btn btn-sm btn-remover-pet" style="color:#dc2626; background:transparent; border:1px solid #fca5a5; padding:2px 8px; font-size:0.75rem; cursor:pointer;" onclick="removerCampoPetNovoTutor(this)" title="Remover este animal">
+         <i class="fa-solid fa-trash"></i> Remover
+       </button>`
+    : '';
+
+  return `
+    <div class="novo-pet-card" style="border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:0.9rem; background:var(--surface); margin-bottom:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; padding-bottom:0.4rem; border-bottom:1px dashed var(--border-subtle);">
+        <span style="font-weight:700; color:var(--primary); font-size:0.88rem;">
+          <i class="fa-solid fa-paw"></i> Animal / Paciente <span class="novo-pet-num">#${index}</span>
+        </span>
+        ${removerBtn}
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nome do Pet *</label>
+          <input type="text" class="form-control novo-pet-nome" placeholder="Ex: Kiko, Thor, Nina..." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Categoria do Animal *</label>
+          <select class="form-control novo-pet-categoria" required>
+            <option value="Silvestre / Exótico">Silvestre / Exótico (Ave, Réptil, Roedor...)</option>
+            <option value="Doméstico">Doméstico (Cão / Gato)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Espécie / Raça *</label>
+          <input type="text" class="form-control novo-pet-especie" placeholder="Ex: Papagaio Verdadeiro, Jabuti, Siamês..." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sexo</label>
+          <select class="form-control novo-pet-sexo">
+            <option value="Macho">Macho</option>
+            <option value="Fêmea">Fêmea</option>
+            <option value="Indeterminado">Indeterminado / Não Sexado</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Idade Estimada</label>
+          <input type="text" class="form-control novo-pet-idade" placeholder="Ex: 4 anos, 8 meses...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Peso Atual</label>
+          <input type="text" class="form-control novo-pet-peso" placeholder="Ex: 420g, 2.5kg, 28kg...">
+        </div>
+
+        <div class="form-group full-width">
+          <label class="form-label">Observações Iniciais de Recinto & Hábitos</label>
+          <textarea class="form-control novo-pet-habitat" style="min-height:55px;" placeholder="Ex: Dieta balanceada, viveiro/recinto telado, comportamento e hábitos..."></textarea>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function reindexarCamposPetsNovoTutor() {
+  const container = document.getElementById('lista-pets-novo-tutor');
+  if (!container) return;
+  const cards = container.querySelectorAll('.novo-pet-card');
+  const total = cards.length;
+  cards.forEach((card, i) => {
+    const numSpan = card.querySelector('.novo-pet-num');
+    if (numSpan) numSpan.textContent = `#${i + 1}`;
+    
+    let headerDiv = card.firstElementChild;
+    let removerBtn = headerDiv.querySelector('.btn-remover-pet');
+    if (total > 1) {
+      if (!removerBtn) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-sm btn-remover-pet';
+        btn.style.cssText = 'color:#dc2626; background:transparent; border:1px solid #fca5a5; padding:2px 8px; font-size:0.75rem; cursor:pointer;';
+        btn.title = 'Remover este animal';
+        btn.innerHTML = '<i class="fa-solid fa-trash"></i> Remover';
+        btn.onclick = function() { removerCampoPetNovoTutor(this); };
+        headerDiv.appendChild(btn);
+      }
+    } else if (removerBtn) {
+      removerBtn.remove();
+    }
+  });
+}
+
+function adicionarCampoPetNovoTutor() {
+  const container = document.getElementById('lista-pets-novo-tutor');
+  if (!container) return;
+  const currentCount = container.querySelectorAll('.novo-pet-card').length;
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = criarBlocoPetHtml(currentCount + 1, currentCount + 1);
+  const cardElement = tempDiv.firstElementChild;
+  container.appendChild(cardElement);
+  reindexarCamposPetsNovoTutor();
+}
+
+function removerCampoPetNovoTutor(btn) {
+  const card = btn.closest('.novo-pet-card');
+  const container = document.getElementById('lista-pets-novo-tutor');
+  if (!container || !card) return;
+  if (container.querySelectorAll('.novo-pet-card').length <= 1) {
+    alert('É necessário cadastrar ao menos 1 paciente/pet para o tutor.');
+    return;
+  }
+  card.remove();
+  reindexarCamposPetsNovoTutor();
+}
+
 function executarAberturaModalNovoTutor() {
   document.getElementById('form-novo-tutor').reset();
-  document.getElementById('tutor-id').value = '';
-  document.getElementById('tutor-pet-id').value = '';
-  document.getElementById('modal-tutor-title').innerText = 'Cadastrar Tutor e Paciente (Doméstico ou Silvestre)';
-  document.getElementById('btn-salvar-tutor').innerText = 'Concluir Cadastro';
-
+  const container = document.getElementById('lista-pets-novo-tutor');
+  if (container) {
+    container.innerHTML = criarBlocoPetHtml(1, 1);
+  }
   openModal('modal-novo-tutor');
 }
 
@@ -1509,28 +1621,42 @@ function executarEdicaoTutor(id) {
   const tutor = state.tutores.find(t => t.id === id);
   if (!tutor) return;
 
-  document.getElementById('tutor-id').value = tutor.id;
-  document.getElementById('tutor-nome').value = tutor.nome;
-  document.getElementById('tutor-cpf').value = tutor.cpf;
-  document.getElementById('tutor-telefone').value = tutor.telefone;
-  document.getElementById('tutor-endereco').value = tutor.endereco || '';
+  document.getElementById('edit-tutor-id').value = tutor.id;
+  document.getElementById('edit-tutor-nome').value = tutor.nome;
+  document.getElementById('edit-tutor-cpf').value = tutor.cpf;
+  document.getElementById('edit-tutor-telefone').value = tutor.telefone;
+  document.getElementById('edit-tutor-endereco').value = tutor.endereco || '';
 
-  if (tutor.pets && tutor.pets.length > 0) {
-    const pet = tutor.pets[0];
-    document.getElementById('tutor-pet-id').value = pet.id;
-    document.getElementById('pet-nome').value = pet.nome;
-    document.getElementById('pet-categoria').value = pet.categoria;
-    document.getElementById('pet-especie-raca').value = pet.especieRaca;
-    document.getElementById('pet-sexo').value = pet.sexo || 'Macho';
-    document.getElementById('pet-idade').value = pet.idade || '';
-    document.getElementById('pet-peso').value = pet.peso || '';
-    document.getElementById('pet-habitat').value = pet.habitat || '';
-  }
+  openModal('modal-editar-tutor');
+}
 
-  document.getElementById('modal-tutor-title').innerText = 'Editar Dados do Tutor e Paciente';
-  document.getElementById('btn-salvar-tutor').innerText = 'Salvar Alterações';
+function salvarEdicaoTutor(e) {
+  e.preventDefault();
+  const tutorId = parseInt(document.getElementById('edit-tutor-id').value);
+  const tutor = state.tutores.find(t => t.id === tutorId);
+  if (!tutor) return;
 
-  openModal('modal-novo-tutor');
+  const nome = document.getElementById('edit-tutor-nome').value.trim();
+  const cpf = document.getElementById('edit-tutor-cpf').value.trim();
+  const telefone = document.getElementById('edit-tutor-telefone').value.trim();
+  const endereco = document.getElementById('edit-tutor-endereco').value.trim();
+
+  tutor.nome = nome;
+  tutor.cpf = cpf;
+  tutor.telefone = telefone;
+  tutor.endereco = endereco;
+
+  // Atualiza tutorNome nos agendamentos vinculados aos pets deste tutor
+  state.agendamentos.forEach(ag => {
+    if (tutor.pets && tutor.pets.some(p => p.id === ag.petId)) {
+      ag.tutorNome = tutor.nome;
+    }
+  });
+
+  saveState();
+  renderAll();
+  closeModal('modal-editar-tutor');
+  showToast('Dados do tutor atualizados com sucesso!', 'success');
 }
 
 function editarPet(tutorId, petId) {
@@ -1643,12 +1769,9 @@ function renderTutores(filter = '') {
             </span>
             <small style="color:var(--text-muted);">[<i class="fa-solid fa-stethoscope"></i> ${qtdVet} Clínicos | <i class="fa-solid fa-leaf"></i> ${qtdManejo} Manejos]</small>
           </div>
-          <div style="display:flex; gap:4px;">
+          <div>
             <button class="btn btn-outline btn-sm" style="padding:2px 8px; font-size:0.75rem;" onclick="editarPet(${tutor.id}, ${p.id})" title="Editar Paciente">
               <i class="fa-solid fa-pen"></i> Editar Pet
-            </button>
-            <button class="btn btn-secondary btn-sm" style="padding:2px 8px; font-size:0.75rem;" onclick="agendarParaTutor(${tutor.id}, ${p.id})" title="Agendar Atendimento para este Paciente">
-              <i class="fa-solid fa-calendar-plus"></i> Agendar
             </button>
           </div>
         </div>
@@ -1662,11 +1785,8 @@ function renderTutores(filter = '') {
       <td><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> ${tutor.telefone}</td>
       <td>${petsHtml}</td>
       <td class="text-right">
-        <button class="btn btn-outline btn-sm" style="margin-right:4px;" onclick="editarTutor(${tutor.id})" title="Editar Tutor e Paciente">
+        <button class="btn btn-outline btn-sm" onclick="editarTutor(${tutor.id})" title="Editar Dados do Tutor">
           <i class="fa-solid fa-user-pen"></i> Editar Tutor
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="agendarParaTutor(${tutor.id})" title="Agendar Consulta para este Tutor">
-          <i class="fa-solid fa-calendar-plus"></i> Agendar
         </button>
       </td>
     `;
@@ -2373,80 +2493,58 @@ function imprimirGuiaManejo() {
 // 7. Funções de Apoio (Tutores, Agendamentos, Vacinas, Modais)
 function salvarTutorEPet(e) {
   e.preventDefault();
-  const tutorIdStr = document.getElementById('tutor-id').value;
-  const tutorPetIdStr = document.getElementById('tutor-pet-id').value;
 
   const nomeTutor = document.getElementById('tutor-nome').value.trim();
   const cpf = document.getElementById('tutor-cpf').value.trim();
   const telefone = document.getElementById('tutor-telefone').value.trim();
   const endereco = document.getElementById('tutor-endereco').value.trim();
 
-  const nomePet = document.getElementById('pet-nome').value.trim();
-  const categoria = document.getElementById('pet-categoria').value;
-  const especieRaca = document.getElementById('pet-especie-raca').value.trim();
-  const sexo = document.getElementById('pet-sexo').value;
-  const idade = document.getElementById('pet-idade').value.trim();
-  const peso = document.getElementById('pet-peso').value.trim();
-  const habitat = document.getElementById('pet-habitat').value.trim();
+  const container = document.getElementById('lista-pets-novo-tutor');
+  const petCards = container ? container.querySelectorAll('.novo-pet-card') : [];
 
-  if (tutorIdStr) {
-    // Edição de tutor existente
-    const tutorId = parseInt(tutorIdStr) || Number(tutorIdStr);
-    const tIndex = state.tutores.findIndex(t => t.id === tutorId);
-    if (tIndex !== -1) {
-      const tutorAntigo = state.tutores[tIndex];
-      tutorAntigo.nome = nomeTutor;
-      tutorAntigo.cpf = cpf;
-      tutorAntigo.telefone = telefone;
-      tutorAntigo.endereco = endereco;
-
-      if (tutorPetIdStr && tutorAntigo.pets) {
-        const petId = parseInt(tutorPetIdStr) || Number(tutorPetIdStr);
-        const pIndex = tutorAntigo.pets.findIndex(p => p.id === petId);
-        if (pIndex !== -1) {
-          tutorAntigo.pets[pIndex] = {
-            ...tutorAntigo.pets[pIndex],
-            nome: nomePet,
-            categoria,
-            especieRaca,
-            sexo,
-            idade,
-            peso,
-            habitat
-          };
-        }
-      }
-
-      // Atualiza referências em agendamentos
-      state.agendamentos.forEach(ag => {
-        const p = tutorAntigo.pets.find(item => item.id === ag.petId);
-        if (p) {
-          ag.petNome = `${p.nome} (${p.especieRaca})`;
-          ag.tutorNome = tutorAntigo.nome;
-        }
-      });
-
-      saveState();
-      renderAll();
-      closeModal('modal-novo-tutor');
-      showToast('Dados do tutor e paciente atualizados com sucesso!', 'success');
-      return;
-    }
+  if (petCards.length === 0) {
+    alert('Cadastre ao menos um animal para o tutor.');
+    return;
   }
 
-  // Novo Cadastro
-  const newPetId = Date.now();
-  const newTutorId = Date.now() + 1;
+  const pets = [];
+  const baseTime = Date.now();
+
+  petCards.forEach((card, index) => {
+    const nome = card.querySelector('.novo-pet-nome').value.trim();
+    const categoria = card.querySelector('.novo-pet-categoria').value;
+    const especieRaca = card.querySelector('.novo-pet-especie').value.trim();
+    const sexo = card.querySelector('.novo-pet-sexo').value;
+    const idade = card.querySelector('.novo-pet-idade').value.trim();
+    const peso = card.querySelector('.novo-pet-peso').value.trim();
+    const habitat = card.querySelector('.novo-pet-habitat').value.trim();
+
+    if (nome && especieRaca) {
+      pets.push({
+        id: baseTime + index + 1,
+        nome,
+        categoria,
+        especieRaca,
+        sexo: sexo || 'Macho',
+        idade: idade || '',
+        peso: peso || '',
+        habitat: habitat || ''
+      });
+    }
+  });
+
+  if (pets.length === 0) {
+    alert('Preencha os campos obrigatórios do paciente (Nome e Espécie/Raça).');
+    return;
+  }
 
   const novoTutor = {
-    id: newTutorId,
+    id: baseTime,
     nome: nomeTutor,
     cpf,
     telefone,
     endereco,
-    pets: [
-      { id: newPetId, nome: nomePet, categoria, especieRaca, sexo, idade, peso, habitat }
-    ]
+    pets
   };
 
   state.tutores.unshift(novoTutor);
@@ -2454,7 +2552,7 @@ function salvarTutorEPet(e) {
   renderAll();
   closeModal('modal-novo-tutor');
   document.getElementById('form-novo-tutor').reset();
-  showToast('Tutor e Paciente cadastrados com sucesso!', 'success');
+  showToast(`Tutor ${novoTutor.nome} cadastrado com ${pets.length} animal(is) vinculado(s)!`, 'success');
 }
 
 function salvarAgendamento(e) {
