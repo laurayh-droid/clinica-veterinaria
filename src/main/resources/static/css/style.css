@@ -2489,3 +2489,4 @@ body.mobile-sidebar-active {
   font-weight: 600;
 }
 
+:focus-visible { outline: 3px solid #059669; outline-offset: 2px; }
